@@ -29,8 +29,11 @@ const Index = () => {
   const [appState, setAppState] = useState<AppState>("form");
   const [loadingProgress, setLoadingProgress] = useState(0);
 
-  // Update progress bar based on current step
-  const progress = (step / 3) * 100;
+  // Define the total number of steps
+  const totalSteps = 3;
+  
+  // Update progress bar based on current step and total steps
+  const progress = (step / totalSteps) * 100;
   
   // Function to submit data to webhook
   const submitToWebhook = async () => {
@@ -102,7 +105,7 @@ const Index = () => {
       return;
     }
     
-    if (step < 3) {
+    if (step < totalSteps) {
       setAnimationDirection("next");
       setStep(prev => prev + 1);
     } else {
@@ -129,28 +132,50 @@ const Index = () => {
     }
   };
   
-  // Handle get plan button click
+  // Handle get plan button click - immediately start loading without delay
   const handleGetPlan = () => {
     toast({
-      title: "Plan requested",
-      description: "Downloading your personalized plan",
+      title: "Creating your plan",
+      description: "We're generating your personalized workout plan",
     });
     
-    // Submit data to webhook again
-    submitToWebhook().then((success) => {
-      if (success) {
-        toast({
-          title: "Success",
-          description: "Your plan has been generated",
-        });
-      } else {
-        toast({
-          title: "Error",
-          description: "There was an error generating your plan",
-          variant: "destructive",
-        });
-      }
-    });
+    // Start loading animation immediately
+    const exitAnimation = {
+      opacity: 0,
+      y: 20,
+      transition: { duration: 0.3 }
+    };
+    
+    // Apply exit animation to the results view
+    document.querySelector('.results-container')?.animate(
+      [
+        { opacity: 1, transform: 'translateY(0)' },
+        { opacity: 0, transform: 'translateY(20px)' }
+      ],
+      { duration: 300, easing: 'ease-out' }
+    );
+    
+    // Short timeout just for the animation to complete
+    setTimeout(() => {
+      // Start loading animation
+      setAppState("loading");
+      setLoadingProgress(0);
+      
+      // Submit data to webhook and simulate loading
+      submitToWebhook().then((success) => {
+        if (success) {
+          simulateLoading();
+        } else {
+          toast({
+            title: "Error",
+            description: "There was an error generating your plan",
+            variant: "destructive",
+          });
+          // Return to results state if there was an error
+          setAppState("results");
+        }
+      });
+    }, 300);
   };
   
   // Animation variants for slide transitions
@@ -237,7 +262,7 @@ const Index = () => {
                 onClick={handleNext}
                 className="px-6 py-3 bg-orange hover:bg-orange-hover text-white rounded-lg ml-auto flex items-center gap-2 transition-colors"
               >
-                {step === 3 ? "Complete" : "Continue"}
+                {step === totalSteps ? "Complete" : "Continue"}
                 <ChevronRight size={18} />
               </button>
             </div>
@@ -291,7 +316,7 @@ const Index = () => {
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="w-full max-w-4xl mx-auto"
+            className="w-full max-w-4xl mx-auto results-container"
           >
             <div className="text-center mb-8">
               <h1 className="text-5xl font-bold mb-16">
@@ -370,17 +395,19 @@ const Index = () => {
                 *The image is not intended to represent the user. Results vary per person and are not guaranteed.
               </div>
               
-              <a 
+              <motion.a 
                 href="#" 
                 onClick={(e) => {
                   e.preventDefault();
                   handleGetPlan();
                 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 className="inline-flex items-center gap-2 text-white bg-orange hover:bg-orange-hover px-12 py-4 rounded-lg text-xl font-medium transition-colors"
               >
                 Get my plan
                 <ArrowRight size={20} />
-              </a>
+              </motion.a>
             </div>
           </motion.div>
         )}
