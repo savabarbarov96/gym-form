@@ -162,7 +162,7 @@ const Index = () => {
     center: {
       x: 0,
       opacity: 1,
-    }),
+    },
     exit: (direction: string) => ({
       x: direction === "next" ? "-100%" : "100%",
       opacity: 0,
