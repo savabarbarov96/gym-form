@@ -129,6 +129,30 @@ const Index = () => {
     }
   };
   
+  // Handle get plan button click
+  const handleGetPlan = () => {
+    toast({
+      title: "Plan requested",
+      description: "Downloading your personalized plan",
+    });
+    
+    // Submit data to webhook again
+    submitToWebhook().then((success) => {
+      if (success) {
+        toast({
+          title: "Success",
+          description: "Your plan has been generated",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "There was an error generating your plan",
+          variant: "destructive",
+        });
+      }
+    });
+  };
+  
   // Animation variants for slide transitions
   const slideVariants = {
     enter: (direction: string) => ({
@@ -138,7 +162,7 @@ const Index = () => {
     center: {
       x: 0,
       opacity: 1,
-    },
+    }),
     exit: (direction: string) => ({
       x: direction === "next" ? "-100%" : "100%",
       opacity: 0,
@@ -348,6 +372,10 @@ const Index = () => {
               
               <a 
                 href="#" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleGetPlan();
+                }}
                 className="inline-flex items-center gap-2 text-white bg-orange hover:bg-orange-hover px-12 py-4 rounded-lg text-xl font-medium transition-colors"
               >
                 Get my plan
