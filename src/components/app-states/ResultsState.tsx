@@ -2,6 +2,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import RiveAnimation from "@/components/RiveAnimation";
 
 interface ResultsStateProps {
   handleGetPlan: () => void;
@@ -21,11 +22,13 @@ const ResultsState: React.FC<ResultsStateProps> = ({ handleGetPlan }) => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
           <div className="bg-card p-6 rounded-lg">
-            <img 
-              src="/lovable-uploads/40fb59b5-9510-4b7b-bb48-eec384b61f02.png"
-              alt="Current body" 
-              className="max-h-96 mx-auto"
-            />
+            <div className="flex justify-center">
+              <RiveAnimation 
+                src="https://public.rive.app/hosted/136149/32585/2vr_p_rWVE6D1VbhQYEH9g.riv"
+                height={300}
+                width={300}
+              />
+            </div>
             <div className="mt-4 text-xl font-bold">Now</div>
             
             <div className="mt-6 text-left">
@@ -54,11 +57,13 @@ const ResultsState: React.FC<ResultsStateProps> = ({ handleGetPlan }) => {
           </div>
           
           <div className="bg-card p-6 rounded-lg">
-            <img 
-              src="/lovable-uploads/6a426793-a78f-42c3-9449-6deaf13b0f41.png"
-              alt="Goal body" 
-              className="max-h-96 mx-auto"
-            />
+            <div className="flex justify-center">
+              <RiveAnimation 
+                src="https://public.rive.app/hosted/136151/32591/FZ00B7iJWE6aNO-gB0oJ-g.riv"
+                height={300}
+                width={300}
+              />
+            </div>
             <div className="mt-4 text-xl font-bold">6 months</div>
             
             <div className="mt-6 text-left">
@@ -88,7 +93,7 @@ const ResultsState: React.FC<ResultsStateProps> = ({ handleGetPlan }) => {
         </div>
         
         <div className="text-xs text-muted-foreground mb-16">
-          *The image is not intended to represent the user. Results vary per person and are not guaranteed.
+          *The animation is not intended to represent the user. Results vary per person and are not guaranteed.
         </div>
         
         <motion.a 

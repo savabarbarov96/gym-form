@@ -20,15 +20,18 @@ const ActivitiesStep = ({ selectedActivities, onSelectActivities }: ActivitiesSt
 
   const toggleActivity = (id: string) => {
     if (id === "none") {
+      // When selecting "none", clear other selections
       onSelectActivities(["none"]);
       return;
     }
     
+    // If "none" was selected and user selects another activity
     if (selectedActivities.includes("none")) {
       onSelectActivities([id]);
       return;
     }
     
+    // Toggle the selected activity
     if (selectedActivities.includes(id)) {
       const newActivities = selectedActivities.filter(activity => activity !== id);
       onSelectActivities(newActivities.length === 0 ? ["none"] : newActivities);
@@ -36,6 +39,13 @@ const ActivitiesStep = ({ selectedActivities, onSelectActivities }: ActivitiesSt
       onSelectActivities([...selectedActivities, id]);
     }
   };
+
+  // Initialize with empty array if nothing is selected yet
+  React.useEffect(() => {
+    if (selectedActivities.length === 0) {
+      onSelectActivities([]);
+    }
+  }, []);
 
   const isNoneSelected = selectedActivities.includes("none");
 

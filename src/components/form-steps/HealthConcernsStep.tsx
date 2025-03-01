@@ -1,6 +1,8 @@
+
 import React from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Check } from "lucide-react";
+import RiveAnimation from "@/components/RiveAnimation";
 
 interface HealthConcernsStepProps {
   selectedConcerns: string[];
@@ -41,33 +43,42 @@ const HealthConcernsStep = ({ selectedConcerns, onSelectConcerns }: HealthConcer
       <h1 className="text-4xl sm:text-5xl font-bold mb-12">Do you struggle with any of the following?</h1>
       <p className="text-xl mb-8">We will adjust the plan to protect this body part from further damage</p>
       
-      <div className="max-w-2xl mx-auto space-y-4">
-        {concerns.map((concern) => (
-          <div
-            key={concern.id}
-            className={`flex items-center gap-3 bg-card p-4 rounded-lg cursor-pointer ${isNoneSelected ? "opacity-50 pointer-events-none" : ""}`}
-            onClick={() => toggleConcern(concern.id)}
-          >
-            <Checkbox 
-              id={concern.id}
-              checked={selectedConcerns.includes(concern.id)}
-              onCheckedChange={() => toggleConcern(concern.id)}
-              className="data-[state=checked]:bg-orange data-[state=checked]:text-white"
-              disabled={isNoneSelected}
-            />
-            <label htmlFor={concern.id} className="text-xl cursor-pointer">{concern.label}</label>
-          </div>
-        ))}
-
-        <div className="border-t border-border pt-4 mt-4">
-          <div
-            className="flex items-center gap-3 bg-card p-4 rounded-lg cursor-pointer"
-            onClick={() => toggleConcern("none")}
-          >
-            <div className={`w-5 h-5 rounded-full border border-orange flex items-center justify-center ${isNoneSelected ? "bg-orange" : ""}`}>
-              {isNoneSelected && <Check className="w-4 h-4 text-white" />}
+      <div className="max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+        <div className="flex justify-center">
+          <RiveAnimation 
+            src="https://public.rive.app/hosted/136155/32603/q7kRhYKnjkSmVzEA8RaUjw.riv" 
+            height={200}
+            width={200}
+          />
+        </div>
+        <div className="space-y-4">
+          {concerns.map((concern) => (
+            <div
+              key={concern.id}
+              className={`flex items-center gap-3 bg-card p-4 rounded-lg cursor-pointer ${isNoneSelected ? "opacity-50 pointer-events-none" : ""}`}
+              onClick={() => toggleConcern(concern.id)}
+            >
+              <Checkbox 
+                id={concern.id}
+                checked={selectedConcerns.includes(concern.id)}
+                onCheckedChange={() => toggleConcern(concern.id)}
+                className="data-[state=checked]:bg-orange data-[state=checked]:text-white"
+                disabled={isNoneSelected}
+              />
+              <label htmlFor={concern.id} className="text-xl cursor-pointer">{concern.label}</label>
             </div>
-            <label className="text-xl cursor-pointer">None of the above</label>
+          ))}
+
+          <div className="border-t border-border pt-4 mt-4">
+            <div
+              className="flex items-center gap-3 bg-card p-4 rounded-lg cursor-pointer"
+              onClick={() => toggleConcern("none")}
+            >
+              <div className={`w-5 h-5 rounded-full border border-orange flex items-center justify-center ${isNoneSelected ? "bg-orange" : ""}`}>
+                {isNoneSelected && <Check className="w-4 h-4 text-white" />}
+              </div>
+              <label className="text-xl cursor-pointer">None of the above</label>
+            </div>
           </div>
         </div>
       </div>
