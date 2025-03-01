@@ -1,28 +1,10 @@
 
 import React, { createContext, useContext, useState } from "react";
-import { submitToWebhook, FormData } from "@/components/WebhookService";
+import { submitToWebhook } from "@/components/WebhookService";
 import { useToast } from "@/components/ui/use-toast";
-
-type AppState = "form" | "loading" | "results";
-
-interface SurveyContextType {
-  formData: FormData;
-  updateFormData: (updates: Partial<FormData>) => void;
-  appState: AppState;
-  setAppState: React.Dispatch<React.SetStateAction<AppState>>;
-  step: number;
-  setStep: React.Dispatch<React.SetStateAction<number>>;
-  animationDirection: string;
-  setAnimationDirection: React.Dispatch<React.SetStateAction<string>>;
-  loadingProgress: number;
-  setLoadingProgress: React.Dispatch<React.SetStateAction<number>>;
-  handleNext: () => void;
-  handleBack: () => void;
-  handleGetPlan: () => void;
-  simulateLoading: () => void;
-  totalSteps: number;
-  setFormData: React.Dispatch<React.SetStateAction<FormData>>;
-}
+import { AppState, FormData, SurveyContextType } from "@/types/survey";
+import { validateStep } from "@/utils/surveyValidation";
+import { simulateLoading } from "@/utils/loadingSimulation";
 
 const SurveyContext = createContext<SurveyContextType | undefined>(undefined);
 
@@ -56,118 +38,19 @@ export const SurveyProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [appState, setAppState] = useState<AppState>("form");
   const [loadingProgress, setLoadingProgress] = useState(0);
 
-  const totalSteps = 13; // Updated total steps
+  const totalSteps = 13;
   
   const updateFormData = (updates: Partial<FormData>) => {
     setFormData(prev => ({ ...prev, ...updates }));
   };
   
-  const simulateLoading = () => {
-    setAppState("loading");
-    setLoadingProgress(0);
-    
-    const increment = 100 / 40;
-    let currentProgress = 0;
-    
-    const interval = setInterval(() => {
-      currentProgress += increment;
-      setLoadingProgress(Math.min(Math.round(currentProgress), 100));
-      
-      if (currentProgress >= 100) {
-        clearInterval(interval);
-        setAppState("results");
-      }
-    }, 200);
+  const handleSimulateLoading = () => {
+    simulateLoading(setAppState, setLoadingProgress);
   };
 
   const handleNext = () => {
-    if (step === 1 && !formData.age) {
-      toast({
-        title: "Selection required",
-        description: "Please select your age group to continue",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    if (step === 2 && !formData.bodyType) {
-      toast({
-        title: "Selection required",
-        description: "Please select your body type to continue",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    if (step === 4 && !formData.fitnessGoal) {
-      toast({
-        title: "Selection required",
-        description: "Please select your fitness goal to continue",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    if (step === 5 && !formData.desiredBody) {
-      toast({
-        title: "Selection required",
-        description: "Please select your desired body to continue",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    if (step === 7 && !formData.bestShapeTime) {
-      toast({
-        title: "Selection required",
-        description: "Please select when you were in your best shape to continue",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    if (step === 8 && !formData.weightChange) {
-      toast({
-        title: "Selection required",
-        description: "Please select how your weight typically changes to continue",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    if (step === 9 && formData.activities.length === 0) {
-      toast({
-        title: "Selection required",
-        description: "Please select at least one activity or 'None of the above' to continue",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    if (step === 11 && formData.healthConcerns.length === 0) {
-      toast({
-        title: "Selection required",
-        description: "Please select a health concern or 'None of the above' to continue",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    if (step === 12 && !formData.workoutLocation) {
-      toast({
-        title: "Selection required",
-        description: "Please select where you will be working out to continue",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    if (step === 13 && !formData.workoutIntensity) {
-      toast({
-        title: "Selection required",
-        description: "Please select your preferred workout intensity to continue",
-        variant: "destructive",
-      });
+    // Validate current step
+    if (!validateStep(step, formData, toast)) {
       return;
     }
     
@@ -183,7 +66,7 @@ export const SurveyProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       console.log("Form submitted:", formData);
       
       submitToWebhook(formData).then(() => {
-        simulateLoading();
+        handleSimulateLoading();
       });
     }
   };
@@ -214,7 +97,7 @@ export const SurveyProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     
     submitToWebhook(formData).then((success) => {
       if (success) {
-        simulateLoading();
+        handleSimulateLoading();
       } else {
         toast({
           title: "Error",
@@ -240,7 +123,7 @@ export const SurveyProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     handleNext,
     handleBack,
     handleGetPlan,
-    simulateLoading,
+    simulateLoading: handleSimulateLoading,
     totalSteps,
     setFormData
   };

@@ -1,17 +1,5 @@
-export interface FormData {
-  age: string | null;
-  bodyType: string | null;
-  goal: number;
-  fitnessGoal: string | null;
-  desiredBody: string | null;
-  problemAreas: string[];
-  bestShapeTime: string | null;
-  weightChange: string | null;
-  activities: string[];
-  healthConcerns: string[];
-  workoutLocation: string | null;
-  workoutIntensity: string | null;
-}
+
+import { FormData } from "@/types/survey";
 
 export const submitToWebhook = async (formData: FormData): Promise<boolean> => {
   try {
