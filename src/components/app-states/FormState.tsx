@@ -1,7 +1,5 @@
 
 import React from "react";
-import { useToast } from "@/components/ui/use-toast";
-import { ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   AgeSelectionStep,
@@ -16,6 +14,7 @@ import {
   ProgressGraphStep,
   HealthConcernsStep
 } from "@/components/form-steps";
+import { ChevronRight } from "lucide-react";
 
 interface FormData {
   age: string | null;
