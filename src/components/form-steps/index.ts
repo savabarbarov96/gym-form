@@ -8,3 +8,5 @@ export { default as ProblemAreasStep } from './ProblemAreasStep';
 export { default as BestShapeStep } from './BestShapeStep';
 export { default as WeightChangeStep } from './WeightChangeStep';
 export { default as ActivitiesStep } from './ActivitiesStep';
+export { default as ProgressGraphStep } from './ProgressGraphStep';
+export { default as HealthConcernsStep } from './HealthConcernsStep';

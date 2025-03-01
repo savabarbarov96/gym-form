@@ -1,10 +1,8 @@
-
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { ChevronRight, ArrowRight, Check } from "lucide-react";
 import Logo from "@/components/Logo";
 import { motion, AnimatePresence } from "framer-motion";
-import ProgressGraph from "@/components/ProgressGraph";
 import {
   AgeSelectionStep,
   BodyTypeStep,
@@ -14,7 +12,9 @@ import {
   ProblemAreasStep,
   BestShapeStep,
   WeightChangeStep,
-  ActivitiesStep
+  ActivitiesStep,
+  ProgressGraphStep,
+  HealthConcernsStep
 } from "@/components/form-steps";
 
 interface FormData {
@@ -27,6 +27,7 @@ interface FormData {
   bestShapeTime: string | null;
   weightChange: string | null;
   activities: string[];
+  healthConcerns: string[];
 }
 
 type AppState = "form" | "loading" | "results";
@@ -45,12 +46,13 @@ const Index = () => {
     bestShapeTime: null,
     weightChange: null,
     activities: [],
+    healthConcerns: [],
   });
   
   const [appState, setAppState] = useState<AppState>("form");
   const [loadingProgress, setLoadingProgress] = useState(0);
 
-  const totalSteps = 9;
+  const totalSteps = 11; // Updated to include the two new steps
   
   const progress = (step / totalSteps) * 100;
   
@@ -66,6 +68,7 @@ const Index = () => {
       if (formData.bestShapeTime) params.append('bestShapeTime', formData.bestShapeTime);
       if (formData.weightChange) params.append('weightChange', formData.weightChange);
       if (formData.activities.length > 0) params.append('activities', formData.activities.join(','));
+      if (formData.healthConcerns.length > 0) params.append('healthConcerns', formData.healthConcerns.join(','));
       
       const webhookUrl = `https://sava.automationaid.eu/webhook/8ffb7f1e-6c6f-412c-8022-eef6957d78d4?${params.toString()}`;
       
@@ -160,6 +163,24 @@ const Index = () => {
       return;
     }
     
+    if (step === 9 && formData.activities.length === 0) {
+      toast({
+        title: "Selection required",
+        description: "Please select at least one activity or 'None of the above' to continue",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (step === 11 && formData.healthConcerns.length === 0) {
+      toast({
+        title: "Selection required",
+        description: "Please select a health concern or 'None of the above' to continue",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     if (step < totalSteps) {
       setAnimationDirection("next");
       setStep(prev => prev + 1);
@@ -190,12 +211,6 @@ const Index = () => {
       description: "We're generating your personalized workout plan",
     });
     
-    const exitAnimation = {
-      opacity: 0,
-      y: 20,
-      transition: { duration: 0.3 }
-    };
-    
     document.querySelector('.results-container')?.animate(
       [
         { opacity: 1, transform: 'translateY(0)' },
@@ -204,23 +219,21 @@ const Index = () => {
       { duration: 300, easing: 'ease-out' }
     );
     
-    setTimeout(() => {
-      setAppState("loading");
-      setLoadingProgress(0);
-      
-      submitToWebhook().then((success) => {
-        if (success) {
-          simulateLoading();
-        } else {
-          toast({
-            title: "Error",
-            description: "There was an error generating your plan",
-            variant: "destructive",
-          });
-          setAppState("results");
-        }
-      });
-    }, 300);
+    setAppState("loading");
+    setLoadingProgress(0);
+    
+    submitToWebhook().then((success) => {
+      if (success) {
+        simulateLoading();
+      } else {
+        toast({
+          title: "Error",
+          description: "There was an error generating your plan",
+          variant: "destructive",
+        });
+        setAppState("results");
+      }
+    });
   };
 
   const slideVariants = {
@@ -328,6 +341,19 @@ const Index = () => {
                   <ActivitiesStep 
                     selectedActivities={formData.activities}
                     onSelectActivities={(activities) => setFormData({...formData, activities})}
+                  />
+                )}
+                
+                {step === 10 && (
+                  <ProgressGraphStep 
+                    goalValue={formData.goal}
+                  />
+                )}
+                
+                {step === 11 && (
+                  <HealthConcernsStep 
+                    selectedConcerns={formData.healthConcerns}
+                    onSelectConcerns={(healthConcerns) => setFormData({...formData, healthConcerns})}
                   />
                 )}
               </motion.div>
