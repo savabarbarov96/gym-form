@@ -21,6 +21,7 @@ interface SurveyContextType {
   handleGetPlan: () => void;
   simulateLoading: () => void;
   totalSteps: number;
+  setFormData: React.Dispatch<React.SetStateAction<FormData>>;
 }
 
 const SurveyContext = createContext<SurveyContextType | undefined>(undefined);
@@ -220,7 +221,8 @@ export const SurveyProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     handleBack,
     handleGetPlan,
     simulateLoading,
-    totalSteps
+    totalSteps,
+    setFormData
   };
 
   return <SurveyContext.Provider value={value}>{children}</SurveyContext.Provider>;
