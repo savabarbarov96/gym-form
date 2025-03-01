@@ -10,3 +10,5 @@ export { default as WeightChangeStep } from './WeightChangeStep';
 export { default as ActivitiesStep } from './ActivitiesStep';
 export { default as ProgressGraphStep } from './ProgressGraphStep';
 export { default as HealthConcernsStep } from './HealthConcernsStep';
+export { default as WorkoutLocationStep } from './WorkoutLocationStep';
+export { default as WorkoutIntensityStep } from './WorkoutIntensityStep';

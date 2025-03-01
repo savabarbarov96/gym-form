@@ -12,7 +12,9 @@ import {
   WeightChangeStep,
   ActivitiesStep,
   ProgressGraphStep,
-  HealthConcernsStep
+  HealthConcernsStep,
+  WorkoutLocationStep,
+  WorkoutIntensityStep
 } from "@/components/form-steps";
 import { ChevronRight } from "lucide-react";
 
@@ -27,6 +29,8 @@ interface FormData {
   weightChange: string | null;
   activities: string[];
   healthConcerns: string[];
+  workoutLocation: string | null;
+  workoutIntensity: string | null;
 }
 
 interface FormStateProps {
@@ -123,7 +127,7 @@ const FormState: React.FC<FormStateProps> = ({
           {step === 6 && (
             <ProblemAreasStep 
               selectedAreas={formData.problemAreas}
-              onSelectArea={(areas) => setFormData({...formData, problemAreas: areas})}
+              onSelectArea={(problemAreas) => setFormData({...formData, problemAreas})}
             />
           )}
 
@@ -158,6 +162,20 @@ const FormState: React.FC<FormStateProps> = ({
             <HealthConcernsStep 
               selectedConcerns={formData.healthConcerns}
               onSelectConcerns={(healthConcerns) => setFormData({...formData, healthConcerns})}
+            />
+          )}
+
+          {step === 12 && (
+            <WorkoutLocationStep
+              selectedLocation={formData.workoutLocation}
+              onSelect={(workoutLocation) => setFormData({...formData, workoutLocation})}
+            />
+          )}
+
+          {step === 13 && (
+            <WorkoutIntensityStep
+              selectedIntensity={formData.workoutIntensity}
+              onSelect={(workoutIntensity) => setFormData({...formData, workoutIntensity})}
             />
           )}
         </motion.div>

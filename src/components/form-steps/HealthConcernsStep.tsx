@@ -17,19 +17,28 @@ const HealthConcernsStep = ({ selectedConcerns, onSelectConcerns }: HealthConcer
   ];
 
   const toggleConcern = (id: string) => {
-    if (id === "none") {
+    // If "none" is clicked and not already selected
+    if (id === "none" && !selectedConcerns.includes("none")) {
       onSelectConcerns(["none"]);
       return;
     }
     
-    if (selectedConcerns.includes("none")) {
+    // If "none" is clicked and already selected, unselect it
+    if (id === "none" && selectedConcerns.includes("none")) {
+      onSelectConcerns([]);
+      return;
+    }
+    
+    // If a regular concern is clicked while "none" is selected, clear "none"
+    if (id !== "none" && selectedConcerns.includes("none")) {
       onSelectConcerns([id]);
       return;
     }
     
+    // Toggle the selected concern
     if (selectedConcerns.includes(id)) {
       const newConcerns = selectedConcerns.filter(concern => concern !== id);
-      onSelectConcerns(newConcerns.length === 0 ? [] : newConcerns);
+      onSelectConcerns(newConcerns);
     } else {
       onSelectConcerns([...selectedConcerns, id]);
     }

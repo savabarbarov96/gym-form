@@ -1,4 +1,3 @@
-
 export interface FormData {
   age: string | null;
   bodyType: string | null;
@@ -10,6 +9,8 @@ export interface FormData {
   weightChange: string | null;
   activities: string[];
   healthConcerns: string[];
+  workoutLocation: string | null;
+  workoutIntensity: string | null;
 }
 
 export const submitToWebhook = async (formData: FormData): Promise<boolean> => {
@@ -25,6 +26,8 @@ export const submitToWebhook = async (formData: FormData): Promise<boolean> => {
     if (formData.weightChange) params.append('weightChange', formData.weightChange);
     if (formData.activities.length > 0) params.append('activities', formData.activities.join(','));
     if (formData.healthConcerns.length > 0) params.append('healthConcerns', formData.healthConcerns.join(','));
+    if (formData.workoutLocation) params.append('workoutLocation', formData.workoutLocation);
+    if (formData.workoutIntensity) params.append('workoutIntensity', formData.workoutIntensity);
     
     const webhookUrl = `https://sava.automationaid.eu/webhook/8ffb7f1e-6c6f-412c-8022-eef6957d78d4?${params.toString()}`;
     

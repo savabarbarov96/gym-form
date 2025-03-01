@@ -10,23 +10,31 @@ interface ActivitiesStepProps {
 
 const ActivitiesStep = ({ selectedActivities, onSelectActivities }: ActivitiesStepProps) => {
   const activities = [
-    { label: "Walking outside", id: "walking-outside", emoji: "🚶" },
-    { label: "Morning exercise", id: "morning-exercise", emoji: "🌅" },
-    { label: "Walking my pet", id: "walking-pet", emoji: "🐕" },
-    { label: "Climbing stairs frequently", id: "climbing-stairs", emoji: "🪜" },
-    { label: "Spend time with my child", id: "child-time", emoji: "👶" },
-    { label: "Household affairs", id: "household", emoji: "🔧" },
+    { label: "Running", id: "running" },
+    { label: "Cycling", id: "cycling" },
+    { label: "Swimming", id: "swimming" },
+    { label: "Walking", id: "walking" },
+    { label: "Dancing", id: "dancing" },
+    { label: "Pilates", id: "pilates" },
+    { label: "Team sports", id: "teamsports" },
+    { label: "Hiking", id: "hiking" },
   ];
 
   const toggleActivity = (id: string) => {
-    if (id === "none") {
-      // When selecting "none", clear other selections
+    // If "none" is clicked and not already selected
+    if (id === "none" && !selectedActivities.includes("none")) {
       onSelectActivities(["none"]);
       return;
     }
     
-    // If "none" was selected and user selects another activity
-    if (selectedActivities.includes("none")) {
+    // If "none" is clicked and already selected, unselect it
+    if (id === "none" && selectedActivities.includes("none")) {
+      onSelectActivities([]);
+      return;
+    }
+    
+    // If a regular activity is clicked while "none" is selected, clear "none"
+    if (id !== "none" && selectedActivities.includes("none")) {
       onSelectActivities([id]);
       return;
     }
@@ -34,7 +42,7 @@ const ActivitiesStep = ({ selectedActivities, onSelectActivities }: ActivitiesSt
     // Toggle the selected activity
     if (selectedActivities.includes(id)) {
       const newActivities = selectedActivities.filter(activity => activity !== id);
-      onSelectActivities(newActivities.length === 0 ? [] : newActivities);
+      onSelectActivities(newActivities);
     } else {
       onSelectActivities([...selectedActivities, id]);
     }
@@ -46,29 +54,34 @@ const ActivitiesStep = ({ selectedActivities, onSelectActivities }: ActivitiesSt
     <div className="text-center">
       <h1 className="text-4xl sm:text-5xl font-bold mb-12">Are any of these activities part of your life?</h1>
       
-      <div className="max-w-2xl mx-auto space-y-4">
-        {activities.map((activity) => (
+      <div className="max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+        <div className="flex justify-center">
+          <img 
+            src="/lovable-uploads/949229f9-bb7a-407e-b06a-54cc9a26b481.png"
+            alt="Activities"
+            className="max-h-[200px] object-contain"
+          />
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {activities.map((activity) => (
+            <div
+              key={activity.id}
+              className={`flex items-center gap-3 bg-card p-4 rounded-lg cursor-pointer ${isNoneSelected ? "opacity-50 pointer-events-none" : ""}`}
+              onClick={() => toggleActivity(activity.id)}
+            >
+              <Checkbox 
+                id={activity.id}
+                checked={selectedActivities.includes(activity.id)}
+                onCheckedChange={() => toggleActivity(activity.id)}
+                className="data-[state=checked]:bg-orange data-[state=checked]:text-white"
+                disabled={isNoneSelected}
+              />
+              <label htmlFor={activity.id} className="text-xl cursor-pointer">{activity.label}</label>
+            </div>
+          ))}
+          
           <div
-            key={activity.id}
-            className={`flex items-center gap-3 bg-card p-4 rounded-lg cursor-pointer ${isNoneSelected ? "opacity-50 pointer-events-none" : ""}`}
-            onClick={() => toggleActivity(activity.id)}
-          >
-            <Checkbox 
-              id={activity.id}
-              checked={selectedActivities.includes(activity.id)}
-              onCheckedChange={() => toggleActivity(activity.id)}
-              className="data-[state=checked]:bg-orange data-[state=checked]:text-white"
-              disabled={isNoneSelected}
-            />
-            <label htmlFor={activity.id} className="text-xl cursor-pointer">
-              {activity.label} <span className="ml-2">{activity.emoji}</span>
-            </label>
-          </div>
-        ))}
-
-        <div className="border-t border-border pt-4 mt-4">
-          <div
-            className="flex items-center gap-3 bg-card p-4 rounded-lg cursor-pointer"
+            className="flex items-center gap-3 bg-card p-4 rounded-lg cursor-pointer col-span-full"
             onClick={() => toggleActivity("none")}
           >
             <div className={`w-5 h-5 rounded-full border border-orange flex items-center justify-center ${isNoneSelected ? "bg-orange" : ""}`}>

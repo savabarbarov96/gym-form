@@ -49,12 +49,14 @@ export const SurveyProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     weightChange: null,
     activities: [],
     healthConcerns: [],
+    workoutLocation: null,
+    workoutIntensity: null,
   });
   
   const [appState, setAppState] = useState<AppState>("form");
   const [loadingProgress, setLoadingProgress] = useState(0);
 
-  const totalSteps = 11;
+  const totalSteps = 13; // Updated total steps
   
   const updateFormData = (updates: Partial<FormData>) => {
     setFormData(prev => ({ ...prev, ...updates }));
@@ -146,6 +148,24 @@ export const SurveyProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       toast({
         title: "Selection required",
         description: "Please select a health concern or 'None of the above' to continue",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (step === 12 && !formData.workoutLocation) {
+      toast({
+        title: "Selection required",
+        description: "Please select where you will be working out to continue",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (step === 13 && !formData.workoutIntensity) {
+      toast({
+        title: "Selection required",
+        description: "Please select your preferred workout intensity to continue",
         variant: "destructive",
       });
       return;
