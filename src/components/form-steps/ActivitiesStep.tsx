@@ -34,18 +34,11 @@ const ActivitiesStep = ({ selectedActivities, onSelectActivities }: ActivitiesSt
     // Toggle the selected activity
     if (selectedActivities.includes(id)) {
       const newActivities = selectedActivities.filter(activity => activity !== id);
-      onSelectActivities(newActivities.length === 0 ? ["none"] : newActivities);
+      onSelectActivities(newActivities.length === 0 ? [] : newActivities);
     } else {
       onSelectActivities([...selectedActivities, id]);
     }
   };
-
-  // Initialize with empty array if nothing is selected yet
-  React.useEffect(() => {
-    if (selectedActivities.length === 0) {
-      onSelectActivities([]);
-    }
-  }, []);
 
   const isNoneSelected = selectedActivities.includes("none");
 

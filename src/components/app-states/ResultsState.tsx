@@ -2,7 +2,6 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import RiveAnimation from "@/components/RiveAnimation";
 
 interface ResultsStateProps {
   handleGetPlan: () => void;
@@ -23,10 +22,10 @@ const ResultsState: React.FC<ResultsStateProps> = ({ handleGetPlan }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
           <div className="bg-card p-6 rounded-lg">
             <div className="flex justify-center">
-              <RiveAnimation 
-                src="https://public.rive.app/hosted/136149/32585/2vr_p_rWVE6D1VbhQYEH9g.riv"
-                height={300}
-                width={300}
+              <img 
+                src="/lovable-uploads/4ebaaf49-4ba0-41fb-b5f4-abd901f7548c.png"
+                alt="Current body state"
+                className="h-[300px] object-contain"
               />
             </div>
             <div className="mt-4 text-xl font-bold">Now</div>
@@ -58,10 +57,10 @@ const ResultsState: React.FC<ResultsStateProps> = ({ handleGetPlan }) => {
           
           <div className="bg-card p-6 rounded-lg">
             <div className="flex justify-center">
-              <RiveAnimation 
-                src="https://public.rive.app/hosted/136151/32591/FZ00B7iJWE6aNO-gB0oJ-g.riv"
-                height={300}
-                width={300}
+              <img 
+                src="/lovable-uploads/8c1d1175-e256-43d0-b73e-9366eee65eb8.png"
+                alt="Future body state"
+                className="h-[300px] object-contain"
               />
             </div>
             <div className="mt-4 text-xl font-bold">6 months</div>

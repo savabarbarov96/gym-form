@@ -2,7 +2,6 @@
 import React from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Check } from "lucide-react";
-import RiveAnimation from "@/components/RiveAnimation";
 
 interface HealthConcernsStepProps {
   selectedConcerns: string[];
@@ -30,7 +29,7 @@ const HealthConcernsStep = ({ selectedConcerns, onSelectConcerns }: HealthConcer
     
     if (selectedConcerns.includes(id)) {
       const newConcerns = selectedConcerns.filter(concern => concern !== id);
-      onSelectConcerns(newConcerns.length === 0 ? ["none"] : newConcerns);
+      onSelectConcerns(newConcerns.length === 0 ? [] : newConcerns);
     } else {
       onSelectConcerns([...selectedConcerns, id]);
     }
@@ -45,10 +44,10 @@ const HealthConcernsStep = ({ selectedConcerns, onSelectConcerns }: HealthConcer
       
       <div className="max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
         <div className="flex justify-center">
-          <RiveAnimation 
-            src="https://public.rive.app/hosted/136155/32603/q7kRhYKnjkSmVzEA8RaUjw.riv" 
-            height={200}
-            width={200}
+          <img 
+            src="/lovable-uploads/a9d4c688-e9fc-4930-90ba-a0931317e8c3.png"
+            alt="Health concerns"
+            className="max-h-[200px] object-contain"
           />
         </div>
         <div className="space-y-4">

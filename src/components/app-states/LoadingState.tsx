@@ -1,7 +1,6 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import RiveAnimation from "@/components/RiveAnimation";
 
 interface LoadingStateProps {
   loadingProgress: number;
@@ -18,9 +17,10 @@ const LoadingState: React.FC<LoadingStateProps> = ({ loadingProgress }) => {
         <div className="text-2xl mb-12">Suggesting workout program</div>
         
         <div className="mx-auto relative">
-          <RiveAnimation 
-            src="https://public.rive.app/hosted/136153/32598/PCiKw3R3j0-lEUhgIadccw.riv"
-            height={200} 
+          <img 
+            src="/lovable-uploads/a9d4c688-e9fc-4930-90ba-a0931317e8c3.png"
+            alt="Loading"
+            className="h-[200px] mx-auto object-contain mb-4"
           />
           
           <div className="w-32 h-32 mx-auto relative">
