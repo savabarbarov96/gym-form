@@ -19,6 +19,16 @@ export const submitToWebhook = async (formData: FormData): Promise<boolean> => {
     if (formData.workoutFrequency) params.append('workoutFrequency', formData.workoutFrequency);
     if (formData.workoutDuration) params.append('workoutDuration', formData.workoutDuration);
     if (formData.height) params.append('height', formData.height);
+    if (formData.currentWeight) params.append('currentWeight', formData.currentWeight);
+    if (formData.targetWeight) params.append('targetWeight', formData.targetWeight);
+    params.append('weightUnit', formData.weightUnit);
+    
+    // Add exercise preferences
+    for (const [exercise, preference] of Object.entries(formData.exercisePreferences)) {
+      if (preference) {
+        params.append(`preference_${exercise.replace(/\s+/g, '_')}`, preference);
+      }
+    }
     
     const webhookUrl = `https://sava.automationaid.eu/webhook/8ffb7f1e-6c6f-412c-8022-eef6957d78d4?${params.toString()}`;
     

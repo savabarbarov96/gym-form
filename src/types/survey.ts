@@ -17,6 +17,12 @@ export interface FormData {
   workoutFrequency: string | null;
   workoutDuration: string | null;
   height: string | null;
+  currentWeight: string | null;
+  targetWeight: string | null;
+  weightUnit: "kg" | "lbs";
+  exercisePreferences: {
+    [key: string]: "like" | "neutral" | "dislike" | null;
+  };
 }
 
 export interface SurveyContextType {

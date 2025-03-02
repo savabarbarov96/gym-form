@@ -1,4 +1,3 @@
-
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -18,7 +17,9 @@ import {
   WorkoutFrequencyStep,
   WorkoutDurationStep,
   HormoneGraphStep,
-  HeightInputStep
+  HeightInputStep,
+  WeightInputStep,
+  ExercisePreferencesStep
 } from "@/components/form-steps";
 import { ChevronRight } from "lucide-react";
 
@@ -38,6 +39,12 @@ interface FormData {
   workoutFrequency: string | null;
   workoutDuration: string | null;
   height: string | null;
+  currentWeight: string | null;
+  targetWeight: string | null;
+  weightUnit: "kg" | "lbs";
+  exercisePreferences: {
+    [key: string]: "like" | "neutral" | "dislike" | null;
+  };
 }
 
 interface FormStateProps {
@@ -210,6 +217,24 @@ const FormState: React.FC<FormStateProps> = ({
             <HeightInputStep
               value={formData.height}
               onChange={(height) => setFormData({...formData, height})}
+            />
+          )}
+          
+          {step === 18 && (
+            <WeightInputStep
+              currentWeight={formData.currentWeight}
+              targetWeight={formData.targetWeight}
+              weightUnit={formData.weightUnit || "kg"}
+              onWeightChange={({ currentWeight, targetWeight, weightUnit }) => 
+                setFormData({...formData, currentWeight, targetWeight, weightUnit})}
+            />
+          )}
+          
+          {step === 19 && (
+            <ExercisePreferencesStep
+              preferences={formData.exercisePreferences || {}}
+              onPreferenceChange={(exercisePreferences) => 
+                setFormData({...formData, exercisePreferences})}
             />
           )}
         </motion.div>

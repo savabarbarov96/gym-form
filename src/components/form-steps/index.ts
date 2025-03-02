@@ -16,3 +16,5 @@ export { default as WorkoutFrequencyStep } from './WorkoutFrequencyStep';
 export { default as WorkoutDurationStep } from './WorkoutDurationStep';
 export { default as HormoneGraphStep } from './HormoneGraphStep';
 export { default as HeightInputStep } from './HeightInputStep';
+export { default as WeightInputStep } from './WeightInputStep';
+export { default as ExercisePreferencesStep } from './ExercisePreferencesStep';

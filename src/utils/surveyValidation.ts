@@ -1,4 +1,3 @@
-
 import { FormData } from "@/types/survey";
 import { toast as toastFunction } from "@/components/ui/use-toast";
 
@@ -122,6 +121,32 @@ export const validateStep = (
       variant: "destructive",
     });
     return false;
+  }
+  
+  if (step === 18 && (!formData.currentWeight || !formData.targetWeight)) {
+    toast({
+      title: "Required fields",
+      description: "Please enter both your current and target weight",
+      variant: "destructive",
+    });
+    return false;
+  }
+  
+  if (step === 19) {
+    const exercises = ["Cardio", "Stretching", "Lifting Weights", "Pull Ups", "Outdoor"];
+    const allExercisesRated = exercises.every(exercise => 
+      formData.exercisePreferences[exercise] !== undefined && 
+      formData.exercisePreferences[exercise] !== null
+    );
+    
+    if (!allExercisesRated) {
+      toast({
+        title: "Rate all exercises",
+        description: "Please rate how you feel about all exercise types",
+        variant: "destructive",
+      });
+      return false;
+    }
   }
   
   return true;
