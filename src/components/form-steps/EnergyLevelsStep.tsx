@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Zap, ZapOff, BatteryLow, Battery, BatteryFull } from 'lucide-react';
+import { ZapOff, BatteryLow, BatteryMedium, Battery, BatteryFull } from 'lucide-react';
 
 interface EnergyLevelsStepProps {
   value: number | null;
@@ -12,7 +12,7 @@ const EnergyLevelsStep: React.FC<EnergyLevelsStepProps> = ({ value, onChange }) 
   const energyLevels = [
     { level: 1, icon: ZapOff, label: 'Very Low' },
     { level: 2, icon: BatteryLow, label: 'Low' },
-    { level: 3, icon: Battery, label: 'Moderate' },
+    { level: 3, icon: BatteryMedium, label: 'Moderate' },
     { level: 4, icon: Battery, label: 'Good' },
     { level: 5, icon: BatteryFull, label: 'Excellent' },
   ];

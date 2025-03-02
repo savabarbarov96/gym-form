@@ -18,50 +18,51 @@ const AnimatedProgressGraph = ({ goalValue = 20 }: AnimatedProgressGraphProps) =
     { month: 'Month 6', bodyFat: 0, muscleMass: 0 },
   ]);
 
-  // Adjust expected progress based on goal value
+  // Adjust expected progress based on goal value with smoother curves
   useEffect(() => {
     if (animationComplete) return;
     
-    // Calculate the starting body fat and muscle mass
+    // Calculate the starting body fat and muscle mass with realistic values
     const startingBodyFat = goalValue;
-    const targetBodyFat = Math.max(startingBodyFat * 0.6, 10); // Target is 60% of starting, min 10%
+    const targetBodyFat = Math.max(startingBodyFat * 0.65, 10); // Target is 65% of starting, min 10%
     const startingMuscleMass = 30; // Arbitrary starting point
-    const targetMuscleMass = 60; // Target muscle mass
+    const targetMuscleMass = 55; // Target muscle mass - more realistic
 
+    // Create more natural curve data points
     const finalData = [
       { 
         month: 'Month 1', 
-        bodyFat: Math.round(startingBodyFat - (startingBodyFat - targetBodyFat) * 0.1),
-        muscleMass: Math.round(startingMuscleMass + (targetMuscleMass - startingMuscleMass) * 0.1)
+        bodyFat: Math.round((startingBodyFat - (startingBodyFat - targetBodyFat) * 0.08) * 10) / 10,
+        muscleMass: Math.round((startingMuscleMass + (targetMuscleMass - startingMuscleMass) * 0.12) * 10) / 10
       },
       { 
         month: 'Month 2', 
-        bodyFat: Math.round(startingBodyFat - (startingBodyFat - targetBodyFat) * 0.25),
-        muscleMass: Math.round(startingMuscleMass + (targetMuscleMass - startingMuscleMass) * 0.25)
+        bodyFat: Math.round((startingBodyFat - (startingBodyFat - targetBodyFat) * 0.22) * 10) / 10,
+        muscleMass: Math.round((startingMuscleMass + (targetMuscleMass - startingMuscleMass) * 0.28) * 10) / 10
       },
       { 
         month: 'Month 3', 
-        bodyFat: Math.round(startingBodyFat - (startingBodyFat - targetBodyFat) * 0.45),
-        muscleMass: Math.round(startingMuscleMass + (targetMuscleMass - startingMuscleMass) * 0.45)
+        bodyFat: Math.round((startingBodyFat - (startingBodyFat - targetBodyFat) * 0.42) * 10) / 10,
+        muscleMass: Math.round((startingMuscleMass + (targetMuscleMass - startingMuscleMass) * 0.48) * 10) / 10
       },
       { 
         month: 'Month 4', 
-        bodyFat: Math.round(startingBodyFat - (startingBodyFat - targetBodyFat) * 0.65),
-        muscleMass: Math.round(startingMuscleMass + (targetMuscleMass - startingMuscleMass) * 0.65)
+        bodyFat: Math.round((startingBodyFat - (startingBodyFat - targetBodyFat) * 0.65) * 10) / 10,
+        muscleMass: Math.round((startingMuscleMass + (targetMuscleMass - startingMuscleMass) * 0.70) * 10) / 10
       },
       { 
         month: 'Month 5', 
-        bodyFat: Math.round(startingBodyFat - (startingBodyFat - targetBodyFat) * 0.85),
-        muscleMass: Math.round(startingMuscleMass + (targetMuscleMass - startingMuscleMass) * 0.85)
+        bodyFat: Math.round((startingBodyFat - (startingBodyFat - targetBodyFat) * 0.85) * 10) / 10,
+        muscleMass: Math.round((startingMuscleMass + (targetMuscleMass - startingMuscleMass) * 0.90) * 10) / 10
       },
       { 
         month: 'Month 6', 
-        bodyFat: Math.round(targetBodyFat),
-        muscleMass: Math.round(targetMuscleMass)
+        bodyFat: Math.round(targetBodyFat * 10) / 10,
+        muscleMass: Math.round(targetMuscleMass * 10) / 10
       },
     ];
     
-    // Animate the data points sequentially
+    // Animate the data points sequentially with a smoother animation
     const animateData = async () => {
       for (let i = 0; i < finalData.length; i++) {
         await new Promise<void>((resolve) => {
@@ -72,7 +73,7 @@ const AnimatedProgressGraph = ({ goalValue = 20 }: AnimatedProgressGraphProps) =
               return newData;
             });
             resolve();
-          }, 300);
+          }, 350); // Slightly longer for smoother visual
         });
       }
       setAnimationComplete(true);
@@ -126,8 +127,8 @@ const AnimatedProgressGraph = ({ goalValue = 20 }: AnimatedProgressGraphProps) =
               fillOpacity={1} 
               fill="url(#bodyFatGradient)" 
               isAnimationActive={true}
-              animationDuration={1000}
-              animationEasing="ease-out"
+              animationDuration={1500}
+              animationEasing="ease-in-out"
             />
             <Area 
               type="monotone" 
@@ -138,8 +139,8 @@ const AnimatedProgressGraph = ({ goalValue = 20 }: AnimatedProgressGraphProps) =
               fillOpacity={1} 
               fill="url(#muscleMassGradient)" 
               isAnimationActive={true}
-              animationDuration={1000}
-              animationEasing="ease-out"
+              animationDuration={1500}
+              animationEasing="ease-in-out"
             />
           </AreaChart>
         </ResponsiveContainer>

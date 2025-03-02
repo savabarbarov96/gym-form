@@ -18,17 +18,18 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext }) => {
     { month: 'Month 6', cortisol: 100, testosterone: 10 },
   ]);
 
-  // Animate the data
+  // Animate the data with smoother curves
   useEffect(() => {
     if (animationComplete) return;
     
+    // Create more realistic, smoother curve data points
     const finalData = [
       { month: 'Month 1', cortisol: 100, testosterone: 10 },
-      { month: 'Month 2', cortisol: 85, testosterone: 25 },
-      { month: 'Month 3', cortisol: 70, testosterone: 40 },
-      { month: 'Month 4', cortisol: 55, testosterone: 55 },
-      { month: 'Month 5', cortisol: 40, testosterone: 70 },
-      { month: 'Month 6', cortisol: 30, testosterone: 85 },
+      { month: 'Month 2', cortisol: 87, testosterone: 23 },
+      { month: 'Month 3', cortisol: 76, testosterone: 38 },
+      { month: 'Month 4', cortisol: 62, testosterone: 52 },
+      { month: 'Month 5', cortisol: 48, testosterone: 68 },
+      { month: 'Month 6', cortisol: 35, testosterone: 82 },
     ];
     
     const animateData = async () => {
@@ -41,7 +42,7 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext }) => {
               return newData;
             });
             resolve();
-          }, 300);
+          }, 350); // Slightly longer for smoother visual transition
         });
       }
       setAnimationComplete(true);
@@ -103,7 +104,8 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext }) => {
               fillOpacity={1} 
               fill="url(#cortisolGradient)" 
               isAnimationActive={true}
-              animationDuration={1000}
+              animationDuration={1500}
+              animationEasing="ease-in-out"
             />
             <Area 
               type="monotone" 
@@ -114,7 +116,8 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext }) => {
               fillOpacity={1} 
               fill="url(#testosteroneGradient)" 
               isAnimationActive={true}
-              animationDuration={1000}
+              animationDuration={1500}
+              animationEasing="ease-in-out"
             />
           </AreaChart>
         </ResponsiveContainer>

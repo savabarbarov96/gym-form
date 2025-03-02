@@ -22,3 +22,7 @@ export { default as SugaryFoodsStep } from './SugaryFoodsStep';
 export { default as WaterIntakeStep } from './WaterIntakeStep';
 export { default as TypicalDayStep } from './TypicalDayStep';
 export { default as EnergyLevelsStep } from './EnergyLevelsStep';
+export { default as SleepAmountStep } from './SleepAmountStep';
+export { default as SelfAssessmentStep } from './SelfAssessmentStep';
+export { default as PersonalInfoStep } from './PersonalInfoStep';
+export { default as StartCommitmentStep } from './StartCommitmentStep';

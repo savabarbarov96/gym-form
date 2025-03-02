@@ -27,6 +27,21 @@ export interface FormData {
   waterIntake: number | null;
   typicalDay: string | null;
   energyLevels: number | null;
+  sleepAmount: number | null;
+  selfAssessments: {
+    outOfBreath: number | null;
+    fallingBack: number | null;
+    suitableWorkouts: number | null;
+    motivationLevel: number | null;
+    dietConsistency: number | null;
+  };
+  personalInfo: {
+    name: string | null;
+    dob: string | null;
+    email: string | null;
+    emailConsent: boolean;
+  };
+  startCommitment: string | null;
 }
 
 export interface SurveyContextType {
@@ -46,4 +61,5 @@ export interface SurveyContextType {
   simulateLoading: () => void;
   totalSteps: number;
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+  generateQuote: (name: string) => string;
 }
