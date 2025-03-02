@@ -25,6 +25,7 @@ import {
   TypicalDayStep,
   EnergyLevelsStep
 } from "@/components/form-steps";
+import SleepAmountStep from "@/components/form-steps/SleepAmountStep";
 import { ChevronRight } from "lucide-react";
 
 interface FormData {
@@ -53,6 +54,7 @@ interface FormData {
   waterIntake: number | null;
   typicalDay: string | null;
   energyLevels: number | null;
+  sleepAmount: number | null;
 }
 
 interface FormStateProps {
@@ -274,6 +276,13 @@ const FormState: React.FC<FormStateProps> = ({
               onChange={(energyLevels) => setFormData({...formData, energyLevels})}
             />
           )}
+          
+          {step === 24 && (
+            <SleepAmountStep
+              value={formData.sleepAmount}
+              onChange={(sleepAmount) => setFormData({...formData, sleepAmount})}
+            />
+          )}
         </motion.div>
       </AnimatePresence>
       
@@ -286,7 +295,6 @@ const FormState: React.FC<FormStateProps> = ({
             Back
           </button>
         )}
-        {/* Don't show the continue button on the hormone graph step */}
         {step !== 16 && (
           <button 
             onClick={handleNext}

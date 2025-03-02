@@ -2,9 +2,9 @@ import { FormData } from "@/types/survey";
 import { toast as toastFunction } from "@/components/ui/use-toast";
 
 export const validateStep = (
-  step: number, 
-  formData: FormData, 
-  toast: typeof toastFunction
+  step: number,
+  formData: FormData,
+  toast = toastFunction
 ): boolean => {
   if (step === 1 && !formData.age) {
     toast({
@@ -163,9 +163,9 @@ export const validateStep = (
     return false;
   }
   
-  if (step === 24 && !formData.sleepAmount) {
+  if (step === 24 && formData.sleepAmount === null) {
     toast({
-      title: "Selection required",
+      title: "Sleep amount required",
       description: "Please indicate how much sleep you usually get",
       variant: "destructive",
     });
@@ -205,7 +205,6 @@ export const validateStep = (
       return false;
     }
     
-    // Validate age (10-80)
     const today = new Date();
     const birthDate = new Date(formData.personalInfo.dob);
     let age = today.getFullYear() - birthDate.getFullYear();
@@ -233,7 +232,6 @@ export const validateStep = (
       return false;
     }
     
-    // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.personalInfo.email)) {
       toast({

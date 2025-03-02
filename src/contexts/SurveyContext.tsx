@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState } from "react";
 import { submitToWebhook } from "@/components/WebhookService";
 import { useToast } from "@/components/ui/use-toast";
@@ -64,7 +63,7 @@ export const SurveyProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [appState, setAppState] = useState<AppState>("form");
   const [loadingProgress, setLoadingProgress] = useState(0);
 
-  const totalSteps = 29; // Updated total steps count for all steps
+  const totalSteps = 29; // This should be correct, just confirming
   
   const updateFormData = (updates: Partial<FormData>) => {
     setFormData(prev => ({ ...prev, ...updates }));
