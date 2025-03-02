@@ -14,6 +14,9 @@ export interface FormData {
   healthConcerns: string[];
   workoutLocation: string | null;
   workoutIntensity: string | null;
+  workoutFrequency: string | null;
+  workoutDuration: string | null;
+  height: string | null;
 }
 
 export interface SurveyContextType {

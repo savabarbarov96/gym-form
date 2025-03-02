@@ -14,7 +14,11 @@ import {
   ProgressGraphStep,
   HealthConcernsStep,
   WorkoutLocationStep,
-  WorkoutIntensityStep
+  WorkoutIntensityStep,
+  WorkoutFrequencyStep,
+  WorkoutDurationStep,
+  HormoneGraphStep,
+  HeightInputStep
 } from "@/components/form-steps";
 import { ChevronRight } from "lucide-react";
 
@@ -31,6 +35,9 @@ interface FormData {
   healthConcerns: string[];
   workoutLocation: string | null;
   workoutIntensity: string | null;
+  workoutFrequency: string | null;
+  workoutDuration: string | null;
+  height: string | null;
 }
 
 interface FormStateProps {
@@ -178,6 +185,33 @@ const FormState: React.FC<FormStateProps> = ({
               onSelect={(workoutIntensity) => setFormData({...formData, workoutIntensity})}
             />
           )}
+          
+          {step === 14 && (
+            <WorkoutFrequencyStep
+              selected={formData.workoutFrequency}
+              onSelect={(workoutFrequency) => setFormData({...formData, workoutFrequency})}
+            />
+          )}
+          
+          {step === 15 && (
+            <WorkoutDurationStep
+              selected={formData.workoutDuration}
+              onSelect={(workoutDuration) => setFormData({...formData, workoutDuration})}
+            />
+          )}
+          
+          {step === 16 && (
+            <HormoneGraphStep
+              onNext={handleNext}
+            />
+          )}
+          
+          {step === 17 && (
+            <HeightInputStep
+              value={formData.height}
+              onChange={(height) => setFormData({...formData, height})}
+            />
+          )}
         </motion.div>
       </AnimatePresence>
       
@@ -190,13 +224,16 @@ const FormState: React.FC<FormStateProps> = ({
             Back
           </button>
         )}
-        <button 
-          onClick={handleNext}
-          className="px-6 py-3 bg-orange hover:bg-orange-hover text-white rounded-lg ml-auto flex items-center gap-2 transition-colors"
-        >
-          {step === totalSteps ? "Complete" : "Continue"}
-          <ChevronRight size={18} />
-        </button>
+        {/* Don't show the continue button on the hormone graph step */}
+        {step !== 16 && (
+          <button 
+            onClick={handleNext}
+            className="px-6 py-3 bg-orange hover:bg-orange-hover text-white rounded-lg ml-auto flex items-center gap-2 transition-colors"
+          >
+            {step === totalSteps ? "Complete" : "Continue"}
+            <ChevronRight size={18} />
+          </button>
+        )}
       </div>
     </>
   );

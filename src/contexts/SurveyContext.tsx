@@ -33,12 +33,15 @@ export const SurveyProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     healthConcerns: [],
     workoutLocation: null,
     workoutIntensity: null,
+    workoutFrequency: null,
+    workoutDuration: null,
+    height: null,
   });
   
   const [appState, setAppState] = useState<AppState>("form");
   const [loadingProgress, setLoadingProgress] = useState(0);
 
-  const totalSteps = 13;
+  const totalSteps = 17; // Updated total steps
   
   const updateFormData = (updates: Partial<FormData>) => {
     setFormData(prev => ({ ...prev, ...updates }));

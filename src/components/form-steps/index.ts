@@ -12,3 +12,7 @@ export { default as ProgressGraphStep } from './ProgressGraphStep';
 export { default as HealthConcernsStep } from './HealthConcernsStep';
 export { default as WorkoutLocationStep } from './WorkoutLocationStep';
 export { default as WorkoutIntensityStep } from './WorkoutIntensityStep';
+export { default as WorkoutFrequencyStep } from './WorkoutFrequencyStep';
+export { default as WorkoutDurationStep } from './WorkoutDurationStep';
+export { default as HormoneGraphStep } from './HormoneGraphStep';
+export { default as HeightInputStep } from './HeightInputStep';

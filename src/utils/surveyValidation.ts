@@ -97,5 +97,32 @@ export const validateStep = (
     return false;
   }
   
+  if (step === 14 && !formData.workoutFrequency) {
+    toast({
+      title: "Selection required",
+      description: "Please select how often you've worked out to continue",
+      variant: "destructive",
+    });
+    return false;
+  }
+  
+  if (step === 15 && !formData.workoutDuration) {
+    toast({
+      title: "Selection required",
+      description: "Please select your preferred workout duration to continue",
+      variant: "destructive",
+    });
+    return false;
+  }
+  
+  if (step === 17 && !formData.height) {
+    toast({
+      title: "Selection required",
+      description: "Please enter your height to continue",
+      variant: "destructive",
+    });
+    return false;
+  }
+  
   return true;
 };
