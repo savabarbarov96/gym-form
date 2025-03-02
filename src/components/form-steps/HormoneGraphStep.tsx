@@ -25,30 +25,30 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext }) => {
     // Create more realistic, smoother curve data points
     const finalData = [
       { month: 'Month 1', cortisol: 100, testosterone: 10 },
-      { month: 'Month 2', cortisol: 87, testosterone: 23 },
-      { month: 'Month 3', cortisol: 76, testosterone: 38 },
-      { month: 'Month 4', cortisol: 62, testosterone: 52 },
-      { month: 'Month 5', cortisol: 48, testosterone: 68 },
-      { month: 'Month 6', cortisol: 35, testosterone: 82 },
+      { month: 'Month 2', cortisol: 88, testosterone: 25 },
+      { month: 'Month 3', cortisol: 74, testosterone: 42 },
+      { month: 'Month 4', cortisol: 60, testosterone: 58 },
+      { month: 'Month 5', cortisol: 45, testosterone: 72 },
+      { month: 'Month 6', cortisol: 35, testosterone: 85 },
     ];
     
-    const animateData = async () => {
-      for (let i = 0; i < finalData.length; i++) {
-        await new Promise<void>((resolve) => {
-          setTimeout(() => {
-            setData(prevData => {
-              const newData = [...prevData];
-              newData[i] = finalData[i];
-              return newData;
-            });
-            resolve();
-          }, 350); // Slightly longer for smoother visual transition
+    // Animate the data points sequentially for a smoother transition
+    let currentIndex = 0;
+    const animateNextPoint = () => {
+      if (currentIndex < finalData.length) {
+        setData(prevData => {
+          const newData = [...prevData];
+          newData[currentIndex] = finalData[currentIndex];
+          return newData;
         });
+        currentIndex++;
+        setTimeout(animateNextPoint, 400);
+      } else {
+        setAnimationComplete(true);
       }
-      setAnimationComplete(true);
     };
     
-    animateData();
+    animateNextPoint();
   }, []);
 
   return (
@@ -105,7 +105,7 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext }) => {
               fill="url(#cortisolGradient)" 
               isAnimationActive={true}
               animationDuration={1500}
-              animationEasing="ease-in-out"
+              animationEasing="ease-out"
             />
             <Area 
               type="monotone" 
@@ -117,7 +117,7 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext }) => {
               fill="url(#testosteroneGradient)" 
               isAnimationActive={true}
               animationDuration={1500}
-              animationEasing="ease-in-out"
+              animationEasing="ease-out"
             />
           </AreaChart>
         </ResponsiveContainer>

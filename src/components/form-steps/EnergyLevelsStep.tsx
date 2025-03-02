@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { ZapOff, BatteryLow, BatteryMedium, Battery, BatteryFull } from 'lucide-react';
+import { ZapOff, BatteryLow, BatteryMedium, Battery, Zap } from 'lucide-react';
 
 interface EnergyLevelsStepProps {
   value: number | null;
@@ -14,7 +14,7 @@ const EnergyLevelsStep: React.FC<EnergyLevelsStepProps> = ({ value, onChange }) 
     { level: 2, icon: BatteryLow, label: 'Low' },
     { level: 3, icon: BatteryMedium, label: 'Moderate' },
     { level: 4, icon: Battery, label: 'Good' },
-    { level: 5, icon: BatteryFull, label: 'Excellent' },
+    { level: 5, icon: Zap, label: 'Excellent', animationClass: 'animate-pulse' },
   ];
 
   return (
@@ -30,14 +30,19 @@ const EnergyLevelsStep: React.FC<EnergyLevelsStepProps> = ({ value, onChange }) 
                 key={energy.level}
                 className={cn(
                   "flex flex-col items-center gap-3 p-4 rounded-lg cursor-pointer transition-all",
-                  value === energy.level ? "bg-orange/20 ring-2 ring-orange" : "hover:bg-muted"
+                  value === energy.level ? 
+                    energy.level === 5 ? "bg-green-500/20 ring-2 ring-green-500" : "bg-orange/20 ring-2 ring-orange" 
+                    : "hover:bg-muted"
                 )}
                 onClick={() => onChange(energy.level)}
               >
                 <Icon 
                   className={cn(
                     "w-8 h-8",
-                    value === energy.level ? "text-orange" : "text-muted-foreground"
+                    value === energy.level ? 
+                      energy.level === 5 ? "text-green-500" : "text-orange" 
+                      : "text-muted-foreground",
+                    energy.level === 5 && energy.animationClass
                   )} 
                 />
                 <span className={cn(

@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ThumbsUp, ThumbsDown, Meh } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -8,13 +8,16 @@ type Preference = "like" | "neutral" | "dislike" | null;
 interface ExercisePreferencesStepProps {
   preferences: {[key: string]: Preference};
   onPreferenceChange: (preferences: {[key: string]: Preference}) => void;
+  onStepComplete?: () => void;
 }
 
 const ExercisePreferencesStep = ({ 
   preferences, 
-  onPreferenceChange 
+  onPreferenceChange,
+  onStepComplete
 }: ExercisePreferencesStepProps) => {
-  const exercises = ["Cardio", "Stretching", "Lifting Weights", "Pull Ups", "Outdoor"];
+  // Updated exercises list as requested
+  const exercises = ["Cardio", "Stretching", "Lifting Weights", "Pull Ups", "Hiking", "Physical Labor"];
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [localPreferences, setLocalPreferences] = useState<{[key: string]: Preference}>(preferences || {});
   
@@ -35,6 +38,11 @@ const ExercisePreferencesStep = ({
       setTimeout(() => {
         setCurrentExerciseIndex(prev => prev + 1);
       }, 300);
+    } else {
+      // Automatically move to next step when the last exercise is rated
+      setTimeout(() => {
+        if (onStepComplete) onStepComplete();
+      }, 500);
     }
   };
 
