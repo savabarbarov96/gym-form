@@ -1,35 +1,14 @@
+
 import React from 'react';
 import { motion } from 'framer-motion';
-import {
-  AgeSelectionStep,
-  BodyTypeStep,
-  GoalStep,
-  FitnessGoalStep,
-  DesiredBodyStep,
-  ProblemAreasStep,
-  BestShapeStep,
-  WeightChangeStep,
-  ActivitiesStep,
-  ProgressGraphStep,
-  HealthConcernsStep,
-  WorkoutLocationStep,
-  WorkoutIntensityStep,
-  WorkoutFrequencyStep,
-  WorkoutDurationStep,
-  HormoneGraphStep,
-  HeightInputStep,
-  WeightInputStep,
-  ExercisePreferencesStep,
-  SugaryFoodsStep,
-  WaterIntakeStep,
-  TypicalDayStep,
-  EnergyLevelsStep,
-  SleepAmountStep,
-  SelfAssessmentStep,
-  PersonalInfoStep,
-  StartCommitmentStep
-} from "@/components/form-steps";
 import { FormData } from '@/types/survey';
+import {
+  BasicInfoStepRenderer,
+  BodyAssessmentStepRenderer,
+  WorkoutPreferencesStepRenderer,
+  LifestyleStepRenderer,
+  FinalStepsRenderer
+} from './step-renderers';
 
 interface StepRendererProps {
   step: number;
@@ -61,6 +40,53 @@ const StepRenderer: React.FC<StepRendererProps> = ({
     }),
   };
 
+  // Determine which step range we're in to choose the appropriate renderer
+  const getStepContent = () => {
+    if (step >= 1 && step <= 5) {
+      return <BasicInfoStepRenderer 
+        step={step} 
+        formData={formData} 
+        setFormData={setFormData} 
+      />;
+    }
+    
+    if (step >= 6 && step <= 11) {
+      return <BodyAssessmentStepRenderer 
+        step={step} 
+        formData={formData} 
+        setFormData={setFormData} 
+        handleNext={handleNext}
+      />;
+    }
+    
+    if (step >= 12 && step <= 19) {
+      return <WorkoutPreferencesStepRenderer 
+        step={step} 
+        formData={formData} 
+        setFormData={setFormData} 
+        handleNext={handleNext}
+      />;
+    }
+    
+    if (step >= 20 && step <= 24) {
+      return <LifestyleStepRenderer 
+        step={step} 
+        formData={formData} 
+        setFormData={setFormData}
+      />;
+    }
+    
+    if (step >= 25 && step <= 29) {
+      return <FinalStepsRenderer 
+        step={step} 
+        formData={formData} 
+        setFormData={setFormData}
+      />;
+    }
+    
+    return null;
+  };
+
   return (
     <motion.div
       key={step}
@@ -75,244 +101,7 @@ const StepRenderer: React.FC<StepRendererProps> = ({
       }}
       className="w-full max-w-4xl mx-auto"
     >
-      {step === 1 && (
-        <AgeSelectionStep 
-          selectedAge={formData.age}
-          onSelect={(age) => setFormData({...formData, age})}
-        />
-      )}
-      
-      {step === 2 && (
-        <BodyTypeStep 
-          selectedType={formData.bodyType}
-          onSelect={(bodyType) => setFormData({...formData, bodyType})}
-        />
-      )}
-      
-      {step === 3 && (
-        <GoalStep 
-          value={formData.goal} 
-          onChange={(goal) => setFormData({...formData, goal})}
-        />
-      )}
-
-      {step === 4 && (
-        <FitnessGoalStep 
-          selectedGoal={formData.fitnessGoal}
-          onSelect={(fitnessGoal) => setFormData({...formData, fitnessGoal})}
-        />
-      )}
-
-      {step === 5 && (
-        <DesiredBodyStep 
-          selectedBody={formData.desiredBody}
-          onSelect={(desiredBody) => setFormData({...formData, desiredBody})}
-        />
-      )}
-
-      {step === 6 && (
-        <ProblemAreasStep 
-          selectedAreas={formData.problemAreas}
-          onSelectArea={(problemAreas) => setFormData({...formData, problemAreas})}
-        />
-      )}
-
-      {step === 7 && (
-        <BestShapeStep 
-          selected={formData.bestShapeTime}
-          onSelect={(bestShapeTime) => setFormData({...formData, bestShapeTime})}
-        />
-      )}
-
-      {step === 8 && (
-        <WeightChangeStep 
-          selected={formData.weightChange}
-          onSelect={(weightChange) => setFormData({...formData, weightChange})}
-        />
-      )}
-
-      {step === 9 && (
-        <ActivitiesStep 
-          selectedActivities={formData.activities}
-          onSelectActivities={(activities) => setFormData({...formData, activities})}
-        />
-      )}
-      
-      {step === 10 && (
-        <ProgressGraphStep 
-          goalValue={formData.goal}
-        />
-      )}
-      
-      {step === 11 && (
-        <HealthConcernsStep 
-          selectedConcerns={formData.healthConcerns}
-          onSelectConcerns={(healthConcerns) => setFormData({...formData, healthConcerns})}
-        />
-      )}
-
-      {step === 12 && (
-        <WorkoutLocationStep
-          selectedLocation={formData.workoutLocation}
-          onSelect={(workoutLocation) => setFormData({...formData, workoutLocation})}
-        />
-      )}
-
-      {step === 13 && (
-        <WorkoutIntensityStep
-          selectedIntensity={formData.workoutIntensity}
-          onSelect={(workoutIntensity) => setFormData({...formData, workoutIntensity})}
-        />
-      )}
-      
-      {step === 14 && (
-        <WorkoutFrequencyStep
-          selected={formData.workoutFrequency}
-          onSelect={(workoutFrequency) => setFormData({...formData, workoutFrequency})}
-        />
-      )}
-      
-      {step === 15 && (
-        <WorkoutDurationStep
-          selected={formData.workoutDuration}
-          onSelect={(workoutDuration) => setFormData({...formData, workoutDuration})}
-        />
-      )}
-      
-      {step === 16 && (
-        <HormoneGraphStep
-          onNext={handleNext}
-        />
-      )}
-      
-      {step === 17 && (
-        <HeightInputStep
-          value={formData.height}
-          onChange={(height) => setFormData({...formData, height})}
-        />
-      )}
-      
-      {step === 18 && (
-        <WeightInputStep
-          currentWeight={formData.currentWeight}
-          targetWeight={formData.targetWeight}
-          weightUnit={formData.weightUnit || "kg"}
-          onWeightChange={({ currentWeight, targetWeight, weightUnit }) => 
-            setFormData({...formData, currentWeight, targetWeight, weightUnit})}
-        />
-      )}
-      
-      {step === 19 && (
-        <ExercisePreferencesStep
-          preferences={formData.exercisePreferences || {}}
-          onPreferenceChange={(exercisePreferences) => 
-            setFormData({...formData, exercisePreferences})}
-          onStepComplete={handleNext}
-        />
-      )}
-      
-      {step === 20 && (
-        <SugaryFoodsStep
-          selected={formData.sugaryFoods}
-          onSelect={(sugaryFoods) => setFormData({...formData, sugaryFoods})}
-        />
-      )}
-      
-      {step === 21 && (
-        <WaterIntakeStep
-          value={formData.waterIntake}
-          onChange={(waterIntake) => setFormData({...formData, waterIntake})}
-        />
-      )}
-      
-      {step === 22 && (
-        <TypicalDayStep
-          selected={formData.typicalDay}
-          onSelect={(typicalDay) => setFormData({...formData, typicalDay})}
-        />
-      )}
-      
-      {step === 23 && (
-        <EnergyLevelsStep
-          value={formData.energyLevels}
-          onChange={(energyLevels) => setFormData({...formData, energyLevels})}
-        />
-      )}
-      
-      {step === 24 && (
-        <SleepAmountStep
-          value={formData.sleepAmount}
-          onChange={(sleepAmount) => setFormData({...formData, sleepAmount})}
-        />
-      )}
-      
-      {step === 25 && (
-        <SelfAssessmentStep 
-          assessmentKey="outOfBreath"
-          question="I am often out of breath when I climb the stairs"
-          value={formData.selfAssessments.outOfBreath}
-          onChange={(value) => setFormData({
-            ...formData, 
-            selfAssessments: {...formData.selfAssessments, outOfBreath: value}
-          })}
-        />
-      )}
-      
-      {step === 26 && (
-        <SelfAssessmentStep 
-          assessmentKey="fallingBack"
-          question="I keep falling back into bad exercise habits"
-          value={formData.selfAssessments.fallingBack}
-          onChange={(value) => setFormData({
-            ...formData, 
-            selfAssessments: {...formData.selfAssessments, fallingBack: value}
-          })}
-        />
-      )}
-      
-      {step === 27 && (
-        <SelfAssessmentStep 
-          assessmentKey="motivationLevel"
-          question="I find it hard to stay motivated with exercise"
-          value={formData.selfAssessments.motivationLevel}
-          onChange={(value) => setFormData({
-            ...formData, 
-            selfAssessments: {...formData.selfAssessments, motivationLevel: value}
-          })}
-        />
-      )}
-      
-      {step === 28 && (
-        <PersonalInfoStep
-          name={formData.personalInfo.name}
-          dob={formData.personalInfo.dob}
-          email={formData.personalInfo.email}
-          emailConsent={formData.personalInfo.emailConsent}
-          onChangeName={(name) => setFormData({
-            ...formData,
-            personalInfo: {...formData.personalInfo, name}
-          })}
-          onChangeDob={(dob) => setFormData({
-            ...formData,
-            personalInfo: {...formData.personalInfo, dob}
-          })}
-          onChangeEmail={(email) => setFormData({
-            ...formData,
-            personalInfo: {...formData.personalInfo, email}
-          })}
-          onChangeConsent={(emailConsent) => setFormData({
-            ...formData,
-            personalInfo: {...formData.personalInfo, emailConsent}
-          })}
-        />
-      )}
-      
-      {step === 29 && (
-        <StartCommitmentStep
-          value={formData.startCommitment}
-          onChange={(startCommitment) => setFormData({...formData, startCommitment})}
-        />
-      )}
+      {getStepContent()}
     </motion.div>
   );
 };
