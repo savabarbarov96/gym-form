@@ -1,11 +1,11 @@
 
 import { FormData } from "@/types/survey";
-import { Toast } from "@/components/ui/use-toast";
+import { toast as toastFunction } from "@/components/ui/use-toast";
 
 export const validateStep = (
   step: number, 
   formData: FormData, 
-  toast: (props: Toast) => void
+  toast: typeof toastFunction
 ): boolean => {
   if (step === 1 && !formData.age) {
     toast({
