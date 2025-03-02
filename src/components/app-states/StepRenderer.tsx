@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import {
@@ -249,7 +248,8 @@ const StepRenderer: React.FC<StepRendererProps> = ({
       
       {step === 25 && (
         <SelfAssessmentStep 
-          type="outOfBreath"
+          assessmentKey="outOfBreath"
+          question="I am often out of breath when I climb the stairs"
           value={formData.selfAssessments.outOfBreath}
           onChange={(value) => setFormData({
             ...formData, 
@@ -260,7 +260,8 @@ const StepRenderer: React.FC<StepRendererProps> = ({
       
       {step === 26 && (
         <SelfAssessmentStep 
-          type="fallingBack"
+          assessmentKey="fallingBack"
+          question="I keep falling back into bad exercise habits"
           value={formData.selfAssessments.fallingBack}
           onChange={(value) => setFormData({
             ...formData, 
@@ -271,7 +272,8 @@ const StepRenderer: React.FC<StepRendererProps> = ({
       
       {step === 27 && (
         <SelfAssessmentStep 
-          type="motivationLevel"
+          assessmentKey="motivationLevel"
+          question="I find it hard to stay motivated with exercise"
           value={formData.selfAssessments.motivationLevel}
           onChange={(value) => setFormData({
             ...formData, 
@@ -282,15 +284,33 @@ const StepRenderer: React.FC<StepRendererProps> = ({
       
       {step === 28 && (
         <PersonalInfoStep
-          personalInfo={formData.personalInfo}
-          onChange={(personalInfo) => setFormData({...formData, personalInfo})}
+          name={formData.personalInfo.name}
+          dob={formData.personalInfo.dob}
+          email={formData.personalInfo.email}
+          emailConsent={formData.personalInfo.emailConsent}
+          onChangeName={(name) => setFormData({
+            ...formData,
+            personalInfo: {...formData.personalInfo, name}
+          })}
+          onChangeDob={(dob) => setFormData({
+            ...formData,
+            personalInfo: {...formData.personalInfo, dob}
+          })}
+          onChangeEmail={(email) => setFormData({
+            ...formData,
+            personalInfo: {...formData.personalInfo, email}
+          })}
+          onChangeConsent={(emailConsent) => setFormData({
+            ...formData,
+            personalInfo: {...formData.personalInfo, emailConsent}
+          })}
         />
       )}
       
       {step === 29 && (
         <StartCommitmentStep
-          selected={formData.startCommitment}
-          onSelect={(startCommitment) => setFormData({...formData, startCommitment})}
+          value={formData.startCommitment}
+          onChange={(startCommitment) => setFormData({...formData, startCommitment})}
         />
       )}
     </motion.div>

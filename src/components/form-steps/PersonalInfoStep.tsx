@@ -4,31 +4,47 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { format } from 'date-fns';
-import { Info, AlertCircle } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
+import { useSurvey } from '@/contexts/SurveyContext';
 
 interface PersonalInfoStepProps {
-  name: string | null;
-  dob: string | null;
-  email: string | null;
-  emailConsent: boolean;
-  onChangeName: (value: string) => void;
-  onChangeDob: (value: string) => void;
-  onChangeEmail: (value: string) => void;
-  onChangeConsent: (value: boolean) => void;
-  motivationalQuote: string;
+  name?: string | null;
+  dob?: string | null;
+  email?: string | null;
+  emailConsent?: boolean;
+  onChangeName?: (value: string) => void;
+  onChangeDob?: (value: string) => void;
+  onChangeEmail?: (value: string) => void;
+  onChangeConsent?: (value: boolean) => void;
+  personalInfo?: {
+    name: string | null;
+    dob: string | null;
+    email: string | null;
+    emailConsent: boolean;
+  };
+  onChange?: (personalInfo: any) => void;
 }
 
 const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
-  name,
-  dob,
-  email,
-  emailConsent,
+  name: propName,
+  dob: propDob,
+  email: propEmail,
+  emailConsent: propEmailConsent,
   onChangeName,
   onChangeDob,
   onChangeEmail,
   onChangeConsent,
-  motivationalQuote
+  personalInfo,
+  onChange
 }) => {
+  const { generateQuote } = useSurvey();
+  
+  // Use either direct props or from personalInfo object
+  const name = personalInfo?.name || propName || null;
+  const dob = personalInfo?.dob || propDob || null;
+  const email = personalInfo?.email || propEmail || null;
+  const emailConsent = personalInfo?.emailConsent ?? propEmailConsent ?? false;
+  
   const [nameEntered, setNameEntered] = useState(!!name);
   const [errors, setErrors] = useState({
     dob: '',
@@ -66,17 +82,46 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
     return "";
   };
 
-  const handleDobChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newDob = e.target.value;
-    onChangeDob(newDob);
-    setErrors(prev => ({...prev, dob: validateDob(newDob)}));
+  const handleNameChange = (value: string) => {
+    if (onChange) {
+      onChange({ ...personalInfo, name: value });
+    } else if (onChangeName) {
+      onChangeName(value);
+    }
   };
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newEmail = e.target.value;
-    onChangeEmail(newEmail);
-    setErrors(prev => ({...prev, email: validateEmail(newEmail)}));
+  const handleDobChange = (value: string) => {
+    const dobError = validateDob(value);
+    setErrors(prev => ({ ...prev, dob: dobError }));
+    
+    if (onChange) {
+      onChange({ ...personalInfo, dob: value });
+    } else if (onChangeDob) {
+      onChangeDob(value);
+    }
   };
+
+  const handleEmailChange = (value: string) => {
+    const emailError = validateEmail(value);
+    setErrors(prev => ({ ...prev, email: emailError }));
+    
+    if (onChange) {
+      onChange({ ...personalInfo, email: value });
+    } else if (onChangeEmail) {
+      onChangeEmail(value);
+    }
+  };
+
+  const handleConsentChange = (checked: boolean) => {
+    if (onChange) {
+      onChange({ ...personalInfo, emailConsent: checked });
+    } else if (onChangeConsent) {
+      onChangeConsent(checked);
+    }
+  };
+
+  // Generate motivational quote based on the name
+  const motivationalQuote = name ? generateQuote(name) : '';
 
   return (
     <div className="max-w-2xl mx-auto w-full">
@@ -88,7 +133,7 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
           <Input 
             id="name" 
             value={name || ''} 
-            onChange={(e) => onChangeName(e.target.value)}
+            onChange={(e) => handleNameChange(e.target.value)}
             onBlur={handleNameBlur}
             placeholder="Your name"
             className="text-lg py-6"
@@ -107,7 +152,7 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
             id="dob" 
             type="date" 
             value={dob || ''} 
-            onChange={handleDobChange}
+            onChange={(e) => handleDobChange(e.target.value)}
             max={format(new Date(), 'yyyy-MM-dd')}
             className={errors.dob ? "border-red-500" : ""}
           />
@@ -128,7 +173,7 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
             id="email" 
             type="email" 
             value={email || ''} 
-            onChange={handleEmailChange}
+            onChange={(e) => handleEmailChange(e.target.value)}
             placeholder="your.email@example.com"
             className={errors.email ? "border-red-500" : ""}
           />
@@ -145,7 +190,7 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
             <Checkbox 
               id="emailConsent" 
               checked={emailConsent} 
-              onCheckedChange={(checked) => onChangeConsent(checked as boolean)}
+              onCheckedChange={(checked) => handleConsentChange(checked as boolean)}
             />
           </div>
           <div className="space-y-1">

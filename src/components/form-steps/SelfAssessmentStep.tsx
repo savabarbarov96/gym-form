@@ -3,18 +3,40 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 
 interface SelfAssessmentStepProps {
-  question: string;
-  assessmentKey: 'outOfBreath' | 'fallingBack' | 'suitableWorkouts' | 'motivationLevel' | 'dietConsistency';
+  question?: string;
+  assessmentKey?: 'outOfBreath' | 'fallingBack' | 'suitableWorkouts' | 'motivationLevel' | 'dietConsistency';
   value: number | null;
   onChange: (value: number) => void;
+  type?: string; // Added this property to match usage in StepRenderer
 }
 
 const SelfAssessmentStep: React.FC<SelfAssessmentStepProps> = ({ 
   question, 
-  assessmentKey, 
+  assessmentKey,
   value, 
-  onChange 
+  onChange,
+  type 
 }) => {
+  // Determine question text based on the type or assessmentKey
+  const getQuestionText = () => {
+    if (question) return question;
+    
+    switch (type || assessmentKey) {
+      case 'outOfBreath':
+        return "I am often out of breath when I climb the stairs";
+      case 'fallingBack':
+        return "I keep falling back into bad exercise habits";
+      case 'suitableWorkouts':
+        return "I struggle to find workouts suitable for my fitness level";
+      case 'motivationLevel':
+        return "I find it hard to stay motivated with exercise";
+      case 'dietConsistency':
+        return "I have trouble maintaining a consistent diet";
+      default:
+        return "";
+    }
+  };
+
   const ratings = [
     { value: 1, label: 'Not at all' },
     { value: 2, label: 'Slightly' },
@@ -26,7 +48,7 @@ const SelfAssessmentStep: React.FC<SelfAssessmentStepProps> = ({
   return (
     <div className="max-w-2xl mx-auto w-full">
       <h2 className="text-2xl font-bold text-center mb-6">How much do you relate to this statement?</h2>
-      <div className="text-xl text-center mb-8 text-orange">{question}</div>
+      <div className="text-xl text-center mb-8 text-orange">{getQuestionText()}</div>
 
       <div className="grid gap-4">
         {ratings.map((rating) => (

@@ -4,11 +4,28 @@ import { cn } from '@/lib/utils';
 import { Calendar, CalendarCheck, XCircle } from 'lucide-react';
 
 interface StartCommitmentStepProps {
-  value: string | null;
-  onChange: (value: string) => void;
+  value?: string | null;
+  onChange?: (value: string) => void;
+  selected?: string | null;
+  onSelect?: (value: string) => void;
 }
 
-const StartCommitmentStep: React.FC<StartCommitmentStepProps> = ({ value, onChange }) => {
+const StartCommitmentStep: React.FC<StartCommitmentStepProps> = ({ 
+  value, 
+  onChange, 
+  selected, 
+  onSelect 
+}) => {
+  // Use either value/onChange or selected/onSelect props
+  const currentValue = selected || value;
+  const handleChange = (newValue: string) => {
+    if (onSelect) {
+      onSelect(newValue);
+    } else if (onChange) {
+      onChange(newValue);
+    }
+  };
+
   const options = [
     { 
       value: 'today', 
@@ -43,15 +60,15 @@ const StartCommitmentStep: React.FC<StartCommitmentStepProps> = ({ value, onChan
               key={option.value}
               className={cn(
                 "option-card p-6 hover:scale-[1.01] cursor-pointer",
-                value === option.value && "selected"
+                currentValue === option.value && "selected"
               )}
-              onClick={() => onChange(option.value)}
+              onClick={() => handleChange(option.value)}
             >
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-3">
                   <Icon className={cn(
                     "h-6 w-6",
-                    value === option.value ? "text-orange" : "text-muted-foreground"
+                    currentValue === option.value ? "text-orange" : "text-muted-foreground"
                   )} />
                   <div>
                     <div className="text-lg font-medium">{option.label}</div>
@@ -60,7 +77,7 @@ const StartCommitmentStep: React.FC<StartCommitmentStepProps> = ({ value, onChan
                 </div>
                 <div className={cn(
                   "w-5 h-5 rounded-full border-2",
-                  value === option.value ? "border-orange bg-orange" : "border-muted-foreground"
+                  currentValue === option.value ? "border-orange bg-orange" : "border-muted-foreground"
                 )} />
               </div>
             </div>
