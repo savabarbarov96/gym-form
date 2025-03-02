@@ -30,6 +30,12 @@ export const submitToWebhook = async (formData: FormData): Promise<boolean> => {
       }
     }
     
+    // Add new fields
+    if (formData.sugaryFoods) params.append('sugaryFoods', formData.sugaryFoods);
+    if (formData.waterIntake) params.append('waterIntake', formData.waterIntake.toString());
+    if (formData.typicalDay) params.append('typicalDay', formData.typicalDay);
+    if (formData.energyLevels) params.append('energyLevels', formData.energyLevels.toString());
+    
     const webhookUrl = `https://sava.automationaid.eu/webhook/8ffb7f1e-6c6f-412c-8022-eef6957d78d4?${params.toString()}`;
     
     const response = await fetch(webhookUrl, {

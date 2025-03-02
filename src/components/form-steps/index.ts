@@ -18,3 +18,7 @@ export { default as HormoneGraphStep } from './HormoneGraphStep';
 export { default as HeightInputStep } from './HeightInputStep';
 export { default as WeightInputStep } from './WeightInputStep';
 export { default as ExercisePreferencesStep } from './ExercisePreferencesStep';
+export { default as SugaryFoodsStep } from './SugaryFoodsStep';
+export { default as WaterIntakeStep } from './WaterIntakeStep';
+export { default as TypicalDayStep } from './TypicalDayStep';
+export { default as EnergyLevelsStep } from './EnergyLevelsStep';

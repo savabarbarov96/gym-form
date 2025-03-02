@@ -1,3 +1,4 @@
+
 import { FormData } from "@/types/survey";
 import { toast as toastFunction } from "@/components/ui/use-toast";
 
@@ -147,6 +148,33 @@ export const validateStep = (
       });
       return false;
     }
+  }
+  
+  if (step === 20 && !formData.sugaryFoods) {
+    toast({
+      title: "Selection required",
+      description: "Please select how often you consume sugary foods or beverages",
+      variant: "destructive",
+    });
+    return false;
+  }
+  
+  if (step === 22 && !formData.typicalDay) {
+    toast({
+      title: "Selection required",
+      description: "Please select how you would describe your typical day",
+      variant: "destructive",
+    });
+    return false;
+  }
+  
+  if (step === 23 && !formData.energyLevels) {
+    toast({
+      title: "Selection required",
+      description: "Please rate your average energy levels during the day",
+      variant: "destructive",
+    });
+    return false;
   }
   
   return true;

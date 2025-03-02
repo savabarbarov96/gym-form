@@ -19,7 +19,11 @@ import {
   HormoneGraphStep,
   HeightInputStep,
   WeightInputStep,
-  ExercisePreferencesStep
+  ExercisePreferencesStep,
+  SugaryFoodsStep,
+  WaterIntakeStep,
+  TypicalDayStep,
+  EnergyLevelsStep
 } from "@/components/form-steps";
 import { ChevronRight } from "lucide-react";
 
@@ -45,6 +49,10 @@ interface FormData {
   exercisePreferences: {
     [key: string]: "like" | "neutral" | "dislike" | null;
   };
+  sugaryFoods: string | null;
+  waterIntake: number | null;
+  typicalDay: string | null;
+  energyLevels: number | null;
 }
 
 interface FormStateProps {
@@ -235,6 +243,34 @@ const FormState: React.FC<FormStateProps> = ({
               preferences={formData.exercisePreferences || {}}
               onPreferenceChange={(exercisePreferences) => 
                 setFormData({...formData, exercisePreferences})}
+            />
+          )}
+          
+          {step === 20 && (
+            <SugaryFoodsStep
+              selected={formData.sugaryFoods}
+              onSelect={(sugaryFoods) => setFormData({...formData, sugaryFoods})}
+            />
+          )}
+          
+          {step === 21 && (
+            <WaterIntakeStep
+              value={formData.waterIntake}
+              onChange={(waterIntake) => setFormData({...formData, waterIntake})}
+            />
+          )}
+          
+          {step === 22 && (
+            <TypicalDayStep
+              selected={formData.typicalDay}
+              onSelect={(typicalDay) => setFormData({...formData, typicalDay})}
+            />
+          )}
+          
+          {step === 23 && (
+            <EnergyLevelsStep
+              value={formData.energyLevels}
+              onChange={(energyLevels) => setFormData({...formData, energyLevels})}
             />
           )}
         </motion.div>

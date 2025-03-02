@@ -23,6 +23,10 @@ export interface FormData {
   exercisePreferences: {
     [key: string]: "like" | "neutral" | "dislike" | null;
   };
+  sugaryFoods: string | null;
+  waterIntake: number | null;
+  typicalDay: string | null;
+  energyLevels: number | null;
 }
 
 export interface SurveyContextType {

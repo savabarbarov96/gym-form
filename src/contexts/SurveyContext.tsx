@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState } from "react";
 import { submitToWebhook } from "@/components/WebhookService";
 import { useToast } from "@/components/ui/use-toast";
@@ -39,12 +40,16 @@ export const SurveyProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     targetWeight: null,
     weightUnit: "kg",
     exercisePreferences: {},
+    sugaryFoods: null,
+    waterIntake: 1500,
+    typicalDay: null,
+    energyLevels: null,
   });
   
   const [appState, setAppState] = useState<AppState>("form");
   const [loadingProgress, setLoadingProgress] = useState(0);
 
-  const totalSteps = 19; // Updated total steps to include the two new steps
+  const totalSteps = 23; // Updated total steps to include the new steps
   
   const updateFormData = (updates: Partial<FormData>) => {
     setFormData(prev => ({ ...prev, ...updates }));
