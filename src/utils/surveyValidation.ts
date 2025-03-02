@@ -134,7 +134,7 @@ export const validateStep = (
   }
   
   if (step === 19) {
-    const exercises = ["Cardio", "Stretching", "Lifting Weights", "Pull Ups", "Outdoor"];
+    const exercises = ["Cardio", "Stretching", "Lifting Weights", "Pull Ups", "Hiking", "Physical Labor"];
     const allExercisesRated = exercises.every(exercise => 
       formData.exercisePreferences[exercise] !== undefined && 
       formData.exercisePreferences[exercise] !== null

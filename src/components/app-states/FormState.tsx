@@ -243,6 +243,7 @@ const FormState: React.FC<FormStateProps> = ({
               preferences={formData.exercisePreferences || {}}
               onPreferenceChange={(exercisePreferences) => 
                 setFormData({...formData, exercisePreferences})}
+              onStepComplete={handleNext}
             />
           )}
           
