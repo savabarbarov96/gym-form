@@ -1,4 +1,3 @@
-
 import { FormData } from "@/types/survey";
 import { toast as toastFunction } from "@/components/ui/use-toast";
 
@@ -134,20 +133,7 @@ export const validateStep = (
   }
   
   if (step === 19) {
-    const exercises = ["Cardio", "Stretching", "Lifting Weights", "Pull Ups", "Hiking", "Physical Labor"];
-    const allExercisesRated = exercises.every(exercise => 
-      formData.exercisePreferences[exercise] !== undefined && 
-      formData.exercisePreferences[exercise] !== null
-    );
-    
-    if (!allExercisesRated) {
-      toast({
-        title: "Rate all exercises",
-        description: "Please rate how you feel about all exercise types",
-        variant: "destructive",
-      });
-      return false;
-    }
+    return true;
   }
   
   if (step === 20 && !formData.sugaryFoods) {

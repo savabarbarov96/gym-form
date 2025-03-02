@@ -24,6 +24,20 @@ const ExercisePreferencesStep = ({
   const currentExercise = exercises[currentExerciseIndex];
   const isLastExercise = currentExerciseIndex === exercises.length - 1;
 
+  // Handle auto-advancing to next step after rating last exercise
+  useEffect(() => {
+    // If this is the last exercise and it has a preference, auto-advance after a delay
+    if (isLastExercise && 
+        localPreferences[currentExercise] !== undefined && 
+        localPreferences[currentExercise] !== null) {
+      const timer = setTimeout(() => {
+        if (onStepComplete) onStepComplete();
+      }, 800);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isLastExercise, localPreferences, currentExercise, onStepComplete]);
+
   const handlePreference = (exercise: string, preference: Preference) => {
     const updatedPreferences = {
       ...localPreferences,
@@ -38,12 +52,8 @@ const ExercisePreferencesStep = ({
       setTimeout(() => {
         setCurrentExerciseIndex(prev => prev + 1);
       }, 300);
-    } else {
-      // Automatically move to next step when the last exercise is rated
-      setTimeout(() => {
-        if (onStepComplete) onStepComplete();
-      }, 500);
     }
+    // We don't need an else statement here as the useEffect will handle advancing to the next step
   };
 
   return (
