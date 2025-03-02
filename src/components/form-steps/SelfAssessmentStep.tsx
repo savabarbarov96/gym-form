@@ -7,7 +7,7 @@ interface SelfAssessmentStepProps {
   assessmentKey?: 'outOfBreath' | 'fallingBack' | 'suitableWorkouts' | 'motivationLevel' | 'dietConsistency';
   value: number | null;
   onChange: (value: number) => void;
-  type?: string; // Added this property to match usage in StepRenderer
+  type?: string;
 }
 
 const SelfAssessmentStep: React.FC<SelfAssessmentStepProps> = ({ 
@@ -48,15 +48,18 @@ const SelfAssessmentStep: React.FC<SelfAssessmentStepProps> = ({
   return (
     <div className="max-w-2xl mx-auto w-full">
       <h2 className="text-2xl font-bold text-center mb-6">How much do you relate to this statement?</h2>
-      <div className="text-xl text-center mb-8 text-orange">{getQuestionText()}</div>
+      
+      <div className="text-xl text-center p-6 mb-8 bg-card rounded-xl shadow-md border border-border">
+        <span className="text-orange font-medium">{getQuestionText()}</span>
+      </div>
 
       <div className="grid gap-4">
         {ratings.map((rating) => (
           <div
             key={rating.value}
             className={cn(
-              "option-card p-6 hover:scale-[1.01] cursor-pointer",
-              value === rating.value && "selected"
+              "option-card p-6 transition-all hover:scale-[1.01] cursor-pointer border border-border rounded-lg",
+              value === rating.value ? "bg-muted border-orange" : "bg-card"
             )}
             onClick={() => onChange(rating.value)}
           >
@@ -69,7 +72,7 @@ const SelfAssessmentStep: React.FC<SelfAssessmentStepProps> = ({
                     className={cn(
                       "w-6 h-6 rounded-full",
                       i <= rating.value 
-                        ? (value === rating.value ? "bg-orange" : "bg-muted") 
+                        ? (value === rating.value ? "bg-orange" : "bg-muted-foreground/30") 
                         : "border border-muted-foreground"
                     )} 
                   />

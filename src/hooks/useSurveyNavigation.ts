@@ -14,8 +14,15 @@ export const useSurveyNavigation = (
   const [animationDirection, setAnimationDirection] = useState("next");
 
   const handleNext = () => {
-    // Validate current step
-    if (!validateStep(step, formData, toast)) {
+    // Special case for self-assessment steps - don't validate if we already have a value
+    const isSelfAssessmentStep = step >= 25 && step <= 27;
+    const hasValue = isSelfAssessmentStep && 
+      ((step === 25 && formData.selfAssessments.outOfBreath !== null) ||
+       (step === 26 && formData.selfAssessments.fallingBack !== null) ||
+       (step === 27 && formData.selfAssessments.motivationLevel !== null));
+
+    // Skip validation for self-assessment steps if we already have a value
+    if (!hasValue && !validateStep(step, formData, toast)) {
       return;
     }
     
