@@ -10,6 +10,7 @@ import {
   HealthConcernsStepRenderer,
   WeightChangeStepRenderer
 } from './body-assessment';
+import { BestShapeStep } from "@/components/form-steps";
 
 interface BodyAssessmentStepRendererProps {
   step: number;
@@ -51,8 +52,5 @@ const BodyAssessmentStepRenderer = ({
       return null;
   }
 };
-
-// Import BestShapeStep directly here to avoid circular dependencies
-import { BestShapeStep } from "@/components/form-steps";
 
 export default BodyAssessmentStepRenderer;
