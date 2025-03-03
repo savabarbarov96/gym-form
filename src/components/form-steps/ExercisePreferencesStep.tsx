@@ -16,7 +16,7 @@ const ExercisePreferencesStep = ({
   onPreferenceChange,
   onStepComplete
 }: ExercisePreferencesStepProps) => {
-  // Updated exercises list as requested
+  // List of exercises - limiting to exactly 6
   const exercises = ["Cardio", "Stretching", "Lifting Weights", "Pull Ups", "Hiking", "Physical Labor"];
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [localPreferences, setLocalPreferences] = useState<{[key: string]: Preference}>(preferences || {});

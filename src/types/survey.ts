@@ -1,17 +1,20 @@
 
-export type AppState = "form" | "loading" | "results";
+export type AppState = "form" | "loading" | "results" | "plan";
 
 export interface FormData {
   age: string | null;
   bodyType: string | null;
   goal: number;
+  currentBodyFat: number;
   fitnessGoal: string | null;
   desiredBody: string | null;
   problemAreas: string[];
   bestShapeTime: string | null;
   weightChange: string | null;
   activities: string[];
+  customActivity: string | null;
   healthConcerns: string[];
+  customHealthConcern: string | null;
   workoutLocation: string | null;
   workoutIntensity: string | null;
   workoutFrequency: string | null;

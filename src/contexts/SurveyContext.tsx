@@ -26,11 +26,12 @@ export const SurveyProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const { formData, setFormData, updateFormData } = useSurveyForm();
   const { appState, setAppState, loadingProgress, setLoadingProgress, simulateLoading } = useSurveyAppState();
   const { generateQuote } = useSurveyQuotes();
-  const { handleGetPlan, submitSurvey } = useSurveySubmit(setAppState, setLoadingProgress);
+  const { handleGetPlan } = useSurveySubmit(setAppState, setLoadingProgress);
   
   // Initialize navigation with form completion handler
   const handleSurveyComplete = () => {
-    submitSurvey(formData, simulateLoading);
+    // Call setAppState directly instead of submitSurvey
+    setAppState("results");
   };
   
   const { 
@@ -56,7 +57,7 @@ export const SurveyProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setLoadingProgress,
     handleNext,
     handleBack,
-    handleGetPlan: () => handleGetPlan(formData, simulateLoading),
+    handleGetPlan: () => handleGetPlan(formData),
     simulateLoading,
     totalSteps,
     setFormData,

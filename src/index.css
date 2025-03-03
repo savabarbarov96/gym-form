@@ -168,3 +168,41 @@
   transform: scale(1.2);
   opacity: 1;
 }
+
+/* Mobile responsiveness improvements */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 1.75rem !important;
+  }
+  
+  .option-card {
+    @apply min-h-[100px] p-3;
+  }
+  
+  .card-content {
+    @apply text-sm;
+  }
+  
+  /* Adjust graph containers for mobile */
+  .chart-container {
+    overflow-x: auto;
+    max-width: 100%;
+  }
+  
+  /* Make sure forms are properly sized on mobile */
+  input, select, textarea {
+    @apply text-base;
+  }
+  
+  /* Improve mobile buttons */
+  button.mobile-friendly {
+    @apply min-h-[44px] min-w-[44px];
+  }
+}
+
+/* Ensure all SVGs scale correctly */
+svg.responsive-svg {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+}

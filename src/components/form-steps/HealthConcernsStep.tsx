@@ -1,211 +1,209 @@
 
-import React, { useState } from "react";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Check, Bone, Footprints, PanelTop, PanelBottom, ShieldCheck, Plus, AlertCircle } from "lucide-react";
-import { cn } from "@/lib/utils";
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Check, Ear, Brain, Heart, Lungs, Plus, X } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 interface HealthConcernsStepProps {
-  selectedConcerns: string[];
-  onSelectConcerns: (concerns: string[]) => void;
+  selectedOptions: string[];
+  customOption: string | null;
+  onSelectionChange: (selected: string[]) => void;
+  onCustomOptionChange: (customOption: string | null) => void;
 }
 
-const HealthConcernsStep = ({ selectedConcerns, onSelectConcerns }: HealthConcernsStepProps) => {
-  const [customConcern, setCustomConcern] = useState("");
-  const [customConcerns, setCustomConcerns] = useState<string[]>([]);
-
-  const concerns = [
-    { label: "Joints", id: "joints", icon: Bone },
-    { label: "Knees", id: "knees", icon: Footprints },
-    { label: "Back", id: "back", icon: PanelTop },
-    { label: "Lower back", id: "lowerback", icon: PanelBottom },
+const HealthConcernsStep = ({
+  selectedOptions,
+  customOption,
+  onSelectionChange,
+  onCustomOptionChange
+}: HealthConcernsStepProps) => {
+  const [showCustomInput, setShowCustomInput] = useState(!!customOption);
+  const [inputValue, setInputValue] = useState(customOption || '');
+  
+  const options = [
+    { 
+      id: 'knees', 
+      label: 'Knee Pain', 
+      icon: <motion.div className="relative"><motion.div className="w-6 h-1 absolute top-3.5 left-0 bg-orange"></motion.div><motion.div className="w-1 h-8 absolute top-0 left-2.5 bg-orange"></motion.div></motion.div>,
+      description: 'Issues when bending, climbing stairs'
+    },
+    { 
+      id: 'back', 
+      label: 'Back Pain', 
+      icon: <motion.div className="relative"><motion.div className="w-6 h-1 absolute top-3.5 left-0 bg-orange transform rotate-90"></motion.div><motion.div className="w-1 h-8 absolute top-0 left-2.5 bg-orange"></motion.div></motion.div>,
+      description: 'Discomfort when sitting or standing'
+    },
+    { 
+      id: 'shoulders', 
+      label: 'Shoulder Issues', 
+      icon: <motion.div className="relative"><motion.div className="w-6 h-1 absolute top-1 left-0 bg-orange transform rotate-45"></motion.div><motion.div className="w-6 h-1 absolute top-1 left-0 bg-orange transform -rotate-45"></motion.div></motion.div>,
+      description: 'Limited range of motion, pain'
+    },
+    { 
+      id: 'wrists', 
+      label: 'Wrist or Hand Problems', 
+      icon: <motion.div className="relative"><motion.div className="w-4 h-4 absolute top-1 left-1 border-2 border-orange rounded"></motion.div></motion.div>,
+      description: 'Weakness, pain during movement'
+    },
+    { 
+      id: 'ankle', 
+      label: 'Ankle/Foot Pain', 
+      icon: <motion.div className="relative"><motion.div className="w-6 h-1 absolute top-3.5 left-0 bg-orange"></motion.div><motion.div className="w-1 h-6 absolute top-1 left-1 bg-orange transform rotate-45"></motion.div></motion.div>,
+      description: 'Issues with stability, discomfort'
+    },
+    { 
+      id: 'hips', 
+      label: 'Hip Problems', 
+      icon: <motion.div className="relative"><motion.div className="w-6 h-1 absolute top-3.5 left-0 bg-orange"></motion.div><motion.div className="w-1 h-8 absolute top-0 left-5 bg-orange transform rotate-45"></motion.div></motion.div>,
+      description: 'Pain during movement or sitting'
+    },
+    { 
+      id: 'heart', 
+      label: 'Heart Conditions', 
+      icon: <Heart className="w-6 h-6 text-orange" />,
+      description: 'Any diagnosed cardiac issues'
+    },
+    { 
+      id: 'breathing', 
+      label: 'Breathing Issues', 
+      icon: <Lungs className="w-6 h-6 text-orange" />,
+      description: 'Asthma, shortness of breath'
+    },
+    { 
+      id: 'headaches', 
+      label: 'Frequent Headaches', 
+      icon: <Brain className="w-6 h-6 text-orange" />,
+      description: 'Migraines, tension headaches'
+    },
+    { 
+      id: 'hearing', 
+      label: 'Hearing Problems', 
+      icon: <Ear className="w-6 h-6 text-orange" />,
+      description: 'Tinnitus, hearing loss'
+    }
   ];
 
-  const toggleConcern = (id: string) => {
-    // If "none" is clicked and not already selected
-    if (id === "none" && !selectedConcerns.includes("none")) {
-      onSelectConcerns(["none"]);
-      return;
-    }
-    
-    // If "none" is clicked and already selected, unselect it
-    if (id === "none" && selectedConcerns.includes("none")) {
-      onSelectConcerns([]);
-      return;
-    }
-    
-    // If a regular concern is clicked while "none" is selected, clear "none"
-    if (id !== "none" && selectedConcerns.includes("none")) {
-      onSelectConcerns([id]);
-      return;
-    }
-    
-    // Toggle the selected concern
-    if (selectedConcerns.includes(id)) {
-      const newConcerns = selectedConcerns.filter(concern => concern !== id);
-      onSelectConcerns(newConcerns);
+  const toggleOption = (id: string) => {
+    if (selectedOptions.includes(id)) {
+      onSelectionChange(selectedOptions.filter(item => item !== id));
     } else {
-      onSelectConcerns([...selectedConcerns, id]);
+      onSelectionChange([...selectedOptions, id]);
     }
   };
-
-  const addCustomConcern = () => {
-    if (customConcern.trim() === "") return;
-    
-    const concernId = `custom-${customConcern.trim().toLowerCase().replace(/\s+/g, '-')}`;
-    
-    // Add to custom concerns list for rendering
-    setCustomConcerns([...customConcerns, customConcern.trim()]);
-    
-    // Add to selected concerns
-    if (!selectedConcerns.includes(concernId) && !selectedConcerns.includes("none")) {
-      onSelectConcerns([...selectedConcerns, concernId]);
-    }
-    
-    setCustomConcern("");
-  };
-
-  const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      addCustomConcern();
+  
+  const handleAddCustom = () => {
+    if (inputValue.trim()) {
+      onCustomOptionChange(inputValue.trim());
+      setShowCustomInput(false);
     }
   };
-
-  const isNoneSelected = selectedConcerns.includes("none");
+  
+  const removeCustom = () => {
+    onCustomOptionChange(null);
+    setInputValue('');
+  };
 
   return (
     <div className="text-center">
-      <h1 className="text-4xl sm:text-5xl font-bold mb-6">Do you have pain in any body parts?</h1>
-      <p className="text-xl mb-8 text-muted-foreground">We will adjust the plan to protect these areas</p>
+      <h1 className="text-4xl sm:text-5xl font-bold mb-4">Do you have any physical limitations or areas of pain?</h1>
+      <p className="text-muted-foreground text-lg mb-10 max-w-2xl mx-auto">
+        Select any areas where you experience pain or have limitations to help us customize your workout plan
+      </p>
       
-      <div className="max-w-3xl mx-auto">
-        <div className="relative p-4 mb-8 bg-orange/10 rounded-lg border border-orange/30">
-          <AlertCircle className="absolute top-4 left-4 text-orange h-6 w-6" />
-          <p className="pl-10 text-left">Identifying pain areas helps us create a customized workout plan that prevents injuries and focuses on safe exercise options for your specific needs.</p>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          {concerns.map((concern) => {
-            const Icon = concern.icon;
-            return (
-              <div
-                key={concern.id}
-                className={cn(
-                  "flex items-center gap-4 bg-card p-5 rounded-lg cursor-pointer border-2 border-transparent transition-all",
-                  isNoneSelected ? "opacity-50 pointer-events-none" : "",
-                  selectedConcerns.includes(concern.id) ? "border-orange bg-orange/5" : "hover:border-muted-foreground/30"
-                )}
-                onClick={() => toggleConcern(concern.id)}
-              >
-                <Checkbox 
-                  id={concern.id}
-                  checked={selectedConcerns.includes(concern.id)}
-                  onCheckedChange={() => toggleConcern(concern.id)}
-                  className="data-[state=checked]:bg-orange data-[state=checked]:text-white"
-                  disabled={isNoneSelected}
-                />
-                <div className={cn(
-                  "icon-container",
-                  selectedConcerns.includes(concern.id) ? "bg-orange/20" : "bg-secondary"
-                )}>
-                  <Icon className={cn(
-                    "icon-sm",
-                    selectedConcerns.includes(concern.id) ? "text-orange" : "text-muted-foreground"
-                  )} />
-                </div>
-                <label htmlFor={concern.id} className="text-xl cursor-pointer flex-1">{concern.label}</label>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
+        {options.map(option => (
+          <motion.div
+            key={option.id}
+            className={`option-card p-4 ${selectedOptions.includes(option.id) ? 'selected' : ''}`}
+            onClick={() => toggleOption(option.id)}
+            whileHover={{ y: -5 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <div className="flex items-center gap-3 mb-2">
+              <div className="bg-muted rounded-full p-2 w-10 h-10 flex items-center justify-center">
+                {option.icon}
               </div>
-            );
-          })}
-        </div>
-
-        {/* Custom concerns */}
-        {customConcerns.length > 0 && (
-          <div className="mt-4 mb-8">
-            <h3 className="text-lg font-medium mb-4 text-left">Your specific pain areas:</h3>
-            <div className="grid grid-cols-1 gap-4">
-              {customConcerns.map((concern, index) => {
-                const concernId = `custom-${concern.toLowerCase().replace(/\s+/g, '-')}`;
-                return (
-                  <div
-                    key={index}
-                    className={cn(
-                      "flex items-center gap-4 bg-card p-4 rounded-lg cursor-pointer border-2 border-transparent transition-all",
-                      isNoneSelected ? "opacity-50 pointer-events-none" : "",
-                      selectedConcerns.includes(concernId) ? "border-orange bg-orange/5" : "hover:border-muted-foreground/30"
-                    )}
-                    onClick={() => toggleConcern(concernId)}
-                  >
-                    <Checkbox 
-                      id={concernId}
-                      checked={selectedConcerns.includes(concernId)}
-                      onCheckedChange={() => toggleConcern(concernId)}
-                      className="data-[state=checked]:bg-orange data-[state=checked]:text-white"
-                      disabled={isNoneSelected}
-                    />
-                    <AlertCircle className={cn(
-                      "h-5 w-5", 
-                      selectedConcerns.includes(concernId) ? "text-orange" : "text-muted-foreground"
-                    )} />
-                    <label htmlFor={concernId} className="flex-1 text-left cursor-pointer">{concern}</label>
-                  </div>
-                );
-              })}
+              <h3 className="font-semibold">{option.label}</h3>
+              {selectedOptions.includes(option.id) && (
+                <div className="ml-auto bg-orange rounded-full p-1">
+                  <Check className="w-4 h-4 text-white" />
+                </div>
+              )}
             </div>
-          </div>
-        )}
+            <p className="text-sm text-muted-foreground">{option.description}</p>
+          </motion.div>
+        ))}
         
-        {/* Add custom concern */}
-        <div className={cn(
-          "mb-8 bg-card p-5 rounded-lg border-2 border-dashed border-muted-foreground/30",
-          isNoneSelected ? "opacity-50 pointer-events-none" : ""
-        )}>
-          <h3 className="text-lg font-medium mb-2 text-left">Specify any other pain areas</h3>
+        {/* Custom option card */}
+        {!showCustomInput && !customOption && (
+          <motion.div
+            className="option-card p-4 flex flex-col items-center justify-center min-h-[112px]"
+            onClick={() => setShowCustomInput(true)}
+            whileHover={{ y: -5 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <div className="bg-muted rounded-full p-2 w-10 h-10 flex items-center justify-center mb-2">
+              <Plus className="w-5 h-5 text-orange" />
+            </div>
+            <p className="text-sm text-muted-foreground">Add another concern</p>
+          </motion.div>
+        )}
+      </div>
+      
+      {/* Custom input */}
+      {showCustomInput && (
+        <motion.div 
+          className="bg-card p-4 rounded-lg max-w-md mx-auto mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <label className="text-sm text-muted-foreground mb-2 block text-left">
+            Add your specific concern:
+          </label>
           <div className="flex gap-2">
             <Input
-              value={customConcern}
-              onChange={e => setCustomConcern(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="E.g., shoulder, wrist, hip..."
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              placeholder="e.g., Elbow pain, neck stiffness"
               className="flex-1"
-              disabled={isNoneSelected}
+              autoFocus
             />
-            <button
-              onClick={addCustomConcern}
-              disabled={customConcern.trim() === "" || isNoneSelected}
-              className={cn(
-                "flex items-center justify-center p-2 rounded-md",
-                customConcern.trim() === "" ? "bg-muted text-muted-foreground" : "bg-orange text-white"
-              )}
-            >
-              <Plus className="w-5 h-5" />
-            </button>
+            <Button onClick={handleAddCustom} variant="default">
+              Add
+            </Button>
           </div>
-        </div>
-
-        <div className="border-t border-border pt-4">
-          <div
-            className={cn(
-              "flex items-center gap-4 bg-card p-5 rounded-lg cursor-pointer border-2 border-transparent transition-all",
-              isNoneSelected ? "border-orange bg-orange/5" : "hover:border-muted-foreground/30"
-            )}
-            onClick={() => toggleConcern("none")}
-          >
-            <div className={cn(
-              "w-5 h-5 rounded-full border flex items-center justify-center",
-              isNoneSelected ? "border-orange bg-orange" : "border-muted-foreground"
-            )}>
-              {isNoneSelected && <Check className="w-4 h-4 text-white" />}
+        </motion.div>
+      )}
+      
+      {/* Display custom option if set */}
+      {customOption && (
+        <motion.div
+          className="option-card selected p-4 max-w-md mx-auto mb-8 flex justify-between items-center"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+        >
+          <div className="flex items-center gap-3">
+            <div className="bg-orange/20 rounded-full p-2">
+              <Check className="w-5 h-5 text-orange" />
             </div>
-            <ShieldCheck className={cn(
-              "icon-sm",
-              isNoneSelected ? "text-orange" : "text-muted-foreground"
-            )} />
-            <label className="text-xl cursor-pointer">No pain or injuries</label>
+            <span>{customOption}</span>
           </div>
+          <Button variant="ghost" size="icon" onClick={removeCustom} className="text-muted-foreground">
+            <X className="w-4 h-4" />
+          </Button>
+        </motion.div>
+      )}
+      
+      {selectedOptions.length === 0 && !customOption ? (
+        <div className="text-lg text-muted-foreground mb-4">
+          No issues? Great! Select any that apply or continue.
         </div>
-      </div>
+      ) : (
+        <div className="mt-4 text-orange font-medium">
+          Your plan will account for the selected limitations.
+        </div>
+      )}
     </div>
   );
 };

@@ -1,11 +1,13 @@
+
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
 interface ProgressGraphStepProps {
   goalValue: number;
+  currentBodyFat?: number;
 }
 
-const ProgressGraphStep = ({ goalValue }: ProgressGraphStepProps) => {
+const ProgressGraphStep = ({ goalValue, currentBodyFat = 25 }: ProgressGraphStepProps) => {
   const chartRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
@@ -15,10 +17,10 @@ const ProgressGraphStep = ({ goalValue }: ProgressGraphStepProps) => {
     d3.select(chartRef.current).selectAll("*").remove();
     
     // Calculate values based on goal - adjusted muscle mass to be more realistic
-    const startingBodyFat = goalValue;
-    const targetBodyFat = Math.max(startingBodyFat * 0.65, 10);
+    const startingBodyFat = currentBodyFat || goalValue;
+    const targetBodyFat = Math.max(goalValue, 8);
     const startingMuscleMass = 30;
-    const targetMuscleMass = 45; // Reduced from 55 to more realistic value
+    const targetMuscleMass = 40; // Reduced from previous value to more realistic value
     
     // Data for the chart - adjusted values
     const data = [
@@ -38,7 +40,7 @@ const ProgressGraphStep = ({ goalValue }: ProgressGraphStepProps) => {
     }));
 
     // Set up dimensions
-    const margin = { top: 50, right: 100, bottom: 70, left: 70 };
+    const margin = { top: 50, right: 130, bottom: 70, left: 70 };
     const width = chartRef.current.clientWidth - margin.left - margin.right;
     const height = 400 - margin.top - margin.bottom;
     
@@ -306,7 +308,7 @@ const ProgressGraphStep = ({ goalValue }: ProgressGraphStepProps) => {
       .style("fill", "#888")
       .text("Percentage (%)");
     
-    // Add enhanced legend
+    // Add enhanced legend with more space
     const legend = svg.append("g")
       .attr("transform", `translate(${width + 20}, 0)`);
     
@@ -363,7 +365,7 @@ const ProgressGraphStep = ({ goalValue }: ProgressGraphStepProps) => {
     
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [goalValue]);
+  }, [goalValue, currentBodyFat]);
 
   return (
     <div className="text-center">
@@ -372,7 +374,7 @@ const ProgressGraphStep = ({ goalValue }: ProgressGraphStepProps) => {
       <div className="max-w-4xl mx-auto">
         <div 
           ref={chartRef} 
-          className="w-full h-[400px] bg-card rounded-lg p-4 shadow-md mb-8"
+          className="w-full h-[400px] bg-card rounded-lg p-4 shadow-md mb-8 overflow-x-auto"
         ></div>
         
         <div className="text-center mt-4 text-orange font-medium text-xl">

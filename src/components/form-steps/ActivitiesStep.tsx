@@ -1,201 +1,224 @@
 
-import React, { useState } from "react";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Check, Activity, Bike, Waves, UserCircle2, Music, Dumbbell, Users, Mountain, Plus } from "lucide-react";
-import { cn } from "@/lib/utils";
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Check, Plus, X } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 interface ActivitiesStepProps {
   selectedActivities: string[];
-  onSelectActivities: (activities: string[]) => void;
+  customActivity: string | null;
+  onSelectionsChange: (selected: string[]) => void;
+  onCustomActivityChange: (customActivity: string | null) => void;
 }
 
-const ActivitiesStep = ({ selectedActivities, onSelectActivities }: ActivitiesStepProps) => {
-  const [customActivity, setCustomActivity] = useState("");
-  const [customActivities, setCustomActivities] = useState<string[]>([]);
-
+const ActivitiesStep = ({
+  selectedActivities,
+  customActivity,
+  onSelectionsChange,
+  onCustomActivityChange
+}: ActivitiesStepProps) => {
+  const [showCustomInput, setShowCustomInput] = useState(false);
+  const [inputValue, setInputValue] = useState('');
+  
   const activities = [
-    { label: "Running", id: "running", icon: Activity },
-    { label: "Cycling", id: "cycling", icon: Bike },
-    { label: "Swimming", id: "swimming", icon: Waves },
-    { label: "Walking", id: "walking", icon: UserCircle2 },
-    { label: "Dancing", id: "dancing", icon: Music },
-    { label: "Pilates", id: "pilates", icon: Dumbbell },
-    { label: "Team sports", id: "teamsports", icon: Users },
-    { label: "Hiking", id: "hiking", icon: Mountain },
+    { 
+      id: 'walking', 
+      label: 'Walking', 
+      description: 'Regular walks or hiking',
+      icon: '🚶'
+    },
+    { 
+      id: 'running', 
+      label: 'Running', 
+      description: 'Jogging or running',
+      icon: '🏃'
+    },
+    { 
+      id: 'cycling', 
+      label: 'Cycling', 
+      description: 'Indoor or outdoor cycling',
+      icon: '🚴'
+    },
+    { 
+      id: 'swimming', 
+      label: 'Swimming', 
+      description: 'Pool or open water swimming',
+      icon: '🏊'
+    },
+    { 
+      id: 'gym', 
+      label: 'Gym Workouts', 
+      description: 'Weight training or machines',
+      icon: '🏋️'
+    },
+    { 
+      id: 'sports', 
+      label: 'Team Sports', 
+      description: 'Basketball, soccer, etc.',
+      icon: '⚽'
+    },
+    { 
+      id: 'yoga', 
+      label: 'Yoga', 
+      description: 'Regular yoga practice',
+      icon: '🧘'
+    },
+    { 
+      id: 'dancing', 
+      label: 'Dancing', 
+      description: 'Any style of dance',
+      icon: '💃'
+    },
+    { 
+      id: 'martialarts', 
+      label: 'Martial Arts', 
+      description: 'Boxing, karate, etc.',
+      icon: '🥋'
+    },
+    { 
+      id: 'none', 
+      label: 'No Regular Activity', 
+      description: 'Currently sedentary',
+      icon: '🛋️'
+    }
   ];
 
-  const toggleActivity = (id: string) => {
-    // If "none" is clicked and not already selected
-    if (id === "none" && !selectedActivities.includes("none")) {
-      onSelectActivities(["none"]);
-      return;
-    }
-    
-    // If "none" is clicked and already selected, unselect it
-    if (id === "none" && selectedActivities.includes("none")) {
-      onSelectActivities([]);
-      return;
-    }
-    
-    // If a regular activity is clicked while "none" is selected, clear "none"
-    if (id !== "none" && selectedActivities.includes("none")) {
-      onSelectActivities([id]);
-      return;
-    }
-    
-    // Toggle the selected activity
-    if (selectedActivities.includes(id)) {
-      const newActivities = selectedActivities.filter(activity => activity !== id);
-      onSelectActivities(newActivities);
+  const toggleSelection = (id: string) => {
+    if (id === 'none') {
+      // If "None" is selected, clear all other selections
+      if (selectedActivities.includes('none')) {
+        onSelectionsChange(selectedActivities.filter(item => item !== 'none'));
+      } else {
+        onSelectionsChange(['none']);
+      }
     } else {
-      onSelectActivities([...selectedActivities, id]);
+      // If any other activity is selected, remove "None" if it's there
+      let newSelections = [...selectedActivities];
+      
+      if (newSelections.includes('none')) {
+        newSelections = newSelections.filter(item => item !== 'none');
+      }
+      
+      if (newSelections.includes(id)) {
+        newSelections = newSelections.filter(item => item !== id);
+      } else {
+        newSelections.push(id);
+      }
+      
+      onSelectionsChange(newSelections);
     }
   };
-
-  const addCustomActivity = () => {
-    if (customActivity.trim() === "") return;
-    
-    const activityId = `custom-${customActivity.trim().toLowerCase().replace(/\s+/g, '-')}`;
-    
-    // Add to custom activities list for rendering
-    setCustomActivities([...customActivities, customActivity.trim()]);
-    
-    // Add to selected activities
-    if (!selectedActivities.includes(activityId) && !selectedActivities.includes("none")) {
-      onSelectActivities([...selectedActivities, activityId]);
-    }
-    
-    setCustomActivity("");
-  };
-
-  const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      addCustomActivity();
+  
+  const handleAddCustom = () => {
+    if (inputValue.trim()) {
+      onCustomActivityChange(inputValue.trim());
+      setShowCustomInput(false);
+      setInputValue('');
+      
+      // If "None" is selected, remove it when adding a custom activity
+      if (selectedActivities.includes('none')) {
+        onSelectionsChange(selectedActivities.filter(item => item !== 'none'));
+      }
     }
   };
-
-  const isNoneSelected = selectedActivities.includes("none");
+  
+  const removeCustom = () => {
+    onCustomActivityChange(null);
+  };
 
   return (
     <div className="text-center">
-      <h1 className="text-4xl sm:text-5xl font-bold mb-6">Are any of these activities part of your life?</h1>
-      <p className="text-muted-foreground text-xl mb-8">Select all that apply to your regular routine</p>
+      <h1 className="text-4xl sm:text-5xl font-bold mb-4">Are any of these activities part of your life?</h1>
+      <p className="text-muted-foreground text-lg mb-10 max-w-2xl mx-auto">
+        Select all activities you regularly participate in
+      </p>
       
-      <div className="max-w-3xl mx-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-          {activities.map((activity) => {
-            const Icon = activity.icon;
-            return (
-              <div
-                key={activity.id}
-                className={cn(
-                  "flex flex-col items-center gap-3 bg-card p-5 rounded-lg cursor-pointer border border-transparent transition-all",
-                  isNoneSelected ? "opacity-50 pointer-events-none" : "",
-                  selectedActivities.includes(activity.id) ? "border-orange bg-orange/5" : "hover:border-muted-foreground/30"
-                )}
-                onClick={() => toggleActivity(activity.id)}
-              >
-                <div className={cn(
-                  "icon-container",
-                  selectedActivities.includes(activity.id) ? "bg-orange/20" : "bg-secondary"
-                )}>
-                  <Icon className={cn(
-                    "icon-sm",
-                    selectedActivities.includes(activity.id) ? "text-orange" : "text-muted-foreground"
-                  )} />
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
+        {activities.map(activity => (
+          <motion.div
+            key={activity.id}
+            className={`option-card p-4 ${selectedActivities.includes(activity.id) ? 'selected' : ''}`}
+            onClick={() => toggleSelection(activity.id)}
+            whileHover={{ y: -5 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <div className="flex items-center gap-3 mb-2">
+              <div className="text-2xl" aria-hidden="true">{activity.icon}</div>
+              <h3 className="font-semibold">{activity.label}</h3>
+              {selectedActivities.includes(activity.id) && (
+                <div className="ml-auto bg-orange rounded-full p-1">
+                  <Check className="w-4 h-4 text-white" />
                 </div>
-                <label className="text-base cursor-pointer">{activity.label}</label>
-                <Checkbox 
-                  id={activity.id}
-                  checked={selectedActivities.includes(activity.id)}
-                  onCheckedChange={() => toggleActivity(activity.id)}
-                  className="data-[state=checked]:bg-orange data-[state=checked]:text-white mt-auto"
-                  disabled={isNoneSelected}
-                />
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Custom activities */}
-        {customActivities.length > 0 && (
-          <div className="mt-8">
-            <h3 className="text-lg font-medium mb-4">Your custom activities:</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {customActivities.map((activity, index) => {
-                const activityId = `custom-${activity.toLowerCase().replace(/\s+/g, '-')}`;
-                return (
-                  <div
-                    key={index}
-                    className={cn(
-                      "flex items-center gap-3 bg-card p-4 rounded-lg cursor-pointer border border-transparent transition-all",
-                      isNoneSelected ? "opacity-50 pointer-events-none" : "",
-                      selectedActivities.includes(activityId) ? "border-orange bg-orange/5" : "hover:border-muted-foreground/30"
-                    )}
-                    onClick={() => toggleActivity(activityId)}
-                  >
-                    <Checkbox 
-                      id={activityId}
-                      checked={selectedActivities.includes(activityId)}
-                      onCheckedChange={() => toggleActivity(activityId)}
-                      className="data-[state=checked]:bg-orange data-[state=checked]:text-white"
-                      disabled={isNoneSelected}
-                    />
-                    <label htmlFor={activityId} className="flex-1 text-left cursor-pointer">{activity}</label>
-                  </div>
-                );
-              })}
+              )}
             </div>
-          </div>
-        )}
+            <p className="text-sm text-muted-foreground">{activity.description}</p>
+          </motion.div>
+        ))}
         
-        {/* Add custom activity */}
-        <div className={cn(
-          "mt-8 bg-card p-5 rounded-lg border border-dashed border-muted-foreground/30",
-          isNoneSelected ? "opacity-50 pointer-events-none" : ""
-        )}>
-          <h3 className="text-lg font-medium mb-2">Add a custom activity</h3>
+        {/* Add custom activity button */}
+        {!showCustomInput && !customActivity && (
+          <motion.div
+            className="option-card p-4 flex flex-col items-center justify-center min-h-[112px]"
+            onClick={() => setShowCustomInput(true)}
+            whileHover={{ y: -5 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <div className="bg-muted rounded-full p-2 w-10 h-10 flex items-center justify-center mb-2">
+              <Plus className="w-5 h-5 text-orange" />
+            </div>
+            <p className="text-sm text-muted-foreground">Add another activity</p>
+          </motion.div>
+        )}
+      </div>
+      
+      {/* Custom input */}
+      {showCustomInput && (
+        <motion.div 
+          className="bg-card p-4 rounded-lg max-w-md mx-auto mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <label className="text-sm text-muted-foreground mb-2 block text-left">
+            What other activity do you do regularly?
+          </label>
           <div className="flex gap-2">
             <Input
-              value={customActivity}
-              onChange={e => setCustomActivity(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Type any other activity..."
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              placeholder="e.g., Pilates, Rock Climbing"
               className="flex-1"
-              disabled={isNoneSelected}
+              autoFocus
             />
-            <button
-              onClick={addCustomActivity}
-              disabled={customActivity.trim() === "" || isNoneSelected}
-              className={cn(
-                "flex items-center justify-center p-2 rounded-md",
-                customActivity.trim() === "" ? "bg-muted text-muted-foreground" : "bg-orange text-white"
-              )}
-            >
-              <Plus className="w-5 h-5" />
-            </button>
+            <Button onClick={handleAddCustom} variant="default">
+              Add
+            </Button>
           </div>
-        </div>
-          
-        <div className="mt-8">
-          <div
-            className={cn(
-              "flex items-center gap-4 bg-card p-5 rounded-lg cursor-pointer border border-transparent transition-all",
-              isNoneSelected ? "border-orange bg-orange/5" : "hover:border-muted-foreground/30"
-            )}
-            onClick={() => toggleActivity("none")}
-          >
-            <div className={cn(
-              "w-5 h-5 rounded-full border flex items-center justify-center",
-              isNoneSelected ? "border-orange bg-orange" : "border-muted-foreground"
-            )}>
-              {isNoneSelected && <Check className="w-4 h-4 text-white" />}
-            </div>
-            <label className="text-xl cursor-pointer">None of the above</label>
+        </motion.div>
+      )}
+      
+      {/* Display custom activity if set */}
+      {customActivity && (
+        <motion.div
+          className="option-card selected p-4 max-w-md mx-auto mb-8 flex justify-between items-center"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+        >
+          <div className="flex items-center gap-3">
+            <div className="text-2xl" aria-hidden="true">🏆</div>
+            <span>{customActivity}</span>
           </div>
-        </div>
+          <Button variant="ghost" size="icon" onClick={removeCustom} className="text-muted-foreground">
+            <X className="w-4 h-4" />
+          </Button>
+        </motion.div>
+      )}
+      
+      <div className="mt-4 text-muted-foreground">
+        {selectedActivities.length === 0 && !customActivity ? 
+          "Please select any activities you regularly participate in." : 
+          `You've selected ${selectedActivities.length + (customActivity ? 1 : 0)} activities.`
+        }
       </div>
     </div>
   );
