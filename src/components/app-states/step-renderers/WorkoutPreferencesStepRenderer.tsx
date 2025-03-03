@@ -29,7 +29,7 @@ const WorkoutPreferencesStepRenderer = ({
     case 12:
       return (
         <FitnessGoalStep
-          selected={formData.fitnessGoal}
+          selectedGoal={formData.fitnessGoal}
           onSelect={(fitnessGoal) => 
             setFormData(prev => ({ ...prev, fitnessGoal }))
           }
@@ -39,7 +39,7 @@ const WorkoutPreferencesStepRenderer = ({
       return (
         <ProblemAreasStep
           selectedAreas={formData.problemAreas}
-          onSelectionChange={(problemAreas) => 
+          onSelectArea={(problemAreas) => 
             setFormData(prev => ({ ...prev, problemAreas }))
           }
         />
@@ -60,7 +60,7 @@ const WorkoutPreferencesStepRenderer = ({
     case 15:
       return (
         <WorkoutLocationStep
-          selected={formData.workoutLocation}
+          selectedLocation={formData.workoutLocation}
           onSelect={(workoutLocation) => 
             setFormData(prev => ({ ...prev, workoutLocation }))
           }
@@ -69,7 +69,7 @@ const WorkoutPreferencesStepRenderer = ({
     case 16:
       return (
         <WorkoutIntensityStep
-          selected={formData.workoutIntensity}
+          selectedIntensity={formData.workoutIntensity}
           onSelect={(workoutIntensity) => 
             setFormData(prev => ({ ...prev, workoutIntensity }))
           }

@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Check, Ear, Brain, Heart, Lungs, Plus, X } from 'lucide-react';
+import { Check, Ear, Brain, Heart, Wind, Plus, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
@@ -67,7 +67,7 @@ const HealthConcernsStep = ({
     { 
       id: 'breathing', 
       label: 'Breathing Issues', 
-      icon: <Lungs className="w-6 h-6 text-orange" />,
+      icon: <Wind className="w-6 h-6 text-orange" />,
       description: 'Asthma, shortness of breath'
     },
     { 

@@ -7,18 +7,18 @@ interface WeightInputStepProps {
   currentWeight: string | null;
   targetWeight: string | null;
   weightUnit: "kg" | "lbs";
-  onWeightChange: (data: { 
-    currentWeight: string | null; 
-    targetWeight: string | null;
-    weightUnit: "kg" | "lbs";
-  }) => void;
+  onCurrentWeightChange: (weight: string | null) => void;
+  onTargetWeightChange: (weight: string | null) => void;
+  onWeightUnitChange: (unit: "kg" | "lbs") => void;
 }
 
 const WeightInputStep = ({ 
   currentWeight, 
   targetWeight, 
   weightUnit, 
-  onWeightChange 
+  onCurrentWeightChange, 
+  onTargetWeightChange, 
+  onWeightUnitChange
 }: WeightInputStepProps) => {
   const [localCurrentWeight, setLocalCurrentWeight] = useState(currentWeight || "");
   const [localTargetWeight, setLocalTargetWeight] = useState(targetWeight || "");
@@ -26,29 +26,17 @@ const WeightInputStep = ({
 
   const handleCurrentWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLocalCurrentWeight(e.target.value);
-    onWeightChange({
-      currentWeight: e.target.value,
-      targetWeight: localTargetWeight,
-      weightUnit: localWeightUnit
-    });
+    onCurrentWeightChange(e.target.value);
   };
 
   const handleTargetWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLocalTargetWeight(e.target.value);
-    onWeightChange({
-      currentWeight: localCurrentWeight,
-      targetWeight: e.target.value,
-      weightUnit: localWeightUnit
-    });
+    onTargetWeightChange(e.target.value);
   };
 
   const handleUnitChange = (value: "kg" | "lbs") => {
     setLocalWeightUnit(value);
-    onWeightChange({
-      currentWeight: localCurrentWeight,
-      targetWeight: localTargetWeight,
-      weightUnit: value
-    });
+    onWeightUnitChange(value);
   };
 
   return (
