@@ -6,12 +6,13 @@ const TOAST_REMOVE_DELAY = 1000000;
 
 type ToastActionElement = React.ReactElement;
 
-export type Toast = {
+type ToastType = {
   id: string;
   title?: React.ReactNode;
   description?: React.ReactNode;
   action?: ToastActionElement;
   variant?: "default" | "destructive";
+  open?: boolean;
 };
 
 const actionTypes = {
@@ -33,11 +34,11 @@ type ActionType = typeof actionTypes;
 type Action =
   | {
       type: ActionType["ADD_TOAST"];
-      toast: Toast;
+      toast: ToastType;
     }
   | {
       type: ActionType["UPDATE_TOAST"];
-      toast: Partial<Toast>;
+      toast: Partial<ToastType>;
     }
   | {
       type: ActionType["DISMISS_TOAST"];
@@ -49,12 +50,12 @@ type Action =
     };
 
 interface State {
-  toasts: Toast[];
+  toasts: ToastType[];
 }
 
 const toastTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
 
-const reducer = (state: State, action: Action): State => {
+const toastReducer = (state: State, action: Action): State => {
   switch (action.type) {
     case actionTypes.ADD_TOAST:
       return {
@@ -119,15 +120,13 @@ const listeners: Array<(state: State) => void> = [];
 let memoryState: State = { toasts: [] };
 
 function dispatch(action: Action) {
-  memoryState = reducer(memoryState, action);
+  memoryState = toastReducer(memoryState, action);
   listeners.forEach((listener) => {
     listener(memoryState);
   });
 }
 
-type Toast = Parameters<typeof dispatch>[0]["toast"];
-
-function useToastBase(reducer = reducer) {
+function useToastBase() {
   const [state, setState] = React.useState<State>(memoryState);
 
   React.useEffect(() => {
@@ -142,9 +141,9 @@ function useToastBase(reducer = reducer) {
 
   return {
     ...state,
-    toast: (props: Omit<Toast, "id">) => {
+    toast: (props: Omit<ToastType, "id">) => {
       const id = genId();
-      const toast = { ...props, id, open: true } as Toast;
+      const toast = { ...props, id, open: true } as ToastType;
       dispatch({
         type: actionTypes.ADD_TOAST,
         toast,
@@ -161,5 +160,5 @@ function useToastBase(reducer = reducer) {
   };
 }
 
-export { useToastBase, type Toast as ToastPrimitive };
+export { useToastBase, type ToastType };
 export const useToast = useToastBase;

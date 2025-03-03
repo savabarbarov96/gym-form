@@ -8,7 +8,7 @@ import {
   ToastTitle,
   ToastViewport,
 } from "@/components/ui/toast";
-import { useToast as useToastBase } from "@/components/ui/use-toast-primitive";
+import { useToast as useToastPrimitive } from "@/components/ui/use-toast-primitive";
 
 export type ToasterToast = React.ComponentPropsWithoutRef<typeof Toast>;
 export type ToastActionElement = React.ReactElement<typeof ToastClose>;
@@ -21,18 +21,19 @@ export type ToastParams = {
 };
 
 export const useToast = () => {
-  const baseToast = useToastBase();
+  const baseToast = useToastPrimitive();
   
   return {
     toast: baseToast.toast,
     dismiss: baseToast.dismiss,
+    toasts: baseToast.toasts
   };
 };
 
-export const toast = (props: ToastParams) => {
-  const { toast: toastFn } = useToastBase();
-  toastFn(props);
-};
+export function toast(props: ToastParams) {
+  const { toast: toastFn } = useToastPrimitive();
+  return toastFn(props);
+}
 
 // Re-export the Toast component types for validation files
 export type { ToasterToast as Toast };
