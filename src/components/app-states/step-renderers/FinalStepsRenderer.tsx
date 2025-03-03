@@ -1,10 +1,9 @@
 
 import React from 'react';
 import { FormData } from '@/types/survey';
-import {
-  SelfAssessmentStep,
-  PersonalInfoStep
-} from "@/components/form-steps";
+import { SelfAssessmentStep, PersonalInfoStep, StartCommitmentStep } from '@/components/form-steps';
+import { useToast } from '@/hooks/use-toast';
+import { validateFinalStepsStep } from '@/utils/validation/finalStepsValidation';
 
 interface FinalStepsRendererProps {
   step: number;
@@ -12,81 +11,89 @@ interface FinalStepsRendererProps {
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
 }
 
-const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({
-  step,
-  formData,
-  setFormData
-}) => {
-  // Adjust step numbers to match validation logic (start from 26)
-  if (step === 26) {
-    return (
-      <SelfAssessmentStep 
-        assessmentKey="outOfBreath"
-        question="I am often out of breath when I climb the stairs"
-        value={formData.selfAssessments.outOfBreath}
-        onChange={(value) => setFormData({
-          ...formData, 
-          selfAssessments: {...formData.selfAssessments, outOfBreath: value}
-        })}
-      />
-    );
-  }
+const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData, setFormData }) => {
+  const { toast } = useToast();
   
-  if (step === 27) {
-    return (
-      <SelfAssessmentStep 
-        assessmentKey="fallingBack"
-        question="I keep falling back into bad exercise habits"
-        value={formData.selfAssessments.fallingBack}
-        onChange={(value) => setFormData({
-          ...formData, 
-          selfAssessments: {...formData.selfAssessments, fallingBack: value}
-        })}
-      />
-    );
-  }
+  // This maps the global step number to the local step within this renderer
+  const localStep = step - 25;
   
-  if (step === 28) {
-    return (
-      <SelfAssessmentStep 
-        assessmentKey="motivationLevel"
-        question="I find it hard to stay motivated with exercise"
-        value={formData.selfAssessments.motivationLevel}
-        onChange={(value) => setFormData({
-          ...formData, 
-          selfAssessments: {...formData.selfAssessments, motivationLevel: value}
-        })}
-      />
-    );
-  }
+  const handleSelfAssessmentChange = (key: keyof FormData['selfAssessments'], value: number | null) => {
+    setFormData(prev => ({
+      ...prev,
+      selfAssessments: {
+        ...prev.selfAssessments,
+        [key]: value
+      }
+    }));
+  };
   
-  if (step === 29) {
-    return (
-      <SelfAssessmentStep 
-        assessmentKey="dietConsistency"
-        question="I find it difficult to stay consistent with my diet"
-        value={formData.selfAssessments.dietConsistency}
-        onChange={(value) => setFormData({
-          ...formData, 
-          selfAssessments: {...formData.selfAssessments, dietConsistency: value}
-        })}
-      />
-    );
-  }
+  const handlePersonalInfoChange = (personalInfo: FormData['personalInfo']) => {
+    setFormData(prev => ({
+      ...prev,
+      personalInfo
+    }));
+  };
   
-  if (step === 30) {
-    return (
-      <PersonalInfoStep
-        personalInfo={formData.personalInfo}
-        onChange={(personalInfo) => setFormData({
-          ...formData,
-          personalInfo
-        })}
-      />
-    );
-  }
+  const handleStartCommitmentChange = (value: string | null) => {
+    setFormData(prev => ({
+      ...prev,
+      startCommitment: value
+    }));
+  };
   
-  return null;
+  // Map the local step to the appropriate component
+  switch (localStep) {
+    case 1: // Step 26
+      return (
+        <SelfAssessmentStep 
+          title="I get out of breath easily when exercising"
+          value={formData.selfAssessments.outOfBreath}
+          onChange={(value) => handleSelfAssessmentChange('outOfBreath', value)}
+          onValidate={() => validateFinalStepsStep(step, formData, toast)}
+        />
+      );
+    
+    case 2: // Step 27 
+      return (
+        <SelfAssessmentStep
+          title="I've tried to get in shape before but keep falling back into old habits"
+          value={formData.selfAssessments.fallingBack}
+          onChange={(value) => handleSelfAssessmentChange('fallingBack', value)}
+          onValidate={() => validateFinalStepsStep(step, formData, toast)}
+        />
+      );
+    
+    case 3: // Step 28
+      return (
+        <SelfAssessmentStep
+          title="I sometimes struggle to find the motivation to exercise"
+          value={formData.selfAssessments.motivationLevel}
+          onChange={(value) => handleSelfAssessmentChange('motivationLevel', value)}
+          onValidate={() => validateFinalStepsStep(step, formData, toast)}
+        />
+      );
+    
+    case 4: // Step 29
+      return (
+        <SelfAssessmentStep
+          title="I find it difficult to stay consistent with a healthy diet"
+          value={formData.selfAssessments.dietConsistency}
+          onChange={(value) => handleSelfAssessmentChange('dietConsistency', value)}
+          onValidate={() => validateFinalStepsStep(step, formData, toast)}
+        />
+      );
+    
+    case 5: // Step 30
+      return (
+        <PersonalInfoStep
+          personalInfo={formData.personalInfo}
+          onChange={handlePersonalInfoChange}
+        />
+      );
+      
+    default:
+      return null;
+  }
 };
 
 export default FinalStepsRenderer;
