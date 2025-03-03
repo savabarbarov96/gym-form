@@ -46,7 +46,7 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
     case 1: // Step 26
       return (
         <SelfAssessmentStep 
-          title="I get out of breath easily when exercising"
+          question="I get out of breath easily when exercising"
           value={formData.selfAssessments.outOfBreath}
           onChange={(value) => handleSelfAssessmentChange('outOfBreath', value)}
           onValidate={() => validateFinalStepsStep(step, formData, toast)}
@@ -56,7 +56,7 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
     case 2: // Step 27 
       return (
         <SelfAssessmentStep
-          title="I've tried to get in shape before but keep falling back into old habits"
+          question="I've tried to get in shape before but keep falling back into old habits"
           value={formData.selfAssessments.fallingBack}
           onChange={(value) => handleSelfAssessmentChange('fallingBack', value)}
           onValidate={() => validateFinalStepsStep(step, formData, toast)}
@@ -66,7 +66,7 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
     case 3: // Step 28
       return (
         <SelfAssessmentStep
-          title="I sometimes struggle to find the motivation to exercise"
+          question="I sometimes struggle to find the motivation to exercise"
           value={formData.selfAssessments.motivationLevel}
           onChange={(value) => handleSelfAssessmentChange('motivationLevel', value)}
           onValidate={() => validateFinalStepsStep(step, formData, toast)}
@@ -76,7 +76,7 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
     case 4: // Step 29
       return (
         <SelfAssessmentStep
-          title="I find it difficult to stay consistent with a healthy diet"
+          question="I find it difficult to stay consistent with a healthy diet"
           value={formData.selfAssessments.dietConsistency}
           onChange={(value) => handleSelfAssessmentChange('dietConsistency', value)}
           onValidate={() => validateFinalStepsStep(step, formData, toast)}

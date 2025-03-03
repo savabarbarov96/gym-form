@@ -8,6 +8,7 @@ interface SelfAssessmentStepProps {
   value: number | null;
   onChange: (value: number) => void;
   type?: string;
+  onValidate?: () => boolean;
 }
 
 const SelfAssessmentStep: React.FC<SelfAssessmentStepProps> = ({ 
@@ -15,7 +16,8 @@ const SelfAssessmentStep: React.FC<SelfAssessmentStepProps> = ({
   assessmentKey,
   value, 
   onChange,
-  type 
+  type,
+  onValidate 
 }) => {
   // Determine question text based on the type or assessmentKey
   const getQuestionText = () => {
