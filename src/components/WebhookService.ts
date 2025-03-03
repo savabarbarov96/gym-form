@@ -1,101 +1,78 @@
 
 import { FormData } from "@/types/survey";
 
-export const submitToWebhook = async (formData: FormData): Promise<boolean> => {
-  try {
-    // Create a more structured object with clear labels for the AI
-    const params = new URLSearchParams();
-    
-    // Basic Information
-    if (formData.age) params.append('age', formData.age);
-    if (formData.bodyType) params.append('bodyType', formData.bodyType);
-    params.append('motivationLevel', formData.goal.toString());
-    if (formData.fitnessGoal) params.append('fitnessGoal', formData.fitnessGoal);
-    if (formData.desiredBody) params.append('desiredBody', formData.desiredBody);
-    
-    // Body Assessment
-    if (formData.problemAreas.length > 0) params.append('problemAreas', formData.problemAreas.join(','));
-    if (formData.bestShapeTime) params.append('bestShapeTime', formData.bestShapeTime);
-    if (formData.weightChange) params.append('weightChangeTrend', formData.weightChange);
-    if (formData.activities.length > 0) params.append('currentActivities', formData.activities.join(','));
-    if (formData.healthConcerns.length > 0) params.append('healthConcerns', formData.healthConcerns.join(','));
-    
-    // Workout Preferences
-    if (formData.workoutLocation) params.append('workoutLocation', formData.workoutLocation);
-    if (formData.workoutIntensity) params.append('workoutIntensity', formData.workoutIntensity);
-    if (formData.workoutFrequency) params.append('workoutFrequency', formData.workoutFrequency);
-    if (formData.workoutDuration) params.append('workoutDuration', formData.workoutDuration);
-    
-    // Body Measurements
-    if (formData.height) params.append('height', formData.height);
-    if (formData.currentWeight) params.append('currentWeight', formData.currentWeight);
-    if (formData.targetWeight) params.append('targetWeight', formData.targetWeight);
-    params.append('weightUnit', formData.weightUnit);
-    
-    // Exercise Preferences
-    for (const [exercise, preference] of Object.entries(formData.exercisePreferences)) {
-      if (preference) {
-        params.append(`exercisePreference_${exercise.replace(/\s+/g, '_')}`, preference);
-      }
+// Define the webhook URL as a constant
+const WEBHOOK_URL = "https://sava.automationaid.eu/webhook/8ffb7f1e-6c6f-412c-8022-eef6957d78d4";
+
+// Function to map form data to API parameters
+const mapFormDataToParams = (formData: FormData): Record<string, string> => {
+  const params: Record<string, string> = {};
+  
+  // Basic Information
+  if (formData.age) params['age'] = formData.age;
+  if (formData.bodyType) params['bodyType'] = formData.bodyType;
+  params['motivationLevel'] = formData.goal.toString();
+  if (formData.fitnessGoal) params['fitnessGoal'] = formData.fitnessGoal;
+  if (formData.desiredBody) params['desiredBody'] = formData.desiredBody;
+  
+  // Body Assessment
+  if (formData.problemAreas.length > 0) params['problemAreas'] = formData.problemAreas.join(',');
+  if (formData.bestShapeTime) params['bestShapeTime'] = formData.bestShapeTime;
+  if (formData.weightChange) params['weightChangeTrend'] = formData.weightChange;
+  if (formData.activities.length > 0) params['currentActivities'] = formData.activities.join(',');
+  if (formData.healthConcerns.length > 0) params['healthConcerns'] = formData.healthConcerns.join(',');
+  
+  // Workout Preferences
+  if (formData.workoutLocation) params['workoutLocation'] = formData.workoutLocation;
+  if (formData.workoutIntensity) params['workoutIntensity'] = formData.workoutIntensity;
+  if (formData.workoutFrequency) params['workoutFrequency'] = formData.workoutFrequency;
+  if (formData.workoutDuration) params['workoutDuration'] = formData.workoutDuration;
+  
+  // Body Measurements
+  if (formData.height) params['height'] = formData.height;
+  if (formData.currentWeight) params['currentWeight'] = formData.currentWeight;
+  if (formData.targetWeight) params['targetWeight'] = formData.targetWeight;
+  params['weightUnit'] = formData.weightUnit;
+  
+  // Exercise Preferences
+  for (const [exercise, preference] of Object.entries(formData.exercisePreferences)) {
+    if (preference) {
+      params[`exercisePreference_${exercise.replace(/\s+/g, '_')}`] = preference;
     }
-    
-    // Lifestyle Information
-    if (formData.sugaryFoods) params.append('sugaryFoodsFrequency', formData.sugaryFoods);
-    if (formData.waterIntake) params.append('dailyWaterIntake_ml', formData.waterIntake.toString());
-    if (formData.typicalDay) params.append('activityLevel', formData.typicalDay);
-    if (formData.energyLevels) params.append('energyLevels', formData.energyLevels.toString());
-    if (formData.sleepAmount) params.append('sleepHours', formData.sleepAmount.toString());
-    
-    // Self Assessments
-    if (formData.selfAssessments.outOfBreath !== null) 
-      params.append('assessment_outOfBreath', formData.selfAssessments.outOfBreath.toString());
-    if (formData.selfAssessments.fallingBack !== null) 
-      params.append('assessment_stayingConsistent', formData.selfAssessments.fallingBack.toString());
-    if (formData.selfAssessments.suitableWorkouts !== null) 
-      params.append('assessment_findingSuitableWorkouts', formData.selfAssessments.suitableWorkouts.toString());
-    if (formData.selfAssessments.motivationLevel !== null) 
-      params.append('assessment_motivationStruggle', formData.selfAssessments.motivationLevel.toString());
-    if (formData.selfAssessments.dietConsistency !== null) 
-      params.append('assessment_dietConsistency', formData.selfAssessments.dietConsistency.toString());
-    
-    // Personal Information
-    if (formData.personalInfo.name) params.append('name', formData.personalInfo.name);
-    if (formData.personalInfo.dob) params.append('dateOfBirth', formData.personalInfo.dob);
-    if (formData.personalInfo.email) params.append('email', formData.personalInfo.email);
-    params.append('marketingConsent', formData.personalInfo.emailConsent.toString());
-    
-    // Commitment Information
-    if (formData.startCommitment) params.append('startCommitment', formData.startCommitment);
-    
-    // Add contextual information
-    const contextParams = generateContextualParameters(formData);
-    for (const [key, value] of Object.entries(contextParams)) {
-      params.append(key, value);
-    }
-    
-    const webhookUrl = `https://sava.automationaid.eu/webhook/8ffb7f1e-6c6f-412c-8022-eef6957d78d4?${params.toString()}`;
-    
-    console.log("Submitting data to webhook:", Object.fromEntries(params.entries()));
-    
-    const response = await fetch(webhookUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    
-    if (!response.ok) {
-      throw new Error('Failed to submit data');
-    }
-    
-    return true;
-  } catch (error) {
-    console.error('Error submitting data:', error);
-    return false;
   }
+  
+  // Lifestyle Information
+  if (formData.sugaryFoods) params['sugaryFoodsFrequency'] = formData.sugaryFoods;
+  if (formData.waterIntake) params['dailyWaterIntake_ml'] = formData.waterIntake.toString();
+  if (formData.typicalDay) params['activityLevel'] = formData.typicalDay;
+  if (formData.energyLevels) params['energyLevels'] = formData.energyLevels.toString();
+  if (formData.sleepAmount) params['sleepHours'] = formData.sleepAmount.toString();
+  
+  // Self Assessments
+  if (formData.selfAssessments.outOfBreath !== null) 
+    params['assessment_outOfBreath'] = formData.selfAssessments.outOfBreath.toString();
+  if (formData.selfAssessments.fallingBack !== null) 
+    params['assessment_stayingConsistent'] = formData.selfAssessments.fallingBack.toString();
+  if (formData.selfAssessments.suitableWorkouts !== null) 
+    params['assessment_findingSuitableWorkouts'] = formData.selfAssessments.suitableWorkouts.toString();
+  if (formData.selfAssessments.motivationLevel !== null) 
+    params['assessment_motivationStruggle'] = formData.selfAssessments.motivationLevel.toString();
+  if (formData.selfAssessments.dietConsistency !== null) 
+    params['assessment_dietConsistency'] = formData.selfAssessments.dietConsistency.toString();
+  
+  // Personal Information
+  if (formData.personalInfo.name) params['name'] = formData.personalInfo.name;
+  if (formData.personalInfo.dob) params['dateOfBirth'] = formData.personalInfo.dob;
+  if (formData.personalInfo.email) params['email'] = formData.personalInfo.email;
+  params['marketingConsent'] = formData.personalInfo.emailConsent.toString();
+  
+  // Commitment Information
+  if (formData.startCommitment) params['startCommitment'] = formData.startCommitment;
+  
+  return params;
 };
 
-// Function to generate additional contextual parameters that might help the AI
+// Function to generate contextual parameters
 const generateContextualParameters = (formData: FormData): Record<string, string> => {
   const contextParams: Record<string, string> = {};
   
@@ -116,7 +93,7 @@ const generateContextualParameters = (formData: FormData): Record<string, string
     }
   }
   
-  // Weight loss/gain goal if current and target weights are available
+  // Weight loss/gain goal
   if (formData.currentWeight && formData.targetWeight) {
     try {
       const current = parseFloat(formData.currentWeight);
@@ -131,7 +108,7 @@ const generateContextualParameters = (formData: FormData): Record<string, string
     }
   }
   
-  // Assess overall fitness level based on multiple factors
+  // Assess overall fitness level
   let fitnessScore = 0;
   let factorsCount = 0;
   
@@ -175,4 +152,45 @@ const generateContextualParameters = (formData: FormData): Record<string, string
   }
   
   return contextParams;
+};
+
+// Main function to submit data to the webhook
+export const submitToWebhook = async (formData: FormData): Promise<boolean> => {
+  try {
+    // Get base parameters from form data
+    const baseParams = mapFormDataToParams(formData);
+    
+    // Add contextual parameters
+    const contextParams = generateContextualParameters(formData);
+    
+    // Combine all parameters
+    const allParams = { ...baseParams, ...contextParams };
+    
+    // Convert to URLSearchParams
+    const urlParams = new URLSearchParams();
+    for (const [key, value] of Object.entries(allParams)) {
+      urlParams.append(key, value);
+    }
+    
+    // Build complete URL
+    const webhookUrl = `${WEBHOOK_URL}?${urlParams.toString()}`;
+    
+    console.log("Submitting data to webhook:", allParams);
+    
+    const response = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to submit data');
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Error submitting data:', error);
+    return false;
+  }
 };

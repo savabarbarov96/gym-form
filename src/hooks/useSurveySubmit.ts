@@ -1,13 +1,16 @@
 
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { FormData } from "@/types/survey";
 import { submitToWebhook } from "@/components/WebhookService";
 import { updateLoadingAfterWebhook } from "@/utils/loadingSimulation";
 
-export const useSurveySubmit = (setAppState: (state: any) => void, setLoadingProgress: (progress: number) => void) => {
+export const useSurveySubmit = (
+  setAppState: (state: any) => void, 
+  setLoadingProgress: (progress: number) => void
+) => {
   const { toast } = useToast();
 
-  const handleGetPlan = (formData: FormData) => {
+  const handleGetPlan = async (formData: FormData) => {
     toast({
       title: "Creating your plan",
       description: "We're generating your personalized workout plan",
@@ -27,10 +30,10 @@ export const useSurveySubmit = (setAppState: (state: any) => void, setLoadingPro
     setLoadingProgress(0);
     
     // Send to webhook while showing loading animation
-    submitToWebhook(formData).then((success) => {
-      // Update loading animation based on webhook response
-      updateLoadingAfterWebhook(success, setAppState, setLoadingProgress);
-    });
+    const success = await submitToWebhook(formData);
+    
+    // Update loading animation based on webhook response
+    await updateLoadingAfterWebhook(success, setAppState, setLoadingProgress);
   };
 
   return {
