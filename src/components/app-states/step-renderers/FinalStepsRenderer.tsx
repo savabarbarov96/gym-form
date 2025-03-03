@@ -18,6 +18,7 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({
   formData,
   setFormData
 }) => {
+  // The step after sleep amount (which is step 24) should be step 25
   if (step === 25) {
     return (
       <SelfAssessmentStep 
@@ -62,32 +63,31 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({
   
   if (step === 28) {
     return (
-      <PersonalInfoStep
-        name={formData.personalInfo.name}
-        dob={formData.personalInfo.dob}
-        email={formData.personalInfo.email}
-        emailConsent={formData.personalInfo.emailConsent}
-        onChangeName={(name) => setFormData({
-          ...formData,
-          personalInfo: {...formData.personalInfo, name}
-        })}
-        onChangeDob={(dob) => setFormData({
-          ...formData,
-          personalInfo: {...formData.personalInfo, dob}
-        })}
-        onChangeEmail={(email) => setFormData({
-          ...formData,
-          personalInfo: {...formData.personalInfo, email}
-        })}
-        onChangeConsent={(emailConsent) => setFormData({
-          ...formData,
-          personalInfo: {...formData.personalInfo, emailConsent}
+      <SelfAssessmentStep 
+        assessmentKey="dietConsistency"
+        question="I find it difficult to stay consistent with my diet"
+        value={formData.selfAssessments.dietConsistency}
+        onChange={(value) => setFormData({
+          ...formData, 
+          selfAssessments: {...formData.selfAssessments, dietConsistency: value}
         })}
       />
     );
   }
   
   if (step === 29) {
+    return (
+      <PersonalInfoStep
+        personalInfo={formData.personalInfo}
+        onChange={(personalInfo) => setFormData({
+          ...formData,
+          personalInfo
+        })}
+      />
+    );
+  }
+  
+  if (step === 30) {
     return (
       <StartCommitmentStep
         value={formData.startCommitment}
