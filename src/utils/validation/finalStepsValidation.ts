@@ -1,8 +1,8 @@
-
 import { FormData } from "@/types/survey";
-import { toast as toastFunction, Toast as ToastProps } from "@/hooks/use-toast";
+import { toast as toastFunction } from "@/hooks/use-toast";
+import type { Toast } from "@/components/ui/toast";
 
-export const validateOutOfBreathStep = (formData: FormData, toast: (props: ToastProps) => void): boolean => {
+export const validateOutOfBreathStep = (formData: FormData, toast: (props: Toast) => void): boolean => {
   if (formData.selfAssessments.outOfBreath === null) {
     toast({
       title: "Selection required",
@@ -14,7 +14,7 @@ export const validateOutOfBreathStep = (formData: FormData, toast: (props: Toast
   return true;
 };
 
-export const validateFallingBackStep = (formData: FormData, toast: (props: ToastProps) => void): boolean => {
+export const validateFallingBackStep = (formData: FormData, toast: (props: Toast) => void): boolean => {
   if (formData.selfAssessments.fallingBack === null) {
     toast({
       title: "Selection required",
@@ -26,7 +26,7 @@ export const validateFallingBackStep = (formData: FormData, toast: (props: Toast
   return true;
 };
 
-export const validateSuitableWorkoutsStep = (formData: FormData, toast: (props: ToastProps) => void): boolean => {
+export const validateSuitableWorkoutsStep = (formData: FormData, toast: (props: Toast) => void): boolean => {
   if (formData.selfAssessments.suitableWorkouts === null) {
     toast({
       title: "Selection required",
@@ -38,7 +38,7 @@ export const validateSuitableWorkoutsStep = (formData: FormData, toast: (props: 
   return true;
 };
 
-export const validateMotivationLevelStep = (formData: FormData, toast: (props: ToastProps) => void): boolean => {
+export const validateMotivationLevelStep = (formData: FormData, toast: (props: Toast) => void): boolean => {
   if (formData.selfAssessments.motivationLevel === null) {
     toast({
       title: "Selection required",
@@ -50,7 +50,7 @@ export const validateMotivationLevelStep = (formData: FormData, toast: (props: T
   return true;
 };
 
-export const validateDietConsistencyStep = (formData: FormData, toast: (props: ToastProps) => void): boolean => {
+export const validateDietConsistencyStep = (formData: FormData, toast: (props: Toast) => void): boolean => {
   if (formData.selfAssessments.dietConsistency === null) {
     toast({
       title: "Selection required",
@@ -62,7 +62,7 @@ export const validateDietConsistencyStep = (formData: FormData, toast: (props: T
   return true;
 };
 
-export const validatePersonalInfoStep = (formData: FormData, toast: (props: ToastProps) => void): boolean => {
+export const validatePersonalInfoStep = (formData: FormData, toast: (props: Toast) => void): boolean => {
   if (!formData.personalInfo.name) {
     toast({
       title: "Name required",
@@ -121,7 +121,7 @@ export const validatePersonalInfoStep = (formData: FormData, toast: (props: Toas
   return true;
 };
 
-export const validateStartCommitmentStep = (formData: FormData, toast: (props: ToastProps) => void): boolean => {
+export const validateStartCommitmentStep = (formData: FormData, toast: (props: Toast) => void): boolean => {
   // Start commitment is optional, so always return true
   return true;
 };

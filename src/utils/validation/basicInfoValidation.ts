@@ -1,8 +1,8 @@
-
 import { FormData } from "@/types/survey";
-import { toast as toastFunction, Toast as ToastProps } from "@/hooks/use-toast";
+import { toast as toastFunction } from "@/hooks/use-toast";
+import type { Toast } from "@/components/ui/toast";
 
-export const validateAgeStep = (formData: FormData, toast: (props: ToastProps) => void): boolean => {
+export const validateAgeStep = (formData: FormData, toast: (props: Toast) => void): boolean => {
   if (!formData.age) {
     toast({
       title: "Selection required",
@@ -14,7 +14,7 @@ export const validateAgeStep = (formData: FormData, toast: (props: ToastProps) =
   return true;
 };
 
-export const validateBodyTypeStep = (formData: FormData, toast: (props: ToastProps) => void): boolean => {
+export const validateBodyTypeStep = (formData: FormData, toast: (props: Toast) => void): boolean => {
   if (!formData.bodyType) {
     toast({
       title: "Selection required",
@@ -26,7 +26,7 @@ export const validateBodyTypeStep = (formData: FormData, toast: (props: ToastPro
   return true;
 };
 
-export const validateGoalStep = (formData: FormData, toast: (props: ToastProps) => void): boolean => {
+export const validateGoalStep = (formData: FormData, toast: (props: Toast) => void): boolean => {
   if (!formData.goal) {
     toast({
       title: "Selection required",
@@ -38,7 +38,7 @@ export const validateGoalStep = (formData: FormData, toast: (props: ToastProps) 
   return true;
 };
 
-export const validateFitnessGoalStep = (formData: FormData, toast: (props: ToastProps) => void): boolean => {
+export const validateFitnessGoalStep = (formData: FormData, toast: (props: Toast) => void): boolean => {
   if (!formData.fitnessGoal) {
     toast({
       title: "Selection required",
@@ -50,7 +50,7 @@ export const validateFitnessGoalStep = (formData: FormData, toast: (props: Toast
   return true;
 };
 
-export const validateDesiredBodyStep = (formData: FormData, toast: (props: ToastProps) => void): boolean => {
+export const validateDesiredBodyStep = (formData: FormData, toast: (props: Toast) => void): boolean => {
   if (!formData.desiredBody) {
     toast({
       title: "Selection required",
