@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Shirt, Arm, Sandwich, BookOpen, Check } from "lucide-react";
+import { Shirt, Dumbbell, Sandwich, BookOpen, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ProblemAreasStepProps {
@@ -12,7 +12,7 @@ interface ProblemAreasStepProps {
 const ProblemAreasStep = ({ selectedAreas, onSelectArea }: ProblemAreasStepProps) => {
   const problemAreas = [
     { label: "Weak chest", id: "weak-chest", icon: Shirt },
-    { label: "Slim arms", id: "slim-arms", icon: Arm },
+    { label: "Slim arms", id: "slim-arms", icon: Dumbbell },
     { label: "Beer belly", id: "beer-belly", icon: Sandwich },
     { label: "Slim legs", id: "slim-legs", icon: BookOpen },
   ];

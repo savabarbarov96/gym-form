@@ -1,7 +1,7 @@
 
 import React from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { BadgeCheck, Clock, CalendarClock, ClockX } from "lucide-react";
+import { BadgeCheck, Clock, CalendarClock, XCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface BestShapeStepProps {
@@ -32,7 +32,7 @@ const BestShapeStep = ({ selected, onSelect }: BestShapeStepProps) => {
     { 
       label: "Never", 
       id: "never", 
-      icon: ClockX,
+      icon: XCircle,
       description: "You haven't reached your ideal fitness level yet"
     },
   ];

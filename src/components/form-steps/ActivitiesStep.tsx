@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Check, Running, Bike, Waves, Person, Music, Dumbbell, Users, Mountain } from "lucide-react";
+import { Check, Activity, Bike, Waves, UserCircle2, Music, Dumbbell, Users, Mountain } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ActivitiesStepProps {
@@ -11,10 +11,10 @@ interface ActivitiesStepProps {
 
 const ActivitiesStep = ({ selectedActivities, onSelectActivities }: ActivitiesStepProps) => {
   const activities = [
-    { label: "Running", id: "running", icon: Running },
+    { label: "Running", id: "running", icon: Activity },
     { label: "Cycling", id: "cycling", icon: Bike },
     { label: "Swimming", id: "swimming", icon: Waves },
-    { label: "Walking", id: "walking", icon: Person },
+    { label: "Walking", id: "walking", icon: UserCircle2 },
     { label: "Dancing", id: "dancing", icon: Music },
     { label: "Pilates", id: "pilates", icon: Dumbbell },
     { label: "Team sports", id: "teamsports", icon: Users },
