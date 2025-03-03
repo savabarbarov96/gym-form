@@ -3,8 +3,7 @@ import React from 'react';
 import { FormData } from '@/types/survey';
 import {
   SelfAssessmentStep,
-  PersonalInfoStep,
-  StartCommitmentStep
+  PersonalInfoStep
 } from "@/components/form-steps";
 
 interface FinalStepsRendererProps {
@@ -18,7 +17,6 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({
   formData,
   setFormData
 }) => {
-  // The step after sleep amount (which is step 24) should be step 25
   if (step === 25) {
     return (
       <SelfAssessmentStep 
@@ -83,15 +81,6 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({
           ...formData,
           personalInfo
         })}
-      />
-    );
-  }
-  
-  if (step === 30) {
-    return (
-      <StartCommitmentStep
-        value={formData.startCommitment}
-        onChange={(startCommitment) => setFormData({...formData, startCommitment})}
       />
     );
   }

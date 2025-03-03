@@ -20,7 +20,8 @@ export const useSurvey = () => {
 };
 
 export const SurveyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const totalSteps = 30;
+  // Updated to 29 steps since we removed the StartCommitmentStep
+  const totalSteps = 29;
   
   // Use our custom hooks
   const { formData, setFormData, updateFormData } = useSurveyForm();

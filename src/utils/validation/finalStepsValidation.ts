@@ -7,11 +7,11 @@ export const validateFinalStepsStep = (
   formData: FormData,
   toast = toastFunction
 ): boolean => {
-  if (step >= 25 && step <= 27) {
-    const assessmentKeys = ['outOfBreath', 'fallingBack', 'suitableWorkouts', 'motivationLevel', 'dietConsistency'];
+  if (step >= 25 && step <= 28) {
+    const assessmentKeys = ['outOfBreath', 'fallingBack', 'motivationLevel', 'dietConsistency'];
     const currentKey = assessmentKeys[step - 25];
     
-    if (currentKey && !formData.selfAssessments[currentKey as keyof typeof formData.selfAssessments]) {
+    if (currentKey && formData.selfAssessments[currentKey as keyof typeof formData.selfAssessments] === null) {
       toast({
         title: "Selection required",
         description: "Please rate how much you relate to the statement",
@@ -21,7 +21,7 @@ export const validateFinalStepsStep = (
     }
   }
   
-  if (step === 28) {
+  if (step === 29) {
     if (!formData.personalInfo.name) {
       toast({
         title: "Name required",
@@ -76,15 +76,6 @@ export const validateFinalStepsStep = (
       });
       return false;
     }
-  }
-  
-  if (step === 29 && !formData.startCommitment) {
-    toast({
-      title: "Selection required",
-      description: "Please select when you plan to start your fitness journey",
-      variant: "destructive",
-    });
-    return false;
   }
   
   return true;
