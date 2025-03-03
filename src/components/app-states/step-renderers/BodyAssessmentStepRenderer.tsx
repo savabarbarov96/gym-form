@@ -24,13 +24,13 @@ const BodyAssessmentStepRenderer = ({
   setFormData,
   handleNext
 }: BodyAssessmentStepRendererProps) => {
+  // Ensure this step mapping matches the validation in bodyAssessmentValidation.ts
   switch (step) {
     case 6:
       return <HeightInputStepRenderer formData={formData} setFormData={setFormData} />;
     case 7:
       return <WeightInputStepRenderer formData={formData} setFormData={setFormData} />;
     case 8:
-      // Using BestShapeStep instead of GoalStepRenderer
       return (
         <div className="best-shape-container">
           <BestShapeStep

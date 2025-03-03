@@ -1,3 +1,4 @@
+
 import { FormData } from "@/types/survey";
 import { toast as toastFunction } from "@/hooks/use-toast";
 import type { ToastParams } from "@/hooks/use-toast";
@@ -107,13 +108,22 @@ export const validateBodyAssessmentStep = (
   formData: FormData,
   toast = toastFunction
 ): boolean => {
-  if (step === 6) return validateHealthConcernsStep(formData, toast);
-  if (step === 7) return validateProblemAreasStep(formData, toast);
-  if (step === 8) return validateBestShapeStep(formData, toast);
-  if (step === 9) return validateWeightChangeStep(formData, toast);
-  if (step === 10) return validateActivitiesStep(formData, toast);
-  if (step === 11) return validateProgressGraphStep(formData, toast);
-  if (step === 12) return validateHeightInputStep(formData, toast);
-  
-  return true;
+  switch (step) {
+    case 6:
+      return validateHeightInputStep(formData, toast);
+    case 7:
+      return validateWeightInputStep(formData, toast);
+    case 8:
+      return validateBestShapeStep(formData, toast);
+    case 9:
+      return validateWeightChangeStep(formData, toast);
+    case 10:
+      return validateProgressGraphStep(formData, toast);
+    case 11:
+      return true; // Hormone graph step doesn't need validation
+    case 12:
+      return validateHealthConcernsStep(formData, toast);
+    default:
+      return true;
+  }
 };
