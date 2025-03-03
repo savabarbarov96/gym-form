@@ -17,23 +17,23 @@ export const validateStep = (
     return validateBasicInfoStep(step, formData, toast);
   }
   
-  // Body assessment steps (6-11)
-  if (step >= 6 && step <= 11) {
+  // Body assessment steps (6-12)
+  if (step >= 6 && step <= 12) {
     return validateBodyAssessmentStep(step, formData, toast);
   }
   
-  // Workout preferences steps (12-19)
-  if (step >= 12 && step <= 19) {
+  // Workout preferences steps (13-20)
+  if (step >= 13 && step <= 20) {
     return validateWorkoutPreferencesStep(step, formData, toast);
   }
   
-  // Lifestyle steps (20-24)
-  if (step >= 20 && step <= 24) {
+  // Lifestyle steps (21-25)
+  if (step >= 21 && step <= 25) {
     return validateLifestyleStep(step, formData, toast);
   }
   
-  // Final steps (25-29)
-  if (step >= 25 && step <= 29) {
+  // Final steps (26-30)
+  if (step >= 26 && step <= 30) {
     return validateFinalStepsStep(step, formData, toast);
   }
   

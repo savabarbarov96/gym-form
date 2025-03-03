@@ -30,6 +30,7 @@ export const validateBodyAssessmentStep = (
     return true;
   }
   
+  // Step 8 is best shape time
   if (step === 8 && !formData.bestShapeTime) {
     toast({
       title: "Selection required",
@@ -39,6 +40,7 @@ export const validateBodyAssessmentStep = (
     return false;
   }
   
+  // Step 9 is weight change
   if (step === 9 && !formData.weightChange) {
     toast({
       title: "Selection required",
@@ -48,16 +50,18 @@ export const validateBodyAssessmentStep = (
     return false;
   }
   
-  if (step === 10 && formData.activities.length === 0) {
-    toast({
-      title: "Selection required",
-      description: "Please select at least one activity or 'None of the above' to continue",
-      variant: "destructive",
-    });
-    return false;
+  // Step 10 is progress graph, no validation needed
+  if (step === 10) {
+    return true;
   }
   
-  if (step === 11 && formData.healthConcerns.length === 0) {
+  // Step 11 is hormone graph, no validation needed
+  if (step === 11) {
+    return true;
+  }
+  
+  // Step 12 is health concerns
+  if (step === 12 && formData.healthConcerns.length === 0) {
     toast({
       title: "Selection required",
       description: "Please select a health concern or 'None of the above' to continue",

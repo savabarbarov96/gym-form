@@ -7,7 +7,8 @@ import {
   GoalStepRenderer,
   ProgressGraphStepRenderer,
   HormoneGraphStepRenderer,
-  HealthConcernsStepRenderer
+  HealthConcernsStepRenderer,
+  WeightChangeStepRenderer
 } from './body-assessment';
 
 interface BodyAssessmentStepRendererProps {
@@ -39,10 +40,12 @@ const BodyAssessmentStepRenderer = ({
         </div>
       );
     case 9:
-      return <ProgressGraphStepRenderer formData={formData} />;
+      return <WeightChangeStepRenderer formData={formData} setFormData={setFormData} />;
     case 10:
-      return <HormoneGraphStepRenderer handleNext={handleNext} />;
+      return <ProgressGraphStepRenderer formData={formData} />;
     case 11:
+      return <HormoneGraphStepRenderer handleNext={handleNext} />;
+    case 12:
       return <HealthConcernsStepRenderer formData={formData} setFormData={setFormData} />;
     default:
       return null;
