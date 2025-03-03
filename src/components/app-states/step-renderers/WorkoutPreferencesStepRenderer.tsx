@@ -25,22 +25,23 @@ const WorkoutPreferencesStepRenderer = ({
   setFormData,
   handleNext
 }: WorkoutPreferencesStepRendererProps) => {
+  // Map the global step numbers to component-specific steps
   switch (step) {
-    case 12:
-      return <FitnessGoalStepRenderer formData={formData} setFormData={setFormData} />;
     case 13:
-      return <ProblemAreasStepRenderer formData={formData} setFormData={setFormData} />;
+      return <FitnessGoalStepRenderer formData={formData} setFormData={setFormData} />;
     case 14:
-      return <ActivitiesStepRenderer formData={formData} setFormData={setFormData} />;
+      return <ProblemAreasStepRenderer formData={formData} setFormData={setFormData} />;
     case 15:
-      return <WorkoutLocationStepRenderer formData={formData} setFormData={setFormData} />;
+      return <ActivitiesStepRenderer formData={formData} setFormData={setFormData} />;
     case 16:
-      return <WorkoutIntensityStepRenderer formData={formData} setFormData={setFormData} />;
+      return <WorkoutLocationStepRenderer formData={formData} setFormData={setFormData} />;
     case 17:
-      return <WorkoutFrequencyStepRenderer formData={formData} setFormData={setFormData} />;
+      return <WorkoutIntensityStepRenderer formData={formData} setFormData={setFormData} />;
     case 18:
-      return <WorkoutDurationStepRenderer formData={formData} setFormData={setFormData} />;
+      return <WorkoutFrequencyStepRenderer formData={formData} setFormData={setFormData} />;
     case 19:
+      return <WorkoutDurationStepRenderer formData={formData} setFormData={setFormData} />;
+    case 20:
       return <ExercisePreferencesStepRenderer formData={formData} setFormData={setFormData} handleNext={handleNext} />;
     default:
       return null;
