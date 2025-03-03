@@ -24,33 +24,24 @@ export const validateStep = (
   
   // Body Assessment steps (6-12)
   if (step >= 6 && step <= 12) {
-    const { validateHealthConcernsStep, validateProblemAreasStep, validateBestShapeStep, 
-            validateWeightChangeStep, validateActivitiesStep, validateProgressGraphStep,
-            validateHeightInputStep, validateWeightInputStep } = require('./bodyAssessmentValidation');
-    
-    if (step === 6) return validateProblemAreasStep(formData, toast);
-    if (step === 7) return validateBestShapeStep(formData, toast);
-    if (step === 8) return validateWeightChangeStep(formData, toast);
-    if (step === 9) return validateActivitiesStep(formData, toast);
-    if (step === 10) return validateProgressGraphStep(formData, toast);
-    if (step === 11) return validateHealthConcernsStep(formData, toast);
-    if (step === 12) return validateHeightInputStep(formData, toast) && validateWeightInputStep(formData, toast);
+    const { validateBodyAssessmentStep } = require('./bodyAssessmentValidation');
+    return validateBodyAssessmentStep(step, formData, toast);
   }
   
-  // Workout Preference steps (13-17)
-  if (step >= 13 && step <= 17) {
+  // Workout Preference steps (13-20)
+  if (step >= 13 && step <= 20) {
     const { validateWorkoutPreferencesStep } = require('./workoutPreferencesValidation');
     return validateWorkoutPreferencesStep(step, formData, toast);
   }
   
-  // Lifestyle steps (18-22)
-  if (step >= 18 && step <= 22) {
+  // Lifestyle steps (21-24)
+  if (step >= 21 && step <= 24) {
     const { validateLifestyleStep } = require('./lifestyleValidation');
     return validateLifestyleStep(step, formData, toast);
   }
   
-  // Final steps (23-29)
-  if (step >= 23 && step <= 29) {
+  // Final steps (25-29)
+  if (step >= 25 && step <= 29) {
     const { validateFinalStepsStep } = require('./finalStepsValidation');
     return validateFinalStepsStep(step, formData, toast);
   }

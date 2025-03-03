@@ -1,5 +1,5 @@
 
-import { useEffect } from "react";
+import React from "react";
 import Logo from "@/components/Logo";
 import { FormState, LoadingState, ResultsState, SuccessState } from "@/components/app-states";
 import { SurveyProvider, useSurvey } from "@/contexts/SurveyContext";

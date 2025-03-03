@@ -20,7 +20,7 @@ export const useSurvey = () => {
 };
 
 export const SurveyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Updated to 29 steps since we removed the StartCommitmentStep
+  // Updated to 29 steps
   const totalSteps = 29;
   
   // Use our custom hooks
@@ -31,8 +31,10 @@ export const SurveyProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   
   // Initialize navigation with form completion handler
   const handleSurveyComplete = () => {
-    // Call setAppState directly instead of submitSurvey
-    setAppState("results");
+    setAppState("loading");
+    simulateLoading().then(() => {
+      setAppState("results");
+    });
   };
   
   const { 
