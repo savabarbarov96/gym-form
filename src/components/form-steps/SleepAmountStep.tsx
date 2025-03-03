@@ -12,6 +12,7 @@ const SleepAmountStep: React.FC<SleepAmountStepProps> = ({ value, onChange }) =>
   const [hours, setHours] = useState<number>(value || 7);
   
   useEffect(() => {
+    // Update parent form state when hours change
     onChange(hours);
   }, [hours, onChange]);
 
