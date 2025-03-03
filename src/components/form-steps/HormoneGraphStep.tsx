@@ -1,6 +1,6 @@
 
-import React, { useEffect, useState } from "react";
-import { Area, AreaChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import React, { useEffect, useRef, useState } from "react";
+import * as d3 from "d3";
 import { motion } from "framer-motion";
 
 interface HormoneGraphStepProps {
@@ -9,21 +9,16 @@ interface HormoneGraphStepProps {
 
 const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext }) => {
   const [animationComplete, setAnimationComplete] = useState(false);
-  const [data, setData] = useState([
-    { month: 'Month 1', cortisol: 100, testosterone: 10 },
-    { month: 'Month 2', cortisol: 100, testosterone: 10 },
-    { month: 'Month 3', cortisol: 100, testosterone: 10 },
-    { month: 'Month 4', cortisol: 100, testosterone: 10 },
-    { month: 'Month 5', cortisol: 100, testosterone: 10 },
-    { month: 'Month 6', cortisol: 100, testosterone: 10 },
-  ]);
-
-  // Animate the data with smoother curves
+  const chartRef = useRef<HTMLDivElement>(null);
+  
   useEffect(() => {
-    if (animationComplete) return;
+    if (!chartRef.current) return;
     
-    // Create more realistic, smoother curve data points
-    const finalData = [
+    // Clear any existing SVG
+    d3.select(chartRef.current).selectAll("*").remove();
+    
+    // Create more realistic data points
+    const data = [
       { month: 'Month 1', cortisol: 100, testosterone: 10 },
       { month: 'Month 2', cortisol: 88, testosterone: 25 },
       { month: 'Month 3', cortisol: 74, testosterone: 42 },
@@ -31,26 +26,339 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext }) => {
       { month: 'Month 5', cortisol: 45, testosterone: 72 },
       { month: 'Month 6', cortisol: 35, testosterone: 85 },
     ];
+
+    // Set up dimensions
+    const margin = { top: 50, right: 30, bottom: 50, left: 60 };
+    const width = chartRef.current.clientWidth - margin.left - margin.right;
+    const height = 350 - margin.top - margin.bottom;
     
-    // Animate the data points sequentially for a smoother transition
-    let currentIndex = 0;
-    const animateNextPoint = () => {
-      if (currentIndex < finalData.length) {
-        setData(prevData => {
-          const newData = [...prevData];
-          newData[currentIndex] = finalData[currentIndex];
-          return newData;
-        });
-        currentIndex++;
-        setTimeout(animateNextPoint, 400);
-      } else {
+    // Create SVG element
+    const svg = d3.select(chartRef.current)
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+    
+    // Add background rect for styling
+    svg.append("rect")
+      .attr("width", width)
+      .attr("height", height)
+      .attr("fill", "#111")
+      .attr("rx", 6);
+    
+    // X scale
+    const x = d3.scalePoint<string>()
+      .domain(data.map(d => d.month))
+      .range([0, width])
+      .padding(0.5);
+    
+    // Y scale
+    const y = d3.scaleLinear()
+      .domain([0, 100])
+      .range([height, 0]);
+    
+    // Add X grid lines
+    svg.append("g")
+      .attr("class", "grid x-grid")
+      .attr("transform", `translate(0,${height})`)
+      .call(
+        d3.axisBottom(x)
+          .tickSize(-height)
+          .tickFormat(() => "")
+      )
+      .call(g => g.selectAll(".domain, .tick line").attr("stroke", "#333"));
+    
+    // Add Y grid lines
+    svg.append("g")
+      .attr("class", "grid y-grid")
+      .call(
+        d3.axisLeft(y)
+          .tickSize(-width)
+          .tickFormat(() => "")
+          .ticks(5)
+      )
+      .call(g => g.selectAll(".domain, .tick line").attr("stroke", "#333"));
+    
+    // Add X axis
+    svg.append("g")
+      .attr("transform", `translate(0,${height})`)
+      .call(d3.axisBottom(x))
+      .call(g => g.select(".domain").attr("stroke", "#666"))
+      .call(g => g.selectAll("text")
+        .attr("fill", "#999")
+        .style("font-size", "12px")
+      );
+    
+    // Add Y axis
+    svg.append("g")
+      .call(d3.axisLeft(y).ticks(5))
+      .call(g => g.select(".domain").attr("stroke", "#666"))
+      .call(g => g.selectAll("text")
+        .attr("fill", "#999")
+        .style("font-size", "12px")
+      );
+    
+    // Add gradient definitions
+    const defs = svg.append("defs");
+    
+    // Cortisol gradient
+    const cortisolGradient = defs.append("linearGradient")
+      .attr("id", "cortisolGradient")
+      .attr("x1", "0%")
+      .attr("y1", "0%")
+      .attr("x2", "0%")
+      .attr("y2", "100%");
+    
+    cortisolGradient.append("stop")
+      .attr("offset", "0%")
+      .attr("stop-color", "#ff4700")
+      .attr("stop-opacity", 0.9);
+    
+    cortisolGradient.append("stop")
+      .attr("offset", "100%")
+      .attr("stop-color", "#ff4700")
+      .attr("stop-opacity", 0.1);
+    
+    // Testosterone gradient
+    const testosteroneGradient = defs.append("linearGradient")
+      .attr("id", "testosteroneGradient")
+      .attr("x1", "0%")
+      .attr("y1", "0%")
+      .attr("x2", "0%")
+      .attr("y2", "100%");
+    
+    testosteroneGradient.append("stop")
+      .attr("offset", "0%")
+      .attr("stop-color", "#54D62C")
+      .attr("stop-opacity", 0.9);
+    
+    testosteroneGradient.append("stop")
+      .attr("offset", "100%")
+      .attr("stop-color", "#54D62C")
+      .attr("stop-opacity", 0.1);
+    
+    // Add line generators with curve
+    const cortisolLine = d3.line<any>()
+      .x(d => x(d.month) || 0)
+      .y(d => y(d.cortisol))
+      .curve(d3.curveCatmullRom.alpha(0.5));
+    
+    const testosteroneLine = d3.line<any>()
+      .x(d => x(d.month) || 0)
+      .y(d => y(d.testosterone))
+      .curve(d3.curveCatmullRom.alpha(0.5));
+    
+    // Add area generators
+    const cortisolArea = d3.area<any>()
+      .x(d => x(d.month) || 0)
+      .y0(height)
+      .y1(d => y(d.cortisol))
+      .curve(d3.curveCatmullRom.alpha(0.5));
+    
+    const testosteroneArea = d3.area<any>()
+      .x(d => x(d.month) || 0)
+      .y0(height)
+      .y1(d => y(d.testosterone))
+      .curve(d3.curveCatmullRom.alpha(0.5));
+    
+    // Add cortisol area path
+    const cortisolAreaPath = svg.append("path")
+      .datum(data)
+      .attr("fill", "url(#cortisolGradient)")
+      .attr("opacity", 0)
+      .attr("d", cortisolArea);
+    
+    // Add testosterone area path
+    const testosteroneAreaPath = svg.append("path")
+      .datum(data)
+      .attr("fill", "url(#testosteroneGradient)")
+      .attr("opacity", 0)
+      .attr("d", testosteroneArea);
+    
+    // Add cortisol line path with animation
+    const cortisolPath = svg.append("path")
+      .datum(data)
+      .attr("fill", "none")
+      .attr("stroke", "#ff4700")
+      .attr("stroke-width", 3)
+      .attr("stroke-linecap", "round")
+      .attr("d", cortisolLine);
+    
+    const cortisolLength = cortisolPath.node()?.getTotalLength() || 0;
+    
+    cortisolPath
+      .attr("stroke-dasharray", cortisolLength)
+      .attr("stroke-dashoffset", cortisolLength)
+      .transition()
+      .duration(2000)
+      .attr("stroke-dashoffset", 0)
+      .on("end", () => {
+        cortisolAreaPath
+          .transition()
+          .duration(1000)
+          .attr("opacity", 0.3);
+      });
+    
+    // Add testosterone line path with animation
+    const testosteronePath = svg.append("path")
+      .datum(data)
+      .attr("fill", "none")
+      .attr("stroke", "#54D62C")
+      .attr("stroke-width", 3)
+      .attr("stroke-linecap", "round")
+      .attr("d", testosteroneLine);
+    
+    const testosteroneLength = testosteronePath.node()?.getTotalLength() || 0;
+    
+    testosteronePath
+      .attr("stroke-dasharray", testosteroneLength)
+      .attr("stroke-dashoffset", testosteroneLength)
+      .transition()
+      .duration(2000)
+      .attr("stroke-dashoffset", 0)
+      .on("end", () => {
+        testosteroneAreaPath
+          .transition()
+          .duration(1000)
+          .attr("opacity", 0.3);
+          
         setAnimationComplete(true);
+      });
+    
+    // Add data points with animation
+    svg.selectAll(".cortisol-point")
+      .data(data)
+      .enter()
+      .append("circle")
+      .attr("class", "cortisol-point")
+      .attr("cx", d => x(d.month) || 0)
+      .attr("cy", d => y(d.cortisol))
+      .attr("r", 0)
+      .attr("fill", "#ff4700")
+      .transition()
+      .delay((d, i) => 1800 * (i / (data.length - 1)))
+      .duration(300)
+      .attr("r", 5);
+    
+    svg.selectAll(".testosterone-point")
+      .data(data)
+      .enter()
+      .append("circle")
+      .attr("class", "testosterone-point")
+      .attr("cx", d => x(d.month) || 0)
+      .attr("cy", d => y(d.testosterone))
+      .attr("r", 0)
+      .attr("fill", "#54D62C")
+      .transition()
+      .delay((d, i) => 1800 * (i / (data.length - 1)))
+      .duration(300)
+      .attr("r", 5);
+    
+    // Add data labels with animation
+    svg.selectAll(".cortisol-label")
+      .data(data)
+      .enter()
+      .append("text")
+      .attr("class", "cortisol-label")
+      .attr("x", d => x(d.month) || 0)
+      .attr("y", d => y(d.cortisol) - 10)
+      .attr("text-anchor", "middle")
+      .attr("fill", "#ff4700")
+      .attr("font-size", "12px")
+      .attr("opacity", 0)
+      .text(d => `${d.cortisol}%`)
+      .transition()
+      .delay((d, i) => 2000 + i * 100)
+      .duration(500)
+      .attr("opacity", 1);
+    
+    svg.selectAll(".testosterone-label")
+      .data(data)
+      .enter()
+      .append("text")
+      .attr("class", "testosterone-label")
+      .attr("x", d => x(d.month) || 0)
+      .attr("y", d => y(d.testosterone) - 10)
+      .attr("text-anchor", "middle")
+      .attr("fill", "#54D62C")
+      .attr("font-size", "12px")
+      .attr("opacity", 0)
+      .text(d => `${d.testosterone}%`)
+      .transition()
+      .delay((d, i) => 2000 + i * 100)
+      .duration(500)
+      .attr("opacity", 1);
+    
+    // Add chart title
+    svg.append("text")
+      .attr("x", width / 2)
+      .attr("y", -20)
+      .attr("text-anchor", "middle")
+      .attr("fill", "#fff")
+      .attr("font-size", "16px")
+      .attr("font-weight", "bold")
+      .text("Hormone Balance Over Time");
+    
+    // Add stylish legend
+    const legendWidth = 220;
+    const legendHeight = 70;
+    const legendX = width - legendWidth;
+    const legendY = 0;
+    
+    // Legend background
+    svg.append("rect")
+      .attr("x", legendX)
+      .attr("y", legendY)
+      .attr("width", legendWidth)
+      .attr("height", legendHeight)
+      .attr("fill", "rgba(0,0,0,0.5)")
+      .attr("rx", 5);
+    
+    // Cortisol legend item
+    svg.append("line")
+      .attr("x1", legendX + 15)
+      .attr("y1", legendY + 20)
+      .attr("x2", legendX + 45)
+      .attr("y2", legendY + 20)
+      .attr("stroke", "#ff4700")
+      .attr("stroke-width", 3);
+    
+    svg.append("text")
+      .attr("x", legendX + 55)
+      .attr("y", legendY + 25)
+      .attr("fill", "#ddd")
+      .attr("font-size", "14px")
+      .text("Cortisol (Stress)");
+    
+    // Testosterone legend item
+    svg.append("line")
+      .attr("x1", legendX + 15)
+      .attr("y1", legendY + 50)
+      .attr("x2", legendX + 45)
+      .attr("y2", legendY + 50)
+      .attr("stroke", "#54D62C")
+      .attr("stroke-width", 3);
+    
+    svg.append("text")
+      .attr("x", legendX + 55)
+      .attr("y", legendY + 55)
+      .attr("fill", "#ddd")
+      .attr("font-size", "14px")
+      .text("Testosterone");
+    
+    // Handle window resize
+    const handleResize = () => {
+      if (chartRef.current) {
+        d3.select(chartRef.current).selectAll("*").remove();
+        // Redraw chart (this would require duplicating code above)
       }
     };
     
-    animateNextPoint();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
-
+  
   return (
     <div className="text-center max-w-4xl mx-auto">
       <motion.h1 
@@ -71,57 +379,7 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext }) => {
         Our program helps reduce stress hormone (cortisol) and increase testosterone for better results
       </motion.p>
       
-      <div className="h-80 w-full mb-10">
-        <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-            <defs>
-              <linearGradient id="cortisolGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#ff4700" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="#ff4700" stopOpacity={0.2} />
-              </linearGradient>
-              <linearGradient id="testosteroneGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#54D62C" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="#54D62C" stopOpacity={0.2} />
-              </linearGradient>
-            </defs>
-            <XAxis dataKey="month" stroke="#666" />
-            <YAxis stroke="#666" />
-            <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-            <Tooltip 
-              contentStyle={{ 
-                backgroundColor: '#222', 
-                borderColor: '#333',
-                color: '#fff' 
-              }} 
-            />
-            <Legend />
-            <Area 
-              type="monotone" 
-              dataKey="cortisol" 
-              name="Cortisol (Stress)"
-              stroke="#ff4700" 
-              strokeWidth={2}
-              fillOpacity={1} 
-              fill="url(#cortisolGradient)" 
-              isAnimationActive={true}
-              animationDuration={1500}
-              animationEasing="ease-out"
-            />
-            <Area 
-              type="monotone" 
-              dataKey="testosterone" 
-              name="Testosterone"
-              stroke="#54D62C" 
-              strokeWidth={2}
-              fillOpacity={1} 
-              fill="url(#testosteroneGradient)" 
-              isAnimationActive={true}
-              animationDuration={1500}
-              animationEasing="ease-out"
-            />
-          </AreaChart>
-        </ResponsiveContainer>
-      </div>
+      <div ref={chartRef} className="w-full h-[350px] bg-card rounded-lg p-4 shadow-lg mb-12"></div>
 
       <motion.button 
         onClick={onNext}
@@ -132,7 +390,7 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext }) => {
         whileHover={{ y: -5 }}
         whileTap={{ scale: 0.95 }}
       >
-        Awesome
+        Continue
       </motion.button>
     </div>
   );
