@@ -1,16 +1,16 @@
 
 import React from 'react';
 import { FormData } from '@/types/survey';
-import { 
-  WorkoutLocationStep,
-  WorkoutIntensityStep,
-  WorkoutFrequencyStep,
-  WorkoutDurationStep,
-  ActivitiesStep,
-  ExercisePreferencesStep,
-  ProblemAreasStep,
-  FitnessGoalStep
-} from '@/components/form-steps';
+import {
+  FitnessGoalStepRenderer,
+  ProblemAreasStepRenderer,
+  ActivitiesStepRenderer,
+  WorkoutLocationStepRenderer,
+  WorkoutIntensityStepRenderer,
+  WorkoutFrequencyStepRenderer,
+  WorkoutDurationStepRenderer,
+  ExercisePreferencesStepRenderer
+} from './workout-preferences';
 
 interface WorkoutPreferencesStepRendererProps {
   step: number;
@@ -27,82 +27,21 @@ const WorkoutPreferencesStepRenderer = ({
 }: WorkoutPreferencesStepRendererProps) => {
   switch (step) {
     case 12:
-      return (
-        <FitnessGoalStep
-          selectedGoal={formData.fitnessGoal}
-          onSelect={(fitnessGoal) => 
-            setFormData(prev => ({ ...prev, fitnessGoal }))
-          }
-        />
-      );
+      return <FitnessGoalStepRenderer formData={formData} setFormData={setFormData} />;
     case 13:
-      return (
-        <ProblemAreasStep
-          selectedAreas={formData.problemAreas}
-          onSelectArea={(problemAreas) => 
-            setFormData(prev => ({ ...prev, problemAreas }))
-          }
-        />
-      );
+      return <ProblemAreasStepRenderer formData={formData} setFormData={setFormData} />;
     case 14:
-      return (
-        <ActivitiesStep
-          selectedActivities={formData.activities}
-          customActivity={formData.customActivity}
-          onSelectionsChange={(activities) =>
-            setFormData(prev => ({ ...prev, activities }))
-          }
-          onCustomActivityChange={(customActivity) =>
-            setFormData(prev => ({ ...prev, customActivity }))
-          }
-        />
-      );
+      return <ActivitiesStepRenderer formData={formData} setFormData={setFormData} />;
     case 15:
-      return (
-        <WorkoutLocationStep
-          selectedLocation={formData.workoutLocation}
-          onSelect={(workoutLocation) => 
-            setFormData(prev => ({ ...prev, workoutLocation }))
-          }
-        />
-      );
+      return <WorkoutLocationStepRenderer formData={formData} setFormData={setFormData} />;
     case 16:
-      return (
-        <WorkoutIntensityStep
-          selectedIntensity={formData.workoutIntensity}
-          onSelect={(workoutIntensity) => 
-            setFormData(prev => ({ ...prev, workoutIntensity }))
-          }
-        />
-      );
+      return <WorkoutIntensityStepRenderer formData={formData} setFormData={setFormData} />;
     case 17:
-      return (
-        <WorkoutFrequencyStep
-          selected={formData.workoutFrequency}
-          onSelect={(workoutFrequency) => 
-            setFormData(prev => ({ ...prev, workoutFrequency }))
-          }
-        />
-      );
+      return <WorkoutFrequencyStepRenderer formData={formData} setFormData={setFormData} />;
     case 18:
-      return (
-        <WorkoutDurationStep
-          selected={formData.workoutDuration}
-          onSelect={(workoutDuration) => 
-            setFormData(prev => ({ ...prev, workoutDuration }))
-          }
-        />
-      );
+      return <WorkoutDurationStepRenderer formData={formData} setFormData={setFormData} />;
     case 19:
-      return (
-        <ExercisePreferencesStep
-          preferences={formData.exercisePreferences}
-          onPreferenceChange={(exercisePreferences) => 
-            setFormData(prev => ({ ...prev, exercisePreferences }))
-          }
-          onStepComplete={handleNext}
-        />
-      );
+      return <ExercisePreferencesStepRenderer formData={formData} setFormData={setFormData} handleNext={handleNext} />;
     default:
       return null;
   }
