@@ -1,7 +1,8 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, TrendingDown, Dumbbell, BarChart, Calendar, Timer, Heart, Award } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface ResultsStateProps {
   handleGetPlan: () => void;
@@ -15,39 +16,57 @@ const ResultsState: React.FC<ResultsStateProps> = ({ handleGetPlan }) => {
       className="w-full max-w-4xl mx-auto results-container"
     >
       <div className="text-center mb-8">
-        <h1 className="text-5xl font-bold mb-16">
+        <h1 className="text-5xl font-bold mb-8">
           Personal summary based on your answers
         </h1>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-          <div className="bg-card p-6 rounded-lg">
-            <div className="flex justify-center">
-              <img 
-                src="/lovable-uploads/4ebaaf49-4ba0-41fb-b5f4-abd901f7548c.png"
-                alt="Current body state"
-                className="h-[300px] object-contain"
-              />
-            </div>
-            <div className="mt-4 text-xl font-bold">Now</div>
+        <p className="text-muted-foreground text-xl mb-16 max-w-2xl mx-auto">
+          Here's what you can expect to achieve with your personalized plan
+        </p>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+          <div className="bg-card p-8 rounded-lg relative overflow-hidden card-hover-effect">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange/30 to-orange/70"></div>
+            <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
+              <Calendar className="text-orange" />
+              <span>Current State</span>
+            </h2>
             
-            <div className="mt-6 text-left">
-              <div className="mb-4">
-                <div className="text-muted-foreground">Body fat</div>
+            <div className="flex justify-center mb-8">
+              <div className="relative">
+                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-orange/30 to-transparent flex items-center justify-center">
+                  <Award className="w-16 h-16 text-orange/70" />
+                </div>
+              </div>
+            </div>
+            
+            <div className="text-left space-y-6">
+              <div>
+                <div className="text-muted-foreground flex items-center gap-2">
+                  <TrendingDown className="w-4 h-4" />
+                  Body fat
+                </div>
                 <div className="text-orange text-xl font-semibold">20-24%</div>
               </div>
               
-              <div className="mb-4">
-                <div className="text-muted-foreground">Fitness age</div>
+              <div>
+                <div className="text-muted-foreground flex items-center gap-2">
+                  <Timer className="w-4 h-4" />
+                  Fitness age
+                </div>
                 <div className="text-orange text-xl font-semibold">36</div>
               </div>
               
               <div>
-                <div className="text-muted-foreground">Body muscles</div>
+                <div className="text-muted-foreground flex items-center gap-2">
+                  <Dumbbell className="w-4 h-4" />
+                  Body muscles
+                </div>
                 <div className="flex gap-1 mt-2">
                   {[1, 2, 3, 4, 5].map((i) => (
                     <div 
                       key={i} 
-                      className={`h-1 flex-1 ${i <= 2 ? 'bg-orange' : 'bg-muted'}`}
+                      className={`h-2 rounded-full flex-1 ${i <= 2 ? 'bg-orange' : 'bg-muted'}`}
                     />
                   ))}
                 </div>
@@ -55,34 +74,48 @@ const ResultsState: React.FC<ResultsStateProps> = ({ handleGetPlan }) => {
             </div>
           </div>
           
-          <div className="bg-card p-6 rounded-lg">
-            <div className="flex justify-center">
-              <img 
-                src="/lovable-uploads/8c1d1175-e256-43d0-b73e-9366eee65eb8.png"
-                alt="Future body state"
-                className="h-[300px] object-contain"
-              />
-            </div>
-            <div className="mt-4 text-xl font-bold">6 months</div>
+          <div className="bg-card p-8 rounded-lg relative overflow-hidden card-hover-effect">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange/50 to-orange"></div>
+            <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
+              <BarChart className="text-orange" />
+              <span>After 6 months</span>
+            </h2>
             
-            <div className="mt-6 text-left">
-              <div className="mb-4">
-                <div className="text-muted-foreground">Body fat</div>
+            <div className="flex justify-center mb-8">
+              <div className="relative">
+                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-orange/50 to-transparent flex items-center justify-center">
+                  <Heart className="w-16 h-16 text-orange" />
+                </div>
+              </div>
+            </div>
+            
+            <div className="text-left space-y-6">
+              <div>
+                <div className="text-muted-foreground flex items-center gap-2">
+                  <TrendingDown className="w-4 h-4" />
+                  Body fat
+                </div>
                 <div className="text-orange text-xl font-semibold">15-17%</div>
               </div>
               
-              <div className="mb-4">
-                <div className="text-muted-foreground">Fitness age</div>
+              <div>
+                <div className="text-muted-foreground flex items-center gap-2">
+                  <Timer className="w-4 h-4" />
+                  Fitness age
+                </div>
                 <div className="text-orange text-xl font-semibold">32</div>
               </div>
               
               <div>
-                <div className="text-muted-foreground">Body muscles</div>
+                <div className="text-muted-foreground flex items-center gap-2">
+                  <Dumbbell className="w-4 h-4" />
+                  Body muscles
+                </div>
                 <div className="flex gap-1 mt-2">
                   {[1, 2, 3, 4, 5].map((i) => (
                     <div 
                       key={i} 
-                      className={`h-1 flex-1 ${i <= 4 ? 'bg-orange' : 'bg-muted'}`}
+                      className={`h-2 rounded-full flex-1 ${i <= 4 ? 'bg-orange' : 'bg-muted'}`}
                     />
                   ))}
                 </div>
@@ -92,7 +125,7 @@ const ResultsState: React.FC<ResultsStateProps> = ({ handleGetPlan }) => {
         </div>
         
         <div className="text-xs text-muted-foreground mb-16">
-          *The animation is not intended to represent the user. Results vary per person and are not guaranteed.
+          *Results vary by individual and are not guaranteed. Your personalized plan is based on your specific information.
         </div>
         
         <motion.a 
@@ -103,9 +136,9 @@ const ResultsState: React.FC<ResultsStateProps> = ({ handleGetPlan }) => {
           }}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="inline-flex items-center gap-2 text-white bg-orange hover:bg-orange-hover px-12 py-4 rounded-lg text-xl font-medium transition-colors"
+          className="inline-flex items-center gap-3 text-white bg-orange hover:bg-orange-hover px-12 py-4 rounded-lg text-xl font-bold transition-colors"
         >
-          Get my plan
+          Get my personalized plan
           <ArrowRight size={20} />
         </motion.a>
       </div>

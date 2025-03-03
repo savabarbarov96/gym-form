@@ -1,5 +1,7 @@
 
 import React from "react";
+import { UserCircle2, User, Users } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface BodyTypeStepProps {
   selectedType: string | null;
@@ -8,38 +10,65 @@ interface BodyTypeStepProps {
 
 const BodyTypeStep = ({ selectedType, onSelect }: BodyTypeStepProps) => {
   const bodyTypes = [
-    { label: "Slim", id: "slim" },
-    { label: "Average", id: "average" },
-    { label: "Heavy", id: "heavy" },
+    { 
+      label: "Slim", 
+      id: "slim", 
+      icon: UserCircle2,
+      description: "Small frame with lean build"
+    },
+    { 
+      label: "Average", 
+      id: "average", 
+      icon: User,
+      description: "Balanced proportions"
+    },
+    { 
+      label: "Heavy", 
+      id: "heavy", 
+      icon: Users,
+      description: "Larger frame with more mass"
+    },
   ];
 
   return (
     <div className="text-center">
-      <h1 className="text-4xl sm:text-5xl font-bold mb-12">Choose your body type</h1>
+      <h1 className="text-4xl sm:text-5xl font-bold mb-6">Choose your body type</h1>
+      <p className="text-muted-foreground text-xl mb-8">Select the option that best describes your current body</p>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
-        {bodyTypes.map((type) => (
-          <div
-            key={type.id}
-            className={`option-card aspect-[3/4] ${selectedType === type.id ? 'selected' : ''}`}
-            onClick={() => onSelect(type.id)}
-          >
-            <div className="p-4 flex-1 flex flex-col">
-              <div className="flex-1 flex items-center justify-center">
-                <img 
-                  src={`/lovable-uploads/${type.id === "slim" ? "82f8a303-b796-47ca-a21f-603d7e9c07ba.png" : 
-                       type.id === "average" ? "949229f9-bb7a-407e-b06a-54cc9a26b481.png" : 
-                       "4da1e807-08a9-43e9-a569-7c2f5d6e9591.png"}`} 
-                  alt={`${type.label} body type`}
-                  className="h-full object-contain"
-                />
-              </div>
-              <div className="mt-auto">
-                <h3 className="text-xl font-medium">{type.label}</h3>
+        {bodyTypes.map((type) => {
+          const Icon = type.icon;
+          return (
+            <div
+              key={type.id}
+              className={cn(
+                "option-card aspect-[3/4] card-hover-effect",
+                selectedType === type.id ? 'selected' : ''
+              )}
+              onClick={() => onSelect(type.id)}
+            >
+              <div className="p-6 flex-1 flex flex-col">
+                <div className="flex-1 flex items-center justify-center">
+                  <div className="relative">
+                    <div className={cn(
+                      "transition-all duration-300",
+                      selectedType === type.id ? "scale-110" : ""
+                    )}>
+                      <Icon className="w-32 h-32 text-orange/80" strokeWidth={selectedType === type.id ? 2.5 : 1.5} />
+                    </div>
+                    {selectedType === type.id && (
+                      <div className="absolute inset-0 bg-orange/10 rounded-full animate-pulse" />
+                    )}
+                  </div>
+                </div>
+                <div className="mt-auto">
+                  <h3 className="text-xl font-semibold">{type.label}</h3>
+                  <p className="text-sm text-muted-foreground">{type.description}</p>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   );

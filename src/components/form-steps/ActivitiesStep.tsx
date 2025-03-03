@@ -1,7 +1,8 @@
 
 import React from "react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Check } from "lucide-react";
+import { Check, Running, Bike, Waves, Person, Music, Dumbbell, Users, Mountain } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface ActivitiesStepProps {
   selectedActivities: string[];
@@ -10,14 +11,14 @@ interface ActivitiesStepProps {
 
 const ActivitiesStep = ({ selectedActivities, onSelectActivities }: ActivitiesStepProps) => {
   const activities = [
-    { label: "Running", id: "running" },
-    { label: "Cycling", id: "cycling" },
-    { label: "Swimming", id: "swimming" },
-    { label: "Walking", id: "walking" },
-    { label: "Dancing", id: "dancing" },
-    { label: "Pilates", id: "pilates" },
-    { label: "Team sports", id: "teamsports" },
-    { label: "Hiking", id: "hiking" },
+    { label: "Running", id: "running", icon: Running },
+    { label: "Cycling", id: "cycling", icon: Bike },
+    { label: "Swimming", id: "swimming", icon: Waves },
+    { label: "Walking", id: "walking", icon: Person },
+    { label: "Dancing", id: "dancing", icon: Music },
+    { label: "Pilates", id: "pilates", icon: Dumbbell },
+    { label: "Team sports", id: "teamsports", icon: Users },
+    { label: "Hiking", id: "hiking", icon: Mountain },
   ];
 
   const toggleActivity = (id: string) => {
@@ -52,39 +53,57 @@ const ActivitiesStep = ({ selectedActivities, onSelectActivities }: ActivitiesSt
 
   return (
     <div className="text-center">
-      <h1 className="text-4xl sm:text-5xl font-bold mb-12">Are any of these activities part of your life?</h1>
+      <h1 className="text-4xl sm:text-5xl font-bold mb-6">Are any of these activities part of your life?</h1>
+      <p className="text-muted-foreground text-xl mb-8">Select all that apply to your regular routine</p>
       
-      <div className="max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-        <div className="flex justify-center">
-          <img 
-            src="/lovable-uploads/949229f9-bb7a-407e-b06a-54cc9a26b481.png"
-            alt="Activities"
-            className="max-h-[200px] object-contain"
-          />
+      <div className="max-w-3xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          {activities.map((activity) => {
+            const Icon = activity.icon;
+            return (
+              <div
+                key={activity.id}
+                className={cn(
+                  "flex flex-col items-center gap-3 bg-card p-5 rounded-lg cursor-pointer border border-transparent transition-all",
+                  isNoneSelected ? "opacity-50 pointer-events-none" : "",
+                  selectedActivities.includes(activity.id) ? "border-orange bg-orange/5" : "hover:border-muted-foreground/30"
+                )}
+                onClick={() => toggleActivity(activity.id)}
+              >
+                <div className={cn(
+                  "icon-container",
+                  selectedActivities.includes(activity.id) ? "bg-orange/20" : "bg-secondary"
+                )}>
+                  <Icon className={cn(
+                    "icon-sm",
+                    selectedActivities.includes(activity.id) ? "text-orange" : "text-muted-foreground"
+                  )} />
+                </div>
+                <label className="text-base cursor-pointer">{activity.label}</label>
+                <Checkbox 
+                  id={activity.id}
+                  checked={selectedActivities.includes(activity.id)}
+                  onCheckedChange={() => toggleActivity(activity.id)}
+                  className="data-[state=checked]:bg-orange data-[state=checked]:text-white mt-auto"
+                  disabled={isNoneSelected}
+                />
+              </div>
+            );
+          })}
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {activities.map((activity) => (
-            <div
-              key={activity.id}
-              className={`flex items-center gap-3 bg-card p-4 rounded-lg cursor-pointer ${isNoneSelected ? "opacity-50 pointer-events-none" : ""}`}
-              onClick={() => toggleActivity(activity.id)}
-            >
-              <Checkbox 
-                id={activity.id}
-                checked={selectedActivities.includes(activity.id)}
-                onCheckedChange={() => toggleActivity(activity.id)}
-                className="data-[state=checked]:bg-orange data-[state=checked]:text-white"
-                disabled={isNoneSelected}
-              />
-              <label htmlFor={activity.id} className="text-xl cursor-pointer">{activity.label}</label>
-            </div>
-          ))}
           
+        <div className="mt-8">
           <div
-            className="flex items-center gap-3 bg-card p-4 rounded-lg cursor-pointer col-span-full"
+            className={cn(
+              "flex items-center gap-4 bg-card p-5 rounded-lg cursor-pointer border border-transparent transition-all",
+              isNoneSelected ? "border-orange bg-orange/5" : "hover:border-muted-foreground/30"
+            )}
             onClick={() => toggleActivity("none")}
           >
-            <div className={`w-5 h-5 rounded-full border border-orange flex items-center justify-center ${isNoneSelected ? "bg-orange" : ""}`}>
+            <div className={cn(
+              "w-5 h-5 rounded-full border flex items-center justify-center",
+              isNoneSelected ? "border-orange bg-orange" : "border-muted-foreground"
+            )}>
               {isNoneSelected && <Check className="w-4 h-4 text-white" />}
             </div>
             <label className="text-xl cursor-pointer">None of the above</label>

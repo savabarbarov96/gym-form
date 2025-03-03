@@ -69,3 +69,52 @@
 .progress-bar-fill {
   @apply h-full bg-orange transition-all duration-300;
 }
+
+/* Enhanced animations */
+@keyframes pulse-glow {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.2); }
+}
+
+.glow-on-hover:hover {
+  animation: pulse-glow 2s infinite;
+}
+
+/* Card effects */
+.card-hover-effect {
+  @apply transition-all duration-300;
+}
+
+.card-hover-effect:hover {
+  @apply transform -translate-y-1 shadow-lg;
+}
+
+/* Icon decorations */
+.icon-decoration {
+  @apply absolute opacity-10 text-orange;
+}
+
+.icon-topright {
+  @apply top-2 right-2;
+}
+
+.icon-bottomleft {
+  @apply bottom-2 left-2;
+}
+
+/* Icon containers */
+.icon-container {
+  @apply p-3 rounded-full bg-orange/10 text-orange;
+}
+
+.icon-lg {
+  @apply w-16 h-16;
+}
+
+.icon-md {
+  @apply w-12 h-12;
+}
+
+.icon-sm {
+  @apply w-8 h-8;
+}

@@ -1,5 +1,7 @@
 
 import React from "react";
+import { Weight, Dumbbell, Target, Heart } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface FitnessGoalStepProps {
   selectedGoal: string | null;
@@ -8,37 +10,72 @@ interface FitnessGoalStepProps {
 
 const FitnessGoalStep = ({ selectedGoal, onSelect }: FitnessGoalStepProps) => {
   const goals = [
-    { label: "Lose Weight", id: "lose-weight", image: "/lovable-uploads/4ebaaf49-4ba0-41fb-b5f4-abd901f7548c.png" },
-    { label: "Gain Muscle Mass", id: "gain-muscle", image: "/lovable-uploads/8c1d1175-e256-43d0-b73e-9366eee65eb8.png" },
-    { label: "Get Shredded", id: "get-shredded", image: "/lovable-uploads/aa15a6ef-769e-45dc-8fb2-87815f0041b3.png" },
-    { label: "Boost Well-Being", id: "boost-wellbeing", image: "/lovable-uploads/a7e78718-1e2c-457a-a7e2-b4811e5a72aa.png" },
+    { 
+      label: "Lose Weight", 
+      id: "lose-weight", 
+      icon: Weight,
+      description: "Reduce body fat and improve body composition" 
+    },
+    { 
+      label: "Gain Muscle Mass", 
+      id: "gain-muscle", 
+      icon: Dumbbell,
+      description: "Build strength and increase muscle size" 
+    },
+    { 
+      label: "Get Shredded", 
+      id: "get-shredded", 
+      icon: Target,
+      description: "Achieve maximum definition and low body fat" 
+    },
+    { 
+      label: "Boost Well-Being", 
+      id: "boost-wellbeing", 
+      icon: Heart,
+      description: "Improve overall health and energy levels" 
+    },
   ];
 
   return (
     <div className="text-center">
-      <h1 className="text-4xl sm:text-5xl font-bold mb-12">Choose your goal</h1>
+      <h1 className="text-4xl sm:text-5xl font-bold mb-6">Choose your goal</h1>
+      <p className="text-muted-foreground text-xl mb-8">What are you looking to achieve?</p>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-        {goals.map((goal) => (
-          <div
-            key={goal.id}
-            className={`option-card aspect-[3/2] ${selectedGoal === goal.id ? 'selected' : ''}`}
-            onClick={() => onSelect(goal.id)}
-          >
-            <div className="p-4 flex-1 flex flex-col relative">
-              <div className="flex-1 flex items-center">
-                <div className="font-medium text-xl flex items-center">
-                  {goal.label}
+        {goals.map((goal) => {
+          const Icon = goal.icon;
+          return (
+            <div
+              key={goal.id}
+              className={cn(
+                "option-card card-hover-effect p-8",
+                selectedGoal === goal.id ? 'selected' : ''
+              )}
+              onClick={() => onSelect(goal.id)}
+            >
+              <div className="flex items-center gap-6">
+                <div className={cn(
+                  "icon-container transition-all",
+                  selectedGoal === goal.id ? "bg-orange/30" : "bg-secondary"
+                )}>
+                  <Icon className={cn(
+                    "icon-md",
+                    selectedGoal === goal.id ? "text-orange" : "text-muted-foreground"
+                  )} />
                 </div>
-                <img 
-                  src={goal.image} 
-                  alt={`${goal.label} goal`}
-                  className="h-full object-contain absolute right-0 top-0 bottom-0"
-                />
+                <div className="text-left">
+                  <h3 className={cn(
+                    "text-xl font-medium mb-1",
+                    selectedGoal === goal.id ? "text-orange" : ""
+                  )}>
+                    {goal.label}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">{goal.description}</p>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   );
