@@ -1,4 +1,3 @@
-
 import { FormData } from "@/types/survey";
 import { toast as toastFunction } from "@/hooks/use-toast";
 import type { ToastParams } from "@/hooks/use-toast";
@@ -102,7 +101,7 @@ export const validateWeightInputStep = (formData: FormData, toast: (props: Toast
   return true;
 };
 
-// Add the main validation function for this module
+// Main validation function for this module
 export const validateBodyAssessmentStep = (
   step: number,
   formData: FormData,
