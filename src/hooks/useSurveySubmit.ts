@@ -2,6 +2,7 @@
 import { useToast } from "@/components/ui/use-toast";
 import { FormData } from "@/types/survey";
 import { submitToWebhook } from "@/components/WebhookService";
+import { updateLoadingAfterWebhook } from "@/utils/loadingSimulation";
 
 export const useSurveySubmit = (setAppState: (state: any) => void, setLoadingProgress: (progress: number) => void) => {
   const { toast } = useToast();
@@ -25,38 +26,11 @@ export const useSurveySubmit = (setAppState: (state: any) => void, setLoadingPro
     setAppState("loading");
     setLoadingProgress(0);
     
-    // Only send to webhook on "Get my personalized plan" click
+    // Send to webhook while showing loading animation
     submitToWebhook(formData).then((success) => {
-      if (success) {
-        simulateLoading();
-      } else {
-        toast({
-          title: "Error",
-          description: "There was an error generating your plan",
-          variant: "destructive",
-        });
-        setAppState("results");
-      }
+      // Update loading animation based on webhook response
+      updateLoadingAfterWebhook(success, setAppState, setLoadingProgress);
     });
-  };
-
-  // Simulate loading process
-  const simulateLoading = () => {
-    const increment = 100 / 40;
-    let currentProgress = 0;
-    
-    const interval = setInterval(() => {
-      currentProgress += increment;
-      setLoadingProgress(Math.min(Math.round(currentProgress), 100));
-      
-      if (currentProgress >= 100) {
-        clearInterval(interval);
-        // After loading completes, move to plan state
-        setTimeout(() => {
-          setAppState("plan");
-        }, 500);
-      }
-    }, 200);
   };
 
   return {

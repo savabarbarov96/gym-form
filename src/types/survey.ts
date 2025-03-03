@@ -1,5 +1,4 @@
-
-export type AppState = "form" | "loading" | "results" | "plan";
+export type AppState = "form" | "loading" | "results" | "plan" | "success";
 
 export interface FormData {
   age: string | null;

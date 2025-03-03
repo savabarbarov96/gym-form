@@ -1,7 +1,7 @@
 
 import { useEffect } from "react";
 import Logo from "@/components/Logo";
-import { FormState, LoadingState, ResultsState } from "@/components/app-states";
+import { FormState, LoadingState, ResultsState, SuccessState } from "@/components/app-states";
 import { SurveyProvider, useSurvey } from "@/contexts/SurveyContext";
 
 const SurveyContent = () => {
@@ -44,6 +44,10 @@ const SurveyContent = () => {
 
         {appState === "results" && (
           <ResultsState handleGetPlan={handleGetPlan} />
+        )}
+        
+        {appState === "success" && (
+          <SuccessState />
         )}
       </main>
       

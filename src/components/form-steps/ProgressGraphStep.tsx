@@ -39,9 +39,10 @@ const ProgressGraphStep = ({ goalValue, currentBodyFat = 25 }: ProgressGraphStep
       muscleMass: Math.round(item.muscleMass * 10) / 10
     }));
 
-    // Set up dimensions
-    const margin = { top: 50, right: 130, bottom: 70, left: 70 };
-    const width = chartRef.current.clientWidth - margin.left - margin.right;
+    // Set up dimensions - adjusted to fit container without scrolling
+    const parentWidth = chartRef.current.clientWidth;
+    const margin = { top: 50, right: Math.min(130, parentWidth * 0.1), bottom: 70, left: Math.min(70, parentWidth * 0.1) };
+    const width = parentWidth - margin.left - margin.right;
     const height = 400 - margin.top - margin.bottom;
     
     // Create SVG element with dark background
@@ -244,7 +245,9 @@ const ProgressGraphStep = ({ goalValue, currentBodyFat = 25 }: ProgressGraphStep
       .duration(500)
       .attr("r", 6);
     
-    // Add animated data labels
+    // Add animated data labels with responsive font size
+    const fontSize = Math.max(10, Math.min(12, parentWidth / 50));
+    
     svg.selectAll(".bodyFatLabel")
       .data(roundedData)
       .enter()
@@ -253,7 +256,7 @@ const ProgressGraphStep = ({ goalValue, currentBodyFat = 25 }: ProgressGraphStep
       .attr("x", d => (x(d.month) || 0) + x.bandwidth() / 2)
       .attr("y", d => y(d.bodyFat) - 15)
       .attr("text-anchor", "middle")
-      .style("font-size", "12px")
+      .style("font-size", `${fontSize}px`)
       .style("fill", "#FF6B35")
       .style("opacity", 0)
       .text(d => d.bodyFat + "%")
@@ -270,7 +273,7 @@ const ProgressGraphStep = ({ goalValue, currentBodyFat = 25 }: ProgressGraphStep
       .attr("x", d => (x(d.month) || 0) + x.bandwidth() / 2)
       .attr("y", d => y(d.muscleMass) - 15)
       .attr("text-anchor", "middle")
-      .style("font-size", "12px")
+      .style("font-size", `${fontSize}px`)
       .style("fill", "#54D62C")
       .style("opacity", 0)
       .text(d => d.muscleMass + "%")
@@ -302,64 +305,84 @@ const ProgressGraphStep = ({ goalValue, currentBodyFat = 25 }: ProgressGraphStep
     svg.append("text")
       .attr("transform", "rotate(-90)")
       .attr("x", -height / 2)
-      .attr("y", -50)
+      .attr("y", -40)
       .attr("text-anchor", "middle")
       .style("font-size", "14px")
       .style("fill", "#888")
       .text("Percentage (%)");
     
-    // Add enhanced legend with more space
+    // Add legend with responsive position
+    const legendX = width > 400 ? width + 20 : width - 100;
+    const legendY = width > 400 ? 0 : -40;
+    
     const legend = svg.append("g")
-      .attr("transform", `translate(${width + 20}, 0)`);
+      .attr("transform", `translate(${legendX}, ${legendY})`);
     
-    legend.append("rect")
-      .attr("x", 0)
-      .attr("y", 0)
-      .attr("width", 15)
-      .attr("height", 15)
-      .attr("fill", "#FF6B35");
-    
-    legend.append("text")
-      .attr("x", 25)
-      .attr("y", 12.5)
-      .text("Body Fat %")
-      .style("font-size", "14px")
-      .style("fill", "#ccc");
-    
-    legend.append("rect")
-      .attr("x", 0)
-      .attr("y", 30)
-      .attr("width", 15)
-      .attr("height", 15)
-      .attr("fill", "#54D62C");
-    
-    legend.append("text")
-      .attr("x", 25)
-      .attr("y", 42.5)
-      .text("Muscle Mass %")
-      .style("font-size", "14px")
-      .style("fill", "#ccc");
-    
-    // Add annotation for the best results with animation
-    svg.append("text")
-      .attr("x", width)
-      .attr("y", y(targetBodyFat) - 30)
-      .attr("text-anchor", "end")
-      .style("font-size", "14px")
-      .style("fill", "#FF6B35")
-      .style("opacity", 0)
-      .text("Target body fat achieved!")
-      .transition()
-      .delay(2500)
-      .duration(1000)
-      .style("opacity", 1);
+    if (width <= 400) {
+      // For smaller screens, create a horizontal legend
+      legend.append("rect")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", 12)
+        .attr("height", 12)
+        .attr("fill", "#FF6B35");
+      
+      legend.append("text")
+        .attr("x", 18)
+        .attr("y", 10)
+        .text("Body Fat %")
+        .style("font-size", "12px")
+        .style("fill", "#ccc");
+      
+      legend.append("rect")
+        .attr("x", 100)
+        .attr("y", 0)
+        .attr("width", 12)
+        .attr("height", 12)
+        .attr("fill", "#54D62C");
+      
+      legend.append("text")
+        .attr("x", 118)
+        .attr("y", 10)
+        .text("Muscle Mass %")
+        .style("font-size", "12px")
+        .style("fill", "#ccc");
+    } else {
+      // For larger screens, create a vertical legend
+      legend.append("rect")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", 15)
+        .attr("height", 15)
+        .attr("fill", "#FF6B35");
+      
+      legend.append("text")
+        .attr("x", 25)
+        .attr("y", 12.5)
+        .text("Body Fat %")
+        .style("font-size", "14px")
+        .style("fill", "#ccc");
+      
+      legend.append("rect")
+        .attr("x", 0)
+        .attr("y", 30)
+        .attr("width", 15)
+        .attr("height", 15)
+        .attr("fill", "#54D62C");
+      
+      legend.append("text")
+        .attr("x", 25)
+        .attr("y", 42.5)
+        .text("Muscle Mass %")
+        .style("font-size", "14px")
+        .style("fill", "#ccc");
+    }
     
     // Handle resize
     const handleResize = () => {
       if (chartRef.current) {
         d3.select(chartRef.current).selectAll("svg").remove();
-        // Recreate chart with new dimensions
-        // This would be a full copy of the above code with new dimensions
+        // The chart will be recreated on next render
       }
     };
     
@@ -374,7 +397,7 @@ const ProgressGraphStep = ({ goalValue, currentBodyFat = 25 }: ProgressGraphStep
       <div className="max-w-4xl mx-auto">
         <div 
           ref={chartRef} 
-          className="w-full h-[400px] bg-card rounded-lg p-4 shadow-md mb-8 overflow-x-auto"
+          className="w-full h-[400px] bg-card rounded-lg p-4 shadow-md mb-8"
         ></div>
         
         <div className="text-center mt-4 text-orange font-medium text-xl">

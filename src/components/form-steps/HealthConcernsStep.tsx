@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Check, Ear, Brain, Heart, Wind, Plus, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -20,6 +20,14 @@ const HealthConcernsStep = ({
 }: HealthConcernsStepProps) => {
   const [showCustomInput, setShowCustomInput] = useState(!!customOption);
   const [inputValue, setInputValue] = useState(customOption || '');
+  
+  // Handle auto-continuing after adding custom concern
+  useEffect(() => {
+    if (customOption && customOption.trim() !== '') {
+      // Close the input after setting it
+      setShowCustomInput(false);
+    }
+  }, [customOption]);
   
   const options = [
     { 
@@ -95,11 +103,16 @@ const HealthConcernsStep = ({
   const handleAddCustom = () => {
     if (inputValue.trim()) {
       onCustomOptionChange(inputValue.trim());
-      setShowCustomInput(false);
     }
   };
   
   const removeCustom = () => {
+    onCustomOptionChange(null);
+    setInputValue('');
+  };
+  
+  const clearAllSelections = () => {
+    onSelectionChange([]);
     onCustomOptionChange(null);
     setInputValue('');
   };
@@ -194,6 +207,20 @@ const HealthConcernsStep = ({
           </Button>
         </motion.div>
       )}
+      
+      {/* None of the above button */}
+      <motion.button
+        onClick={clearAllSelections}
+        className={`block mx-auto px-6 py-3 rounded-lg border-2 ${
+          selectedOptions.length === 0 && !customOption 
+            ? 'bg-orange/10 border-orange text-orange font-medium'
+            : 'border-muted-foreground/30 text-muted-foreground hover:border-orange hover:text-orange'
+        } transition-colors mb-8`}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        None of the above
+      </motion.button>
       
       {selectedOptions.length === 0 && !customOption ? (
         <div className="text-lg text-muted-foreground mb-4">
