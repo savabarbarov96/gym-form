@@ -68,7 +68,7 @@ const StepRenderer: React.FC<StepRendererProps> = ({
       />;
     }
     
-    if (step >= 21 && step <= 24) {
+    if (step >= 21 && step <= 25) {
       return <LifestyleStepRenderer 
         step={step} 
         formData={formData} 
@@ -76,7 +76,7 @@ const StepRenderer: React.FC<StepRendererProps> = ({
       />;
     }
     
-    if (step >= 25 && step <= 29) {
+    if (step >= 26 && step <= 30) {
       return <FinalStepsRenderer 
         step={step} 
         formData={formData} 
