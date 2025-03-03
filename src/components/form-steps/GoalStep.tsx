@@ -15,6 +15,31 @@ const GoalStep = ({ value, onChange }: GoalStepProps) => {
     return levels.findIndex(level => value <= level);
   }, [value]);
 
+  // Generate body parameters based on body fat percentage
+  const bodyParams = useMemo(() => {
+    // Base parameters
+    const baseNeckWidth = 15;
+    const baseShoulderWidth = 50;
+    const baseChestWidth = 45;
+    const baseWaistWidth = 35;
+    const baseHipWidth = 40;
+    const baseThighWidth = 18;
+    
+    // Calculate adjustment based on body fat
+    const fatAdjustment = (value - 10) / 30; // Normalized from 10%-40% to 0-1
+    const adjustmentFactor = Math.max(0, fatAdjustment);
+    
+    return {
+      neckWidth: baseNeckWidth + (adjustmentFactor * 5),
+      shoulderWidth: baseShoulderWidth + (adjustmentFactor * 10),
+      chestWidth: baseChestWidth + (adjustmentFactor * 15),
+      waistWidth: baseWaistWidth + (adjustmentFactor * 25),
+      hipWidth: baseHipWidth + (adjustmentFactor * 20),
+      thighWidth: baseThighWidth + (adjustmentFactor * 10),
+      opacity: 0.7 + (adjustmentFactor * 0.3),
+    };
+  }, [value]);
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
       <div className="flex items-center justify-center">
@@ -23,44 +48,129 @@ const GoalStep = ({ value, onChange }: GoalStepProps) => {
           <div className="absolute inset-0 bg-orange/5 rounded-full"></div>
           <div className="absolute inset-[10%] bg-orange/10 rounded-full"></div>
           
-          {/* Interactive body visualization */}
+          {/* Interactive human body visualization */}
           <div className={cn(
             "body-shape relative flex items-center justify-center",
             `fatness-level-${fatnessLevel}`
           )}>
-            {/* Body silhouette */}
-            <svg viewBox="0 0 200 300" className="w-3/4 h-3/4">
+            {/* Improved human body silhouette */}
+            <svg viewBox="0 0 100 180" className="w-3/4 h-3/4">
               {/* Head */}
-              <circle cx="100" cy="40" r="30" className="fill-muted-foreground/20 stroke-muted-foreground" />
+              <circle 
+                cx="50" 
+                cy="20" 
+                r="15" 
+                className="fill-orange/50 stroke-orange"
+              />
               
-              {/* Body - changes with body fat % */}
-              <ellipse 
-                cx="100" 
-                cy="150" 
-                rx={50 + (fatnessLevel * 5)} 
-                ry={80 + (fatnessLevel * 6)} 
-                className="fill-orange/30 stroke-orange/60"
+              {/* Neck */}
+              <rect 
+                x={50 - bodyParams.neckWidth/2} 
+                y="35" 
+                width={bodyParams.neckWidth} 
+                height="5" 
+                className="fill-orange/50 stroke-orange"
+              />
+              
+              {/* Shoulders */}
+              <rect 
+                x={50 - bodyParams.shoulderWidth/2} 
+                y="40" 
+                width={bodyParams.shoulderWidth} 
+                height="5" 
+                rx="2"
+                className="fill-orange/50 stroke-orange"
               />
               
               {/* Arms */}
-              <path 
-                d={`M${60 - (fatnessLevel * 3)},90 Q${40 - (fatnessLevel * 4)},130 ${45 - (fatnessLevel * 2)},180 L${65 - (fatnessLevel * 1)},180 Q${60 - (fatnessLevel * 1)},130 ${75 - (fatnessLevel * 2)},100 Z`}
-                className="fill-muted-foreground/30 stroke-muted-foreground/60"
+              <rect 
+                x={50 - bodyParams.shoulderWidth/2} 
+                y="45" 
+                width="8" 
+                height="40" 
+                rx="4"
+                className="fill-orange/50 stroke-orange"
               />
+              <rect 
+                x={50 + bodyParams.shoulderWidth/2 - 8} 
+                y="45" 
+                width="8" 
+                height="40" 
+                rx="4"
+                className="fill-orange/50 stroke-orange"
+              />
+              
+              {/* Torso */}
               <path 
-                d={`M${140 + (fatnessLevel * 3)},90 Q${160 + (fatnessLevel * 4)},130 ${155 + (fatnessLevel * 2)},180 L${135 + (fatnessLevel * 1)},180 Q${140 + (fatnessLevel * 1)},130 ${125 + (fatnessLevel * 2)},100 Z`}
-                className="fill-muted-foreground/30 stroke-muted-foreground/60"
+                d={`
+                  M${50 - bodyParams.chestWidth/2},45
+                  L${50 - bodyParams.waistWidth/2},85
+                  L${50 - bodyParams.hipWidth/2},105
+                  L${50 + bodyParams.hipWidth/2},105
+                  L${50 + bodyParams.waistWidth/2},85
+                  L${50 + bodyParams.chestWidth/2},45
+                  Z
+                `}
+                className="fill-orange/50 stroke-orange"
               />
               
               {/* Legs */}
-              <path 
-                d={`M${75 - (fatnessLevel * 1)},210 Q${70 - (fatnessLevel * 1)},250 ${75 - (fatnessLevel * 0.5)},290 L${95},290 Q${100},250 ${90 - (fatnessLevel * 2)},210 Z`}
-                className="fill-muted-foreground/30 stroke-muted-foreground/60"
+              <rect 
+                x={50 - bodyParams.hipWidth/2 + 5} 
+                y="105" 
+                width={bodyParams.thighWidth} 
+                height="55" 
+                rx="5"
+                className="fill-orange/50 stroke-orange"
               />
-              <path 
-                d={`M${125 + (fatnessLevel * 1)},210 Q${130 + (fatnessLevel * 1)},250 ${125 + (fatnessLevel * 0.5)},290 L${105},290 Q${100},250 ${110 + (fatnessLevel * 2)},210 Z`}
-                className="fill-muted-foreground/30 stroke-muted-foreground/60"
+              <rect 
+                x={50 + bodyParams.hipWidth/2 - bodyParams.thighWidth - 5} 
+                y="105" 
+                width={bodyParams.thighWidth} 
+                height="55" 
+                rx="5"
+                className="fill-orange/50 stroke-orange"
               />
+              
+              {/* Calves - only visible in lower body fat */}
+              {value < 25 && (
+                <>
+                  <rect 
+                    x={50 - bodyParams.hipWidth/2 + 7} 
+                    y="160" 
+                    width={bodyParams.thighWidth - 4} 
+                    height="20" 
+                    rx="3"
+                    className="fill-orange/50 stroke-orange"
+                  />
+                  <rect 
+                    x={50 + bodyParams.hipWidth/2 - bodyParams.thighWidth - 3} 
+                    y="160" 
+                    width={bodyParams.thighWidth - 4} 
+                    height="20" 
+                    rx="3"
+                    className="fill-orange/50 stroke-orange"
+                  />
+                </>
+              )}
+              
+              {/* Muscle definition lines - only visible in lower body fat */}
+              {value < 15 && (
+                <g className="stroke-orange/80 stroke-[0.5]">
+                  {/* Abs */}
+                  <line x1="45" y1="55" x2="55" y2="55" />
+                  <line x1="45" y1="65" x2="55" y2="65" />
+                  <line x1="45" y1="75" x2="55" y2="75" />
+                  <line x1="50" y1="45" x2="50" y2="85" />
+                  
+                  {/* Pecs */}
+                  <path d="M40,50 Q50,55 60,50" />
+                  
+                  {/* Biceps */}
+                  <path d="M30,55 Q25,65 30,75" />
+                  <path d="M70,55 Q75,65 70,75" />
+                </g>
+              )}
             </svg>
             
             {/* Percentage overlay */}

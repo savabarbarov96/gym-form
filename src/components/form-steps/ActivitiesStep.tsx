@@ -1,7 +1,8 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Check, Activity, Bike, Waves, UserCircle2, Music, Dumbbell, Users, Mountain } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Check, Activity, Bike, Waves, UserCircle2, Music, Dumbbell, Users, Mountain, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ActivitiesStepProps {
@@ -10,6 +11,9 @@ interface ActivitiesStepProps {
 }
 
 const ActivitiesStep = ({ selectedActivities, onSelectActivities }: ActivitiesStepProps) => {
+  const [customActivity, setCustomActivity] = useState("");
+  const [customActivities, setCustomActivities] = useState<string[]>([]);
+
   const activities = [
     { label: "Running", id: "running", icon: Activity },
     { label: "Cycling", id: "cycling", icon: Bike },
@@ -46,6 +50,29 @@ const ActivitiesStep = ({ selectedActivities, onSelectActivities }: ActivitiesSt
       onSelectActivities(newActivities);
     } else {
       onSelectActivities([...selectedActivities, id]);
+    }
+  };
+
+  const addCustomActivity = () => {
+    if (customActivity.trim() === "") return;
+    
+    const activityId = `custom-${customActivity.trim().toLowerCase().replace(/\s+/g, '-')}`;
+    
+    // Add to custom activities list for rendering
+    setCustomActivities([...customActivities, customActivity.trim()]);
+    
+    // Add to selected activities
+    if (!selectedActivities.includes(activityId) && !selectedActivities.includes("none")) {
+      onSelectActivities([...selectedActivities, activityId]);
+    }
+    
+    setCustomActivity("");
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      addCustomActivity();
     }
   };
 
@@ -90,6 +117,66 @@ const ActivitiesStep = ({ selectedActivities, onSelectActivities }: ActivitiesSt
               </div>
             );
           })}
+        </div>
+
+        {/* Custom activities */}
+        {customActivities.length > 0 && (
+          <div className="mt-8">
+            <h3 className="text-lg font-medium mb-4">Your custom activities:</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {customActivities.map((activity, index) => {
+                const activityId = `custom-${activity.toLowerCase().replace(/\s+/g, '-')}`;
+                return (
+                  <div
+                    key={index}
+                    className={cn(
+                      "flex items-center gap-3 bg-card p-4 rounded-lg cursor-pointer border border-transparent transition-all",
+                      isNoneSelected ? "opacity-50 pointer-events-none" : "",
+                      selectedActivities.includes(activityId) ? "border-orange bg-orange/5" : "hover:border-muted-foreground/30"
+                    )}
+                    onClick={() => toggleActivity(activityId)}
+                  >
+                    <Checkbox 
+                      id={activityId}
+                      checked={selectedActivities.includes(activityId)}
+                      onCheckedChange={() => toggleActivity(activityId)}
+                      className="data-[state=checked]:bg-orange data-[state=checked]:text-white"
+                      disabled={isNoneSelected}
+                    />
+                    <label htmlFor={activityId} className="flex-1 text-left cursor-pointer">{activity}</label>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+        
+        {/* Add custom activity */}
+        <div className={cn(
+          "mt-8 bg-card p-5 rounded-lg border border-dashed border-muted-foreground/30",
+          isNoneSelected ? "opacity-50 pointer-events-none" : ""
+        )}>
+          <h3 className="text-lg font-medium mb-2">Add a custom activity</h3>
+          <div className="flex gap-2">
+            <Input
+              value={customActivity}
+              onChange={e => setCustomActivity(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Type any other activity..."
+              className="flex-1"
+              disabled={isNoneSelected}
+            />
+            <button
+              onClick={addCustomActivity}
+              disabled={customActivity.trim() === "" || isNoneSelected}
+              className={cn(
+                "flex items-center justify-center p-2 rounded-md",
+                customActivity.trim() === "" ? "bg-muted text-muted-foreground" : "bg-orange text-white"
+              )}
+            >
+              <Plus className="w-5 h-5" />
+            </button>
+          </div>
         </div>
           
         <div className="mt-8">

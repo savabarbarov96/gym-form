@@ -1,5 +1,6 @@
 
 import React from "react";
+import ThreeJSAgeModel from "@/components/ThreeJSAgeModel";
 
 interface AgeSelectionStepProps {
   selectedAge: string | null;
@@ -28,14 +29,7 @@ const AgeSelectionStep = ({ selectedAge, onSelect }: AgeSelectionStepProps) => {
           >
             <div className="p-4 flex-1 flex flex-col">
               <div className="flex-1 flex items-center justify-center">
-                <img 
-                  src={`/lovable-uploads/${age.id === "18-29" ? "82f8a303-b796-47ca-a21f-603d7e9c07ba.png" : 
-                       age.id === "30-39" ? "949229f9-bb7a-407e-b06a-54cc9a26b481.png" : 
-                       age.id === "40-49" ? "4da1e807-08a9-43e9-a569-7c2f5d6e9591.png" : 
-                       "4da1e807-08a9-43e9-a569-7c2f5d6e9591.png"}`} 
-                  alt={`Age ${age.label}`}
-                  className="h-full object-contain"
-                />
+                <ThreeJSAgeModel ageGroup={age.id} />
               </div>
               <div className="mt-auto bg-orange text-white p-3 rounded-md font-medium">
                 Age: {age.label}

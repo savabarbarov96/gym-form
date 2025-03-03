@@ -1,7 +1,8 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, TrendingDown, Dumbbell, BarChart, Calendar, Timer, Heart, Award } from "lucide-react";
+import { useRive } from '@rive-app/react-canvas';
 import { cn } from "@/lib/utils";
 
 interface ResultsStateProps {
@@ -9,6 +10,30 @@ interface ResultsStateProps {
 }
 
 const ResultsState: React.FC<ResultsStateProps> = ({ handleGetPlan }) => {
+  const { RiveComponent: BeforeRive, rive: beforeRive } = useRive({
+    src: 'https://cdn.rive.app/animations/vehicles.riv',
+    stateMachines: 'idle',
+    autoplay: true,
+  });
+  
+  const { RiveComponent: AfterRive, rive: afterRive } = useRive({
+    src: 'https://cdn.rive.app/animations/juice.riv',
+    stateMachines: 'state',
+    autoplay: true,
+  });
+  
+  // Trigger animations on hover
+  useEffect(() => {
+    return () => {
+      if (beforeRive) {
+        beforeRive.cleanup();
+      }
+      if (afterRive) {
+        afterRive.cleanup();
+      }
+    };
+  }, [beforeRive, afterRive]);
+
   return (
     <motion.div 
       initial={{ opacity: 0 }}
@@ -27,17 +52,13 @@ const ResultsState: React.FC<ResultsStateProps> = ({ handleGetPlan }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
           <div className="bg-card p-8 rounded-lg relative overflow-hidden card-hover-effect">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange/30 to-orange/70"></div>
-            <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
+            <h2 className="text-2xl font-bold mb-4 flex items-center gap-3">
               <Calendar className="text-orange" />
               <span>Current State</span>
             </h2>
             
-            <div className="flex justify-center mb-8">
-              <div className="relative">
-                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-orange/30 to-transparent flex items-center justify-center">
-                  <Award className="w-16 h-16 text-orange/70" />
-                </div>
-              </div>
+            <div className="flex justify-center mb-8 h-48">
+              <BeforeRive className="w-full h-full" />
             </div>
             
             <div className="text-left space-y-6">
@@ -76,17 +97,13 @@ const ResultsState: React.FC<ResultsStateProps> = ({ handleGetPlan }) => {
           
           <div className="bg-card p-8 rounded-lg relative overflow-hidden card-hover-effect">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange/50 to-orange"></div>
-            <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
+            <h2 className="text-2xl font-bold mb-4 flex items-center gap-3">
               <BarChart className="text-orange" />
               <span>After 6 months</span>
             </h2>
             
-            <div className="flex justify-center mb-8">
-              <div className="relative">
-                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-orange/50 to-transparent flex items-center justify-center">
-                  <Heart className="w-16 h-16 text-orange" />
-                </div>
-              </div>
+            <div className="flex justify-center mb-8 h-48">
+              <AfterRive className="w-full h-full" />
             </div>
             
             <div className="text-left space-y-6">
