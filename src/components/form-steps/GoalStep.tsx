@@ -17,25 +17,25 @@ const GoalStep = ({ value, onChange }: GoalStepProps) => {
 
   // Generate body parameters based on body fat percentage
   const bodyParams = useMemo(() => {
-    // Base parameters
-    const baseNeckWidth = 15;
-    const baseShoulderWidth = 50;
-    const baseChestWidth = 45;
-    const baseWaistWidth = 35;
-    const baseHipWidth = 40;
-    const baseThighWidth = 18;
+    // Base parameters - adjusted to look less squished
+    const baseNeckWidth = 16;
+    const baseShoulderWidth = 55;
+    const baseChestWidth = 48;
+    const baseWaistWidth = 38;
+    const baseHipWidth = 43;
+    const baseThighWidth = 20;
     
-    // Calculate adjustment based on body fat
+    // Calculate adjustment based on body fat - made more gradual
     const fatAdjustment = (value - 10) / 30; // Normalized from 10%-40% to 0-1
     const adjustmentFactor = Math.max(0, fatAdjustment);
     
     return {
-      neckWidth: baseNeckWidth + (adjustmentFactor * 5),
-      shoulderWidth: baseShoulderWidth + (adjustmentFactor * 10),
-      chestWidth: baseChestWidth + (adjustmentFactor * 15),
-      waistWidth: baseWaistWidth + (adjustmentFactor * 25),
-      hipWidth: baseHipWidth + (adjustmentFactor * 20),
-      thighWidth: baseThighWidth + (adjustmentFactor * 10),
+      neckWidth: baseNeckWidth + (adjustmentFactor * 4),
+      shoulderWidth: baseShoulderWidth + (adjustmentFactor * 8),
+      chestWidth: baseChestWidth + (adjustmentFactor * 12),
+      waistWidth: baseWaistWidth + (adjustmentFactor * 20),
+      hipWidth: baseHipWidth + (adjustmentFactor * 16),
+      thighWidth: baseThighWidth + (adjustmentFactor * 8),
       opacity: 0.7 + (adjustmentFactor * 0.3),
     };
   }, [value]);
@@ -54,121 +54,113 @@ const GoalStep = ({ value, onChange }: GoalStepProps) => {
             `fatness-level-${fatnessLevel}`
           )}>
             {/* Improved human body silhouette */}
-            <svg viewBox="0 0 100 180" className="w-3/4 h-3/4">
+            <svg viewBox="0 0 120 220" className="w-3/4 h-3/4">
               {/* Head */}
               <circle 
-                cx="50" 
-                cy="20" 
-                r="15" 
-                className="fill-orange/50 stroke-orange"
+                cx="60" 
+                cy="25" 
+                r="18" 
+                className="fill-orange/60 stroke-orange"
               />
               
               {/* Neck */}
               <rect 
-                x={50 - bodyParams.neckWidth/2} 
-                y="35" 
+                x={60 - bodyParams.neckWidth/2} 
+                y="42" 
                 width={bodyParams.neckWidth} 
-                height="5" 
-                className="fill-orange/50 stroke-orange"
+                height="8" 
+                className="fill-orange/60 stroke-orange"
+                rx="4"
               />
               
               {/* Shoulders */}
               <rect 
-                x={50 - bodyParams.shoulderWidth/2} 
-                y="40" 
+                x={60 - bodyParams.shoulderWidth/2} 
+                y="50" 
                 width={bodyParams.shoulderWidth} 
-                height="5" 
-                rx="2"
-                className="fill-orange/50 stroke-orange"
+                height="8" 
+                rx="4"
+                className="fill-orange/60 stroke-orange"
               />
               
               {/* Arms */}
               <rect 
-                x={50 - bodyParams.shoulderWidth/2} 
-                y="45" 
-                width="8" 
-                height="40" 
-                rx="4"
-                className="fill-orange/50 stroke-orange"
+                x={60 - bodyParams.shoulderWidth/2 - 4} 
+                y="55" 
+                width="10" 
+                height="55" 
+                rx="5"
+                className="fill-orange/60 stroke-orange"
               />
               <rect 
-                x={50 + bodyParams.shoulderWidth/2 - 8} 
-                y="45" 
-                width="8" 
-                height="40" 
-                rx="4"
-                className="fill-orange/50 stroke-orange"
+                x={60 + bodyParams.shoulderWidth/2 - 6} 
+                y="55" 
+                width="10" 
+                height="55" 
+                rx="5"
+                className="fill-orange/60 stroke-orange"
               />
               
-              {/* Torso */}
+              {/* Torso - improved shape with curves */}
               <path 
                 d={`
-                  M${50 - bodyParams.chestWidth/2},45
-                  L${50 - bodyParams.waistWidth/2},85
-                  L${50 - bodyParams.hipWidth/2},105
-                  L${50 + bodyParams.hipWidth/2},105
-                  L${50 + bodyParams.waistWidth/2},85
-                  L${50 + bodyParams.chestWidth/2},45
+                  M${60 - bodyParams.chestWidth/2},53
+                  C${60 - bodyParams.chestWidth/2},53 ${60 - bodyParams.waistWidth/2 - 5},85 ${60 - bodyParams.waistWidth/2},95
+                  L${60 - bodyParams.hipWidth/2},115
+                  L${60 + bodyParams.hipWidth/2},115
+                  L${60 + bodyParams.waistWidth/2},95
+                  C${60 + bodyParams.waistWidth/2 + 5},85 ${60 + bodyParams.chestWidth/2},53 ${60 + bodyParams.chestWidth/2},53
                   Z
                 `}
-                className="fill-orange/50 stroke-orange"
+                className="fill-orange/60 stroke-orange"
               />
               
-              {/* Legs */}
-              <rect 
-                x={50 - bodyParams.hipWidth/2 + 5} 
-                y="105" 
-                width={bodyParams.thighWidth} 
-                height="55" 
-                rx="5"
-                className="fill-orange/50 stroke-orange"
-              />
-              <rect 
-                x={50 + bodyParams.hipWidth/2 - bodyParams.thighWidth - 5} 
-                y="105" 
-                width={bodyParams.thighWidth} 
-                height="55" 
-                rx="5"
-                className="fill-orange/50 stroke-orange"
+              {/* Legs - more tapered */}
+              <path
+                d={`
+                  M${60 - bodyParams.hipWidth/2 + 5},115
+                  L${60 - bodyParams.thighWidth - 4},180
+                  L${60 - bodyParams.thighWidth},205
+                  L${60 - bodyParams.thighWidth + 10},205
+                  L${60 - bodyParams.thighWidth + 14},180
+                  L${60 - bodyParams.hipWidth/2 + bodyParams.thighWidth},115
+                  Z
+                `}
+                className="fill-orange/60 stroke-orange"
               />
               
-              {/* Calves - only visible in lower body fat */}
-              {value < 25 && (
-                <>
-                  <rect 
-                    x={50 - bodyParams.hipWidth/2 + 7} 
-                    y="160" 
-                    width={bodyParams.thighWidth - 4} 
-                    height="20" 
-                    rx="3"
-                    className="fill-orange/50 stroke-orange"
-                  />
-                  <rect 
-                    x={50 + bodyParams.hipWidth/2 - bodyParams.thighWidth - 3} 
-                    y="160" 
-                    width={bodyParams.thighWidth - 4} 
-                    height="20" 
-                    rx="3"
-                    className="fill-orange/50 stroke-orange"
-                  />
-                </>
-              )}
+              <path
+                d={`
+                  M${60 + bodyParams.hipWidth/2 - 5},115
+                  L${60 + bodyParams.thighWidth + 4},180
+                  L${60 + bodyParams.thighWidth},205
+                  L${60 + bodyParams.thighWidth - 10},205
+                  L${60 + bodyParams.thighWidth - 14},180
+                  L${60 + bodyParams.hipWidth/2 - bodyParams.thighWidth},115
+                  Z
+                `}
+                className="fill-orange/60 stroke-orange"
+              />
               
               {/* Muscle definition lines - only visible in lower body fat */}
               {value < 15 && (
-                <g className="stroke-orange/80 stroke-[0.5]">
+                <g className="stroke-orange/90 stroke-[0.8]">
                   {/* Abs */}
-                  <line x1="45" y1="55" x2="55" y2="55" />
-                  <line x1="45" y1="65" x2="55" y2="65" />
-                  <line x1="45" y1="75" x2="55" y2="75" />
-                  <line x1="50" y1="45" x2="50" y2="85" />
+                  <line x1="53" y1="65" x2="67" y2="65" />
+                  <line x1="52" y1="75" x2="68" y2="75" />
+                  <line x1="51" y1="85" x2="69" y2="85" />
+                  <line x1="60" y1="55" x2="60" y2="95" />
                   
                   {/* Pecs */}
-                  <path d="M40,50 Q50,55 60,50" />
+                  <path d="M50,60 Q60,65 70,60" />
                   
                   {/* Biceps */}
-                  <path d="M30,55 Q25,65 30,75" />
-                  <path d="M70,55 Q75,65 70,75" />
+                  <path d="M36,65 Q32,80 36,90" />
+                  <path d="M84,65 Q88,80 84,90" />
+                  
+                  {/* Leg muscle definition */}
+                  <path d="M50,140 Q55,150 50,160" />
+                  <path d="M70,140 Q65,150 70,160" />
                 </g>
               )}
             </svg>

@@ -11,14 +11,14 @@ interface ResultsStateProps {
 
 const ResultsState: React.FC<ResultsStateProps> = ({ handleGetPlan }) => {
   const { RiveComponent: BeforeRive, rive: beforeRive } = useRive({
-    src: 'https://cdn.rive.app/animations/vehicles.riv',
-    stateMachines: 'idle',
+    src: 'https://cdn.rive.app/animations/fitness_1.riv',
+    stateMachines: 'Default',
     autoplay: true,
   });
   
   const { RiveComponent: AfterRive, rive: afterRive } = useRive({
-    src: 'https://cdn.rive.app/animations/juice.riv',
-    stateMachines: 'state',
+    src: 'https://cdn.rive.app/animations/fitness_2.riv',
+    stateMachines: 'Default',
     autoplay: true,
   });
   
