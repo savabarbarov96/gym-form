@@ -66,13 +66,13 @@ export const validateSleepAmountStep = (formData: FormData, toast: (props: Toast
 export const validateLifestyleStep = (
   step: number,
   formData: FormData,
-  toast = toastFunction
+  toast: (props: ToastParams) => void
 ): boolean => {
-  if (step === 18) return validateSugaryFoodsStep(formData, toast);
-  if (step === 19) return validateWaterIntakeStep(formData, toast);
-  if (step === 20) return validateTypicalDayStep(formData, toast);
-  if (step === 21) return validateEnergyLevelsStep(formData, toast);
-  if (step === 22) return validateSleepAmountStep(formData, toast);
+  if (step === 21) return validateSugaryFoodsStep(formData, toast);
+  if (step === 22) return validateWaterIntakeStep(formData, toast);
+  if (step === 23) return validateTypicalDayStep(formData, toast);
+  if (step === 24) return validateEnergyLevelsStep(formData, toast);
+  if (step === 25) return validateSleepAmountStep(formData, toast);
   
   return true;
 };

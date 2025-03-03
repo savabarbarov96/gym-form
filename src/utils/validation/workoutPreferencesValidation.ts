@@ -59,7 +59,7 @@ export const validateExercisePreferencesStep = (formData: FormData, toast: (prop
 export const validateWorkoutPreferencesStep = (
   step: number,
   formData: FormData,
-  toast = toastFunction
+  toast: (props: ToastParams) => void
 ): boolean => {
   if (step === 13) return true; // This is just a display step for fitness goal
   if (step === 14) return true; // Problem areas can be empty

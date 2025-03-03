@@ -25,14 +25,7 @@ export const validateHealthConcernsStep = (formData: FormData, toast: (props: To
 };
 
 export const validateProblemAreasStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
-  if (!formData.problemAreas || formData.problemAreas.length === 0) {
-    toast({
-      title: "Missing information",
-      description: "Please select at least one problem area or 'None of the above'",
-      variant: "destructive",
-    });
-    return false;
-  }
+  // Make problem areas optional
   return true;
 };
 
@@ -61,20 +54,12 @@ export const validateWeightChangeStep = (formData: FormData, toast: (props: Toas
 };
 
 export const validateActivitiesStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
-  if (!formData.activities || formData.activities.length === 0) {
-    toast({
-      title: "Selection required",
-      description: "Please select at least one activity you enjoy",
-      variant: "destructive",
-    });
-    return false;
-  }
+  // Make activities optional
   return true;
 };
 
 export const validateProgressGraphStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   // This property doesn't exist in FormData, so we'll skip validation for now
-  // Add proper validation once we know what property to check
   return true;
 };
 
@@ -106,7 +91,7 @@ export const validateWeightInputStep = (formData: FormData, toast: (props: Toast
 export const validateBodyAssessmentStep = (
   step: number,
   formData: FormData,
-  toast = toastFunction
+  toast: (props: ToastParams) => void
 ): boolean => {
   switch (step) {
     case 6:

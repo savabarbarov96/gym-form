@@ -30,9 +30,9 @@ export const useToast = () => {
   };
 };
 
-export function toast(props: ToastParams) {
+export function toast(props: ToastParams): void {
   const { toast: toastFn } = useToastPrimitive();
-  return toastFn(props);
+  toastFn(props);
 }
 
 // Re-export the Toast component types for validation files

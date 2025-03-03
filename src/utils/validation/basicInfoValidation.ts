@@ -66,7 +66,7 @@ export const validateDesiredBodyStep = (formData: FormData, toast: (props: Toast
 export const validateBasicInfoStep = (
   step: number,
   formData: FormData,
-  toast = toastFunction
+  toast: (props: ToastParams) => void
 ): boolean => {
   if (step === 1) return validateAgeStep(formData, toast);
   if (step === 2) return validateBodyTypeStep(formData, toast);

@@ -130,15 +130,15 @@ export const validateStartCommitmentStep = (formData: FormData, toast: (props: T
 export const validateFinalStepsStep = (
   step: number,
   formData: FormData,
-  toast = toastFunction
+  toast: (props: ToastParams) => void
 ): boolean => {
-  if (step === 23) return validateOutOfBreathStep(formData, toast);
-  if (step === 24) return validateFallingBackStep(formData, toast);
-  if (step === 25) return validateSuitableWorkoutsStep(formData, toast);
-  if (step === 26) return validateMotivationLevelStep(formData, toast);
-  if (step === 27) return validateDietConsistencyStep(formData, toast);
-  if (step === 28) return validatePersonalInfoStep(formData, toast);
-  if (step === 29) return validateStartCommitmentStep(formData, toast);
+  if (step === 25) return validateOutOfBreathStep(formData, toast);
+  if (step === 26) return validateFallingBackStep(formData, toast);
+  if (step === 27) return validateSuitableWorkoutsStep(formData, toast);
+  if (step === 28) return validateMotivationLevelStep(formData, toast);
+  if (step === 29) return validateDietConsistencyStep(formData, toast);
+  if (step === 30) return validatePersonalInfoStep(formData, toast);
+  if (step === 31) return validateStartCommitmentStep(formData, toast);
   
   return true;
 };
