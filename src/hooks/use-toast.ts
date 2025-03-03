@@ -1,3 +1,4 @@
+
 import * as React from "react"
 
 import type {
@@ -137,9 +138,10 @@ function dispatch(action: Action) {
   })
 }
 
-type Toast = Omit<ToasterToast, "id">
+// Define the type for toast function params
+export type ToastParams = Omit<ToasterToast, "id">
 
-function toast({ ...props }: Toast) {
+function toast({ ...props }: ToastParams) {
   const id = genId()
 
   const update = (props: ToasterToast) =>
@@ -189,4 +191,4 @@ function useToast() {
 }
 
 export { useToast, toast }
-export type Toast = ToasterToast;
+export type { ToasterToast as Toast }

@@ -1,8 +1,9 @@
+
 import { FormData } from "@/types/survey";
 import { toast as toastFunction } from "@/hooks/use-toast";
-import type { Toast } from "@/components/ui/toast";
+import type { ToastParams } from "@/hooks/use-toast";
 
-export const validateHealthConcernsStep = (formData: FormData, toast: (props: Toast) => void): boolean => {
+export const validateHealthConcernsStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   // Health concerns are optional, but if a custom option is being added, it should not be empty
   if (formData.healthConcerns.length === 0 && formData.customHealthConcern === null) {
     // This is valid - user has no health concerns
@@ -23,7 +24,7 @@ export const validateHealthConcernsStep = (formData: FormData, toast: (props: To
   return false;
 };
 
-export const validateProblemAreasStep = (formData: FormData, toast: (props: Toast) => void): boolean => {
+export const validateProblemAreasStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (!formData.problemAreas || formData.problemAreas.length === 0) {
     toast({
       title: "Missing information",
@@ -35,7 +36,7 @@ export const validateProblemAreasStep = (formData: FormData, toast: (props: Toas
   return true;
 };
 
-export const validateBestShapeStep = (formData: FormData, toast: (props: Toast) => void): boolean => {
+export const validateBestShapeStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (!formData.bestShapeTime) {
     toast({
       title: "Selection required",
@@ -47,7 +48,7 @@ export const validateBestShapeStep = (formData: FormData, toast: (props: Toast) 
   return true;
 };
 
-export const validateWeightChangeStep = (formData: FormData, toast: (props: Toast) => void): boolean => {
+export const validateWeightChangeStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (!formData.weightChange) {
     toast({
       title: "Selection required",
@@ -59,7 +60,7 @@ export const validateWeightChangeStep = (formData: FormData, toast: (props: Toas
   return true;
 };
 
-export const validateActivitiesStep = (formData: FormData, toast: (props: Toast) => void): boolean => {
+export const validateActivitiesStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (!formData.activities || formData.activities.length === 0) {
     toast({
       title: "Selection required",
@@ -71,13 +72,13 @@ export const validateActivitiesStep = (formData: FormData, toast: (props: Toast)
   return true;
 };
 
-export const validateProgressGraphStep = (formData: FormData, toast: (props: Toast) => void): boolean => {
+export const validateProgressGraphStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   // This property doesn't exist in FormData, so we'll skip validation for now
   // Add proper validation once we know what property to check
   return true;
 };
 
-export const validateHeightInputStep = (formData: FormData, toast: (props: Toast) => void): boolean => {
+export const validateHeightInputStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (!formData.height) {
     toast({
       title: "Height required",
@@ -89,7 +90,7 @@ export const validateHeightInputStep = (formData: FormData, toast: (props: Toast
   return true;
 };
 
-export const validateWeightInputStep = (formData: FormData, toast: (props: Toast) => void): boolean => {
+export const validateWeightInputStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (!formData.currentWeight) {
     toast({
       title: "Weight required",

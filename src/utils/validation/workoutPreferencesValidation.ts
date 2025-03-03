@@ -1,8 +1,9 @@
+
 import { FormData } from "@/types/survey";
 import { toast as toastFunction } from "@/hooks/use-toast";
-import type { Toast } from "@/components/ui/toast";
+import type { ToastParams } from "@/hooks/use-toast";
 
-export const validateWorkoutLocationStep = (formData: FormData, toast: (props: Toast) => void): boolean => {
+export const validateWorkoutLocationStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (!formData.workoutLocation) {
     toast({
       title: "Selection required",
@@ -14,7 +15,7 @@ export const validateWorkoutLocationStep = (formData: FormData, toast: (props: T
   return true;
 };
 
-export const validateWorkoutIntensityStep = (formData: FormData, toast: (props: Toast) => void): boolean => {
+export const validateWorkoutIntensityStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (!formData.workoutIntensity) {
     toast({
       title: "Selection required",
@@ -26,7 +27,7 @@ export const validateWorkoutIntensityStep = (formData: FormData, toast: (props: 
   return true;
 };
 
-export const validateWorkoutFrequencyStep = (formData: FormData, toast: (props: Toast) => void): boolean => {
+export const validateWorkoutFrequencyStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (!formData.workoutFrequency) {
     toast({
       title: "Selection required",
@@ -38,7 +39,7 @@ export const validateWorkoutFrequencyStep = (formData: FormData, toast: (props: 
   return true;
 };
 
-export const validateWorkoutDurationStep = (formData: FormData, toast: (props: Toast) => void): boolean => {
+export const validateWorkoutDurationStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (!formData.workoutDuration) {
     toast({
       title: "Selection required",
@@ -50,7 +51,7 @@ export const validateWorkoutDurationStep = (formData: FormData, toast: (props: T
   return true;
 };
 
-export const validateExercisePreferencesStep = (formData: FormData, toast: (props: Toast) => void): boolean => {
+export const validateExercisePreferencesStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   // Exercise preferences are optional
   return true;
 };

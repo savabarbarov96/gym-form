@@ -1,7 +1,7 @@
 
 import { FormData } from "@/types/survey";
 import { toast as toastFunction } from "@/hooks/use-toast";
-import type { Toast } from "@/components/ui/toast";
+import type { ToastParams } from "@/hooks/use-toast";
 
 // Re-export all validation functions
 export * from './basicInfoValidation';
@@ -11,7 +11,11 @@ export * from './lifestyleValidation';
 export * from './workoutPreferencesValidation';
 
 // Main validation function that routes to the appropriate step validator
-export const validateStep = (step: number, formData: FormData, toast: (props: Toast) => void = toastFunction): boolean => {
+export const validateStep = (
+  step: number, 
+  formData: FormData, 
+  toast: (props: ToastParams) => void = toastFunction
+): boolean => {
   // Basic Info steps (1-5)
   if (step >= 1 && step <= 5) {
     const { validateBasicInfoStep } = require('./basicInfoValidation');
@@ -20,16 +24,9 @@ export const validateStep = (step: number, formData: FormData, toast: (props: To
   
   // Body Assessment steps (6-12)
   if (step >= 6 && step <= 12) {
-    const { 
-      validateProblemAreasStep,
-      validateBestShapeStep,
-      validateWeightChangeStep,
-      validateActivitiesStep,
-      validateHealthConcernsStep,
-      validateProgressGraphStep,
-      validateHeightInputStep,
-      validateWeightInputStep 
-    } = require('./bodyAssessmentValidation');
+    const { validateHealthConcernsStep, validateProblemAreasStep, validateBestShapeStep, 
+            validateWeightChangeStep, validateActivitiesStep, validateProgressGraphStep,
+            validateHeightInputStep, validateWeightInputStep } = require('./bodyAssessmentValidation');
     
     if (step === 6) return validateProblemAreasStep(formData, toast);
     if (step === 7) return validateBestShapeStep(formData, toast);
