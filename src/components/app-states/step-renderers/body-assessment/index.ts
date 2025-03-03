@@ -1,4 +1,3 @@
-
 export { default as HeightInputStepRenderer } from './HeightInputStepRenderer';
 export { default as WeightInputStepRenderer } from './WeightInputStepRenderer';
 export { default as GoalStepRenderer } from './GoalStepRenderer';

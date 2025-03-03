@@ -43,6 +43,8 @@ const BasicInfoStepRenderer: React.FC<BasicInfoStepRendererProps> = ({
       <GoalStep 
         value={formData.goal} 
         onChange={(goal) => setFormData({...formData, goal})}
+        currentBodyFat={formData.currentBodyFat}
+        onCurrentBodyFatChange={(currentBodyFat) => setFormData({...formData, currentBodyFat})}
       />
     );
   }

@@ -1,6 +1,7 @@
 
 import React from "react";
 import { Baby, User, Users, Clock } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface AgeSelectionStepProps {
   selectedAge: string | null;
@@ -26,17 +27,17 @@ const AgeSelectionStep = ({ selectedAge, onSelect }: AgeSelectionStepProps) => {
           return (
             <div
               key={age.id}
-              className={`option-card aspect-[3/4] rounded-lg shadow-md border-2 transition-all ${
+              className={`option-card aspect-[3/4] rounded-lg shadow-md border-2 transition-all cursor-pointer ${
                 selectedAge === age.id 
                   ? 'border-orange bg-orange/10' 
                   : 'border-border hover:border-orange/50 hover:bg-orange/5'
               }`}
               onClick={() => onSelect(age.id)}
             >
-              <div className="p-6 flex-1 flex flex-col justify-between h-full cursor-pointer">
+              <div className="p-6 flex-1 flex flex-col justify-between h-full">
                 <div className="flex-1 flex items-center justify-center">
                   <div className="aspect-square rounded-full bg-orange/10 p-8 flex items-center justify-center">
-                    <IconComponent size={80} color={age.color} strokeWidth={1.5} />
+                    <IconComponent size={80} color={age.color} strokeWidth={selectedAge === age.id ? 2.5 : 1.5} />
                   </div>
                 </div>
                 <div className="mt-auto bg-orange text-white p-3 rounded-md font-medium">

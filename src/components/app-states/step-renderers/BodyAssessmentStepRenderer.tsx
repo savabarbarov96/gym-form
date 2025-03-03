@@ -29,7 +29,15 @@ const BodyAssessmentStepRenderer = ({
     case 7:
       return <WeightInputStepRenderer formData={formData} setFormData={setFormData} />;
     case 8:
-      return <GoalStepRenderer formData={formData} setFormData={setFormData} />;
+      // Using BestShapeStep instead of GoalStepRenderer
+      return (
+        <div className="best-shape-container">
+          <BestShapeStep
+            selected={formData.bestShapeTime}
+            onSelect={(bestShapeTime) => setFormData({...formData, bestShapeTime})}
+          />
+        </div>
+      );
     case 9:
       return <ProgressGraphStepRenderer formData={formData} />;
     case 10:
@@ -40,5 +48,8 @@ const BodyAssessmentStepRenderer = ({
       return null;
   }
 };
+
+// Import BestShapeStep directly here to avoid circular dependencies
+import { BestShapeStep } from "@/components/form-steps";
 
 export default BodyAssessmentStepRenderer;

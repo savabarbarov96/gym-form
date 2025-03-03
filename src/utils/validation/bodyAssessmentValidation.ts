@@ -18,13 +18,16 @@ export const validateBodyAssessmentStep = (
   }
   
   // Step 7 is weight input
-  if (step === 7 && (!formData.currentWeight || !formData.targetWeight)) {
-    toast({
-      title: "Required fields",
-      description: "Please enter both your current and target weight",
-      variant: "destructive",
-    });
-    return false;
+  if (step === 7) {
+    if (!formData.currentWeight || !formData.targetWeight) {
+      toast({
+        title: "Required fields",
+        description: "Please enter both your current and target weight",
+        variant: "destructive",
+      });
+      return false;
+    }
+    return true;
   }
   
   if (step === 8 && !formData.bestShapeTime) {

@@ -22,20 +22,18 @@ export const useSurveyNavigation = (
        (step === 27 && formData.selfAssessments.motivationLevel !== null));
 
     // Skip validation for self-assessment steps if we already have a value
-    if (!hasValue && !validateStep(step, formData, toast)) {
-      return;
-    }
-    
-    if (step < totalSteps) {
-      setAnimationDirection("next");
-      setStep(prev => prev + 1);
-    } else {
-      toast({
-        title: "Processing your plan",
-        description: "We're creating your personalized fitness plan",
-      });
-      
-      onComplete();
+    if (hasValue || validateStep(step, formData, toast)) {
+      if (step < totalSteps) {
+        setAnimationDirection("next");
+        setStep(prev => prev + 1);
+      } else {
+        toast({
+          title: "Processing your plan",
+          description: "We're creating your personalized fitness plan",
+        });
+        
+        onComplete();
+      }
     }
   };
 
