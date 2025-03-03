@@ -1,10 +1,10 @@
 
 import { ToastParams } from "@/hooks/use-toast";
-import { validateStep as validateBasicInfoStep } from "./basicInfoValidation";
-import { validateStep as validateBodyAssessmentStep } from "./bodyAssessmentValidation";
-import { validateStep as validateWorkoutPreferencesStep } from "./workoutPreferencesValidation";
-import { validateStep as validateLifestyleStep } from "./lifestyleValidation";
-import { validateStep as validateFinalStepsStep } from "./finalStepsValidation";
+import { validateBasicInfoStep } from "./basicInfoValidation";
+import { validateBodyAssessmentStep } from "./bodyAssessmentValidation";
+import { validateWorkoutPreferencesStep } from "./workoutPreferencesValidation";
+import { validateLifestyleStep } from "./lifestyleValidation";
+import { validateFinalStepsStep } from "./finalStepsValidation";
 import { FormData } from "@/types/survey";
 
 /**

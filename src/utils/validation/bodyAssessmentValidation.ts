@@ -101,3 +101,20 @@ export const validateWeightInputStep = (formData: FormData, toast: (props: Toast
   }
   return true;
 };
+
+// Add the main validation function for this module
+export const validateBodyAssessmentStep = (
+  step: number,
+  formData: FormData,
+  toast = toastFunction
+): boolean => {
+  if (step === 6) return validateHealthConcernsStep(formData, toast);
+  if (step === 7) return validateProblemAreasStep(formData, toast);
+  if (step === 8) return validateBestShapeStep(formData, toast);
+  if (step === 9) return validateWeightChangeStep(formData, toast);
+  if (step === 10) return validateActivitiesStep(formData, toast);
+  if (step === 11) return validateProgressGraphStep(formData, toast);
+  if (step === 12) return validateHeightInputStep(formData, toast);
+  
+  return true;
+};
