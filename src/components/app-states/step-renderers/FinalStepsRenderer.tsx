@@ -17,7 +17,8 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({
   formData,
   setFormData
 }) => {
-  if (step === 25) {
+  // Adjust step numbers to match validation logic (start from 26)
+  if (step === 26) {
     return (
       <SelfAssessmentStep 
         assessmentKey="outOfBreath"
@@ -31,7 +32,7 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({
     );
   }
   
-  if (step === 26) {
+  if (step === 27) {
     return (
       <SelfAssessmentStep 
         assessmentKey="fallingBack"
@@ -45,7 +46,7 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({
     );
   }
   
-  if (step === 27) {
+  if (step === 28) {
     return (
       <SelfAssessmentStep 
         assessmentKey="motivationLevel"
@@ -59,7 +60,7 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({
     );
   }
   
-  if (step === 28) {
+  if (step === 29) {
     return (
       <SelfAssessmentStep 
         assessmentKey="dietConsistency"
@@ -73,7 +74,7 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({
     );
   }
   
-  if (step === 29) {
+  if (step === 30) {
     return (
       <PersonalInfoStep
         personalInfo={formData.personalInfo}

@@ -1,12 +1,11 @@
 
 import { FormData } from "@/types/survey";
-import { toast as toastFunction } from "@/hooks/use-toast";
 import type { ToastParams } from "@/hooks/use-toast";
 
 export const validateSugaryFoodsStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (!formData.sugaryFoods) {
     toast({
-      title: "Selection required",
+      title: "Sugary Foods Selection Required",
       description: "Please select how often you consume sugary foods or beverages",
       variant: "destructive",
     });
@@ -16,9 +15,9 @@ export const validateSugaryFoodsStep = (formData: FormData, toast: (props: Toast
 };
 
 export const validateWaterIntakeStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
-  if (!formData.waterIntake) {
+  if (formData.waterIntake === null) {
     toast({
-      title: "Selection required",
+      title: "Water Intake Required",
       description: "Please select your daily water intake",
       variant: "destructive",
     });
@@ -30,7 +29,7 @@ export const validateWaterIntakeStep = (formData: FormData, toast: (props: Toast
 export const validateTypicalDayStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (!formData.typicalDay) {
     toast({
-      title: "Selection required",
+      title: "Daily Activity Selection Required",
       description: "Please select how you would describe your typical day",
       variant: "destructive",
     });
@@ -40,9 +39,9 @@ export const validateTypicalDayStep = (formData: FormData, toast: (props: ToastP
 };
 
 export const validateEnergyLevelsStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
-  if (!formData.energyLevels) {
+  if (formData.energyLevels === null) {
     toast({
-      title: "Selection required",
+      title: "Energy Level Rating Required",
       description: "Please rate your average energy levels during the day",
       variant: "destructive",
     });
@@ -54,7 +53,7 @@ export const validateEnergyLevelsStep = (formData: FormData, toast: (props: Toas
 export const validateSleepAmountStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (formData.sleepAmount === null) {
     toast({
-      title: "Sleep amount required",
+      title: "Sleep Amount Required",
       description: "Please indicate how much sleep you usually get",
       variant: "destructive",
     });
@@ -68,11 +67,22 @@ export const validateLifestyleStep = (
   formData: FormData,
   toast: (props: ToastParams) => void
 ): boolean => {
-  if (step === 21) return validateSugaryFoodsStep(formData, toast);
-  if (step === 22) return validateWaterIntakeStep(formData, toast);
-  if (step === 23) return validateTypicalDayStep(formData, toast);
-  if (step === 24) return validateEnergyLevelsStep(formData, toast);
-  if (step === 25) return validateSleepAmountStep(formData, toast);
+  console.log(`Validating lifestyle step ${step}`);
   
-  return true;
+  // Map the global step numbers to the specific validation functions
+  switch (step) {
+    case 21:
+      return validateSugaryFoodsStep(formData, toast);
+    case 22:
+      return validateWaterIntakeStep(formData, toast);
+    case 23:
+      return validateTypicalDayStep(formData, toast);
+    case 24:
+      return validateEnergyLevelsStep(formData, toast);
+    case 25:
+      return validateSleepAmountStep(formData, toast);
+    default:
+      console.log(`No specific validation for lifestyle step ${step}`);
+      return true;
+  }
 };

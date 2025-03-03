@@ -1,6 +1,5 @@
 
 import { FormData } from "@/types/survey";
-import { toast as toastFunction } from "@/hooks/use-toast";
 import type { ToastParams } from "@/hooks/use-toast";
 
 export const validateHealthConcernsStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
@@ -16,7 +15,7 @@ export const validateHealthConcernsStep = (formData: FormData, toast: (props: To
   }
   
   toast({
-    title: "Missing information",
+    title: "Health Concerns Selection Required",
     description: "Please select at least one health concern or choose 'None of the above'",
     variant: "destructive",
   });
@@ -24,15 +23,15 @@ export const validateHealthConcernsStep = (formData: FormData, toast: (props: To
   return false;
 };
 
-export const validateProblemAreasStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
-  // Make problem areas optional
+export const validateProblemAreasStep = (): boolean => {
+  // Problem areas are optional
   return true;
 };
 
 export const validateBestShapeStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (!formData.bestShapeTime) {
     toast({
-      title: "Selection required",
+      title: "Best Shape Time Selection Required",
       description: "Please select when you were in your best shape",
       variant: "destructive",
     });
@@ -44,7 +43,7 @@ export const validateBestShapeStep = (formData: FormData, toast: (props: ToastPa
 export const validateWeightChangeStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (!formData.weightChange) {
     toast({
-      title: "Selection required",
+      title: "Weight Change Pattern Required",
       description: "Please select how your weight typically changes",
       variant: "destructive",
     });
@@ -53,20 +52,20 @@ export const validateWeightChangeStep = (formData: FormData, toast: (props: Toas
   return true;
 };
 
-export const validateActivitiesStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
-  // Make activities optional
+export const validateActivitiesStep = (): boolean => {
+  // Activities are optional
   return true;
 };
 
-export const validateProgressGraphStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
-  // This property doesn't exist in FormData, so we'll skip validation for now
+export const validateProgressGraphStep = (): boolean => {
+  // This is an informational step
   return true;
 };
 
 export const validateHeightInputStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (!formData.height) {
     toast({
-      title: "Height required",
+      title: "Height Required",
       description: "Please enter your height",
       variant: "destructive",
     });
@@ -78,7 +77,7 @@ export const validateHeightInputStep = (formData: FormData, toast: (props: Toast
 export const validateWeightInputStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (!formData.currentWeight) {
     toast({
-      title: "Weight required",
+      title: "Weight Required",
       description: "Please enter your weight",
       variant: "destructive",
     });
@@ -93,6 +92,9 @@ export const validateBodyAssessmentStep = (
   formData: FormData,
   toast: (props: ToastParams) => void
 ): boolean => {
+  console.log(`Validating body assessment step ${step}`);
+  
+  // Map the global step numbers to the specific validation functions
   switch (step) {
     case 6:
       return validateHeightInputStep(formData, toast);
@@ -103,12 +105,13 @@ export const validateBodyAssessmentStep = (
     case 9:
       return validateWeightChangeStep(formData, toast);
     case 10:
-      return validateProgressGraphStep(formData, toast);
+      return validateProgressGraphStep();
     case 11:
       return true; // Hormone graph step doesn't need validation
     case 12:
       return validateHealthConcernsStep(formData, toast);
     default:
+      console.log(`No specific validation for body assessment step ${step}`);
       return true;
   }
 };

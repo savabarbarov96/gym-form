@@ -1,3 +1,4 @@
+
 import { ToastParams } from "@/hooks/use-toast";
 import { validateBasicInfoStep } from "./basicInfoValidation";
 import { validateBodyAssessmentStep } from "./bodyAssessmentValidation";
@@ -5,6 +6,9 @@ import { validateWorkoutPreferencesStep } from "./workoutPreferencesValidation";
 import { validateLifestyleStep } from "./lifestyleValidation";
 import { validateFinalStepsStep } from "./finalStepsValidation";
 import { FormData } from "@/types/survey";
+
+// Track active validation errors to manage their lifecycle
+const activeValidationErrors = new Map<number, string>();
 
 /**
  * Common validation function that delegates to the correct validation module
@@ -15,29 +19,74 @@ export const validateStep = (
   formData: FormData, 
   toast: (props: ToastParams) => void
 ): boolean => {
-  // Keep track of validation result
+  // Always clear previous errors for this step when validating again
+  if (activeValidationErrors.has(step)) {
+    activeValidationErrors.delete(step);
+  }
+
+  // Debug validation
+  console.log(`Validating step ${step}`);
+  
+  // Initialize validation result
   let isValid = true;
   
-  // Determine which validation module to use based on the step range
-  if (step >= 1 && step <= 5) {
-    isValid = validateBasicInfoStep(step, formData, toast);
+  try {
+    // Determine which validation module to use based on the step range
+    if (step >= 1 && step <= 5) {
+      isValid = validateBasicInfoStep(step, formData, toast);
+      console.log(`Basic info validation result: ${isValid}`);
+    }
+    
+    else if (step >= 6 && step <= 12) {
+      isValid = validateBodyAssessmentStep(step, formData, toast);
+      console.log(`Body assessment validation result: ${isValid}`);
+    }
+    
+    else if (step >= 13 && step <= 20) {
+      isValid = validateWorkoutPreferencesStep(step, formData, toast);
+      console.log(`Workout preferences validation result: ${isValid}`);
+    }
+    
+    else if (step >= 21 && step <= 25) {
+      isValid = validateLifestyleStep(step, formData, toast);
+      console.log(`Lifestyle validation result: ${isValid}`);
+    }
+    
+    else if (step >= 26 && step <= 30) {
+      isValid = validateFinalStepsStep(step, formData, toast);
+      console.log(`Final steps validation result: ${isValid}`);
+    }
+    
+    if (!isValid) {
+      // If validation failed, store the error state for this step
+      activeValidationErrors.set(step, `Validation failed for step ${step}`);
+    }
+    
+    return isValid;
+  } catch (error) {
+    console.error(`Validation error in step ${step}:`, error);
+    toast({
+      title: "Validation Error",
+      description: "An unexpected error occurred during validation",
+      variant: "destructive",
+    });
+    return false;
   }
-  
-  else if (step >= 6 && step <= 12) {
-    isValid = validateBodyAssessmentStep(step, formData, toast);
+};
+
+// Function to clear all validation errors - useful when resetting the form
+export const clearAllValidationErrors = () => {
+  activeValidationErrors.clear();
+};
+
+// Function to clear validation errors for a specific step - useful when moving away from a step
+export const clearValidationErrorForStep = (step: number) => {
+  if (activeValidationErrors.has(step)) {
+    activeValidationErrors.delete(step);
   }
-  
-  else if (step >= 13 && step <= 20) {
-    isValid = validateWorkoutPreferencesStep(step, formData, toast);
-  }
-  
-  else if (step >= 21 && step <= 24) {
-    isValid = validateLifestyleStep(step, formData, toast);
-  }
-  
-  else if (step >= 25 && step <= 29) {
-    isValid = validateFinalStepsStep(step, formData, toast);
-  }
-  
-  return isValid;
+};
+
+// Function to check if a specific step has validation errors
+export const hasValidationErrorForStep = (step: number): boolean => {
+  return activeValidationErrors.has(step);
 };

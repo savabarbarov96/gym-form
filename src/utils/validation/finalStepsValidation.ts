@@ -1,13 +1,12 @@
 
 import { FormData } from "@/types/survey";
-import { toast as toastFunction } from "@/hooks/use-toast";
 import type { ToastParams } from "@/hooks/use-toast";
 
 export const validateOutOfBreathStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (formData.selfAssessments.outOfBreath === null) {
     toast({
-      title: "Selection required",
-      description: "Please rate how much you relate to the statement",
+      title: "Self-Assessment Required",
+      description: "Please rate how much you relate to the statement about being out of breath",
       variant: "destructive",
     });
     return false;
@@ -18,20 +17,8 @@ export const validateOutOfBreathStep = (formData: FormData, toast: (props: Toast
 export const validateFallingBackStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (formData.selfAssessments.fallingBack === null) {
     toast({
-      title: "Selection required",
-      description: "Please rate how much you relate to the statement",
-      variant: "destructive",
-    });
-    return false;
-  }
-  return true;
-};
-
-export const validateSuitableWorkoutsStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
-  if (formData.selfAssessments.suitableWorkouts === null) {
-    toast({
-      title: "Selection required",
-      description: "Please rate how much you relate to the statement",
+      title: "Self-Assessment Required",
+      description: "Please rate how much you relate to the statement about falling back into habits",
       variant: "destructive",
     });
     return false;
@@ -42,8 +29,8 @@ export const validateSuitableWorkoutsStep = (formData: FormData, toast: (props: 
 export const validateMotivationLevelStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (formData.selfAssessments.motivationLevel === null) {
     toast({
-      title: "Selection required",
-      description: "Please rate how much you relate to the statement",
+      title: "Self-Assessment Required",
+      description: "Please rate how much you relate to the statement about motivation",
       variant: "destructive",
     });
     return false;
@@ -54,8 +41,8 @@ export const validateMotivationLevelStep = (formData: FormData, toast: (props: T
 export const validateDietConsistencyStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (formData.selfAssessments.dietConsistency === null) {
     toast({
-      title: "Selection required",
-      description: "Please rate how much you relate to the statement",
+      title: "Self-Assessment Required",
+      description: "Please rate how much you relate to the statement about diet consistency",
       variant: "destructive",
     });
     return false;
@@ -66,7 +53,7 @@ export const validateDietConsistencyStep = (formData: FormData, toast: (props: T
 export const validatePersonalInfoStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (!formData.personalInfo.name) {
     toast({
-      title: "Name required",
+      title: "Name Required",
       description: "Please enter your name to continue",
       variant: "destructive",
     });
@@ -75,7 +62,7 @@ export const validatePersonalInfoStep = (formData: FormData, toast: (props: Toas
   
   if (!formData.personalInfo.dob) {
     toast({
-      title: "Date of birth required",
+      title: "Date of Birth Required",
       description: "Please enter your date of birth to continue",
       variant: "destructive",
     });
@@ -93,7 +80,7 @@ export const validatePersonalInfoStep = (formData: FormData, toast: (props: Toas
   
   if (age < 10 || age > 80) {
     toast({
-      title: "Invalid age",
+      title: "Invalid Age",
       description: "Your age must be between 10 and 80 years",
       variant: "destructive",
     });
@@ -102,7 +89,7 @@ export const validatePersonalInfoStep = (formData: FormData, toast: (props: Toas
   
   if (!formData.personalInfo.email) {
     toast({
-      title: "Email required",
+      title: "Email Required",
       description: "Please enter your email address to continue",
       variant: "destructive",
     });
@@ -112,7 +99,7 @@ export const validatePersonalInfoStep = (formData: FormData, toast: (props: Toas
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(formData.personalInfo.email)) {
     toast({
-      title: "Invalid email",
+      title: "Invalid Email",
       description: "Please enter a valid email address",
       variant: "destructive",
     });
@@ -122,23 +109,27 @@ export const validatePersonalInfoStep = (formData: FormData, toast: (props: Toas
   return true;
 };
 
-export const validateStartCommitmentStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
-  // Start commitment is optional, so always return true
-  return true;
-};
-
 export const validateFinalStepsStep = (
   step: number,
   formData: FormData,
   toast: (props: ToastParams) => void
 ): boolean => {
-  if (step === 25) return validateOutOfBreathStep(formData, toast);
-  if (step === 26) return validateFallingBackStep(formData, toast);
-  if (step === 27) return validateSuitableWorkoutsStep(formData, toast);
-  if (step === 28) return validateMotivationLevelStep(formData, toast);
-  if (step === 29) return validateDietConsistencyStep(formData, toast);
-  if (step === 30) return validatePersonalInfoStep(formData, toast);
-  if (step === 31) return validateStartCommitmentStep(formData, toast);
+  console.log(`Validating final steps step ${step}`);
   
-  return true;
+  // Map the global step numbers to the specific validation functions
+  switch (step) {
+    case 26:
+      return validateOutOfBreathStep(formData, toast);
+    case 27:
+      return validateFallingBackStep(formData, toast);
+    case 28:
+      return validateMotivationLevelStep(formData, toast);
+    case 29:
+      return validateDietConsistencyStep(formData, toast);
+    case 30:
+      return validatePersonalInfoStep(formData, toast);
+    default:
+      console.log(`No specific validation for final steps step ${step}`);
+      return true;
+  }
 };
