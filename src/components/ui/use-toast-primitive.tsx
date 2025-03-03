@@ -2,7 +2,7 @@
 import * as React from "react";
 
 const TOAST_LIMIT = 5;
-const TOAST_REMOVE_DELAY = 1000000;
+const TOAST_REMOVE_DELAY = 5000; // Changed from 1000000 to 5000 (5 seconds)
 
 type ToastActionElement = React.ReactElement;
 
@@ -138,6 +138,20 @@ function useToastBase() {
       }
     };
   }, [state]);
+
+  // Auto-dismiss toasts after they're added
+  React.useEffect(() => {
+    state.toasts.forEach((toast) => {
+      if (toast.open) {
+        setTimeout(() => {
+          dispatch({
+            type: actionTypes.DISMISS_TOAST,
+            toastId: toast.id,
+          });
+        }, 3000); // Auto-dismiss after 3 seconds
+      }
+    });
+  }, [state.toasts]);
 
   return {
     ...state,

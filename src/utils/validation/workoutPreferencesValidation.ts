@@ -61,11 +61,14 @@ export const validateWorkoutPreferencesStep = (
   formData: FormData,
   toast = toastFunction
 ): boolean => {
-  if (step === 13) return validateWorkoutLocationStep(formData, toast);
-  if (step === 14) return validateWorkoutIntensityStep(formData, toast);
-  if (step === 15) return validateWorkoutFrequencyStep(formData, toast);
-  if (step === 16) return validateWorkoutDurationStep(formData, toast);
-  if (step === 17) return validateExercisePreferencesStep(formData, toast);
+  if (step === 13) return true; // This is just a display step for fitness goal
+  if (step === 14) return true; // Problem areas can be empty
+  if (step === 15) return true; // Activities can be empty
+  if (step === 16) return validateWorkoutLocationStep(formData, toast);
+  if (step === 17) return validateWorkoutIntensityStep(formData, toast);
+  if (step === 18) return validateWorkoutFrequencyStep(formData, toast);
+  if (step === 19) return validateWorkoutDurationStep(formData, toast);
+  if (step === 20) return validateExercisePreferencesStep(formData, toast);
   
   return true;
 };
