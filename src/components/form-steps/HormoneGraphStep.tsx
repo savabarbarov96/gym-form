@@ -25,13 +25,13 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) =
     // Clear any existing SVG
     d3.select(chartRef.current).selectAll("*").remove();
     
-    // Data for hormone levels - testosterone increasing, cortisol decreasing
+    // Updated data with lower percentages for testosterone (starting at 20%, ending at 40%)
     const data = [
       { name: "Now", testosterone: 20, cortisol: 80 },
-      { name: "Week 2", testosterone: 35, cortisol: 65 },
-      { name: "Week 4", testosterone: 50, cortisol: 50 },
-      { name: "Week 8", testosterone: 75, cortisol: 35 },
-      { name: "Week 12", testosterone: 95, cortisol: 20 }
+      { name: "Week 2", testosterone: 25, cortisol: 65 },
+      { name: "Week 4", testosterone: 30, cortisol: 50 },
+      { name: "Week 8", testosterone: 35, cortisol: 35 },
+      { name: "Week 12", testosterone: 40, cortisol: 20 }
     ];
     
     // Round values for cleaner display
@@ -47,7 +47,7 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) =
     const width = parentWidth - margin.left - margin.right;
     const height = 400 - margin.top - margin.bottom;
     
-    // Create SVG element with dark background
+    // Create SVG element with dark background matching the website theme
     const svg = d3.select(chartRef.current)
       .append("svg")
       .attr("width", width + margin.left + margin.right)
@@ -55,11 +55,11 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) =
       .append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
     
-    // Add dark background for graph
+    // Add dark background for graph matching the website theme
     svg.append("rect")
       .attr("width", width)
       .attr("height", height)
-      .attr("fill", "#1a1a1a");
+      .attr("fill", "hsl(var(--card))");
     
     // X axis - improved styling
     const x = d3.scaleBand()
@@ -74,11 +74,11 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) =
       .selectAll("text")
       .style("text-anchor", "middle")
       .attr("dy", "1em")
-      .style("fill", "#888")
+      .style("fill", "hsl(var(--muted-foreground))")
       .style("font-size", "12px");
     
     // Remove x-axis line but keep ticks
-    svg.selectAll(".domain").style("stroke", "#333");
+    svg.selectAll(".domain").style("stroke", "hsl(var(--border))");
     
     // Y axis - improved styling
     const yMax = 100; // Fixed max at 100%
@@ -91,12 +91,12 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) =
         .tickSize(-width)
         .tickFormat(d => d + "%"))
       .selectAll("text")
-      .style("fill", "#888")
+      .style("fill", "hsl(var(--muted-foreground))")
       .style("font-size", "12px");
     
     // Style the y-axis grid lines
     svg.selectAll(".tick line")
-      .style("stroke", "#333")
+      .style("stroke", "hsl(var(--border))")
       .style("stroke-opacity", 0.5);
     
     // Line generator for testosterone
@@ -111,9 +111,10 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) =
       .y(d => y(d.cortisol))
       .curve(d3.curveCatmullRom.alpha(0.5));
     
-    // Add gradient definitions
+    // Add gradient definitions with updated colors
     const defs = svg.append("defs");
     
+    // Updated testosterone gradient to match theme orange
     const testosteroneGradient = defs.append("linearGradient")
       .attr("id", "testosteroneGradient")
       .attr("x1", "0%")
@@ -123,14 +124,15 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) =
     
     testosteroneGradient.append("stop")
       .attr("offset", "0%")
-      .attr("stop-color", "rgb(var(--orange))")
+      .attr("stop-color", "hsl(var(--primary))")
       .attr("stop-opacity", 0.8);
     
     testosteroneGradient.append("stop")
       .attr("offset", "100%")
-      .attr("stop-color", "rgb(var(--orange))")
+      .attr("stop-color", "hsl(var(--primary))")
       .attr("stop-opacity", 0.1);
     
+    // Updated cortisol gradient to better match the theme
     const cortisolGradient = defs.append("linearGradient")
       .attr("id", "cortisolGradient")
       .attr("x1", "0%")
@@ -140,12 +142,12 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) =
     
     cortisolGradient.append("stop")
       .attr("offset", "0%")
-      .attr("stop-color", "#888")
+      .attr("stop-color", "hsl(var(--muted-foreground))")
       .attr("stop-opacity", 0.8);
     
     cortisolGradient.append("stop")
       .attr("offset", "100%")
-      .attr("stop-color", "#888")
+      .attr("stop-color", "hsl(var(--muted-foreground))")
       .attr("stop-opacity", 0.1);
     
     // Add area under testosterone line
@@ -180,11 +182,11 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) =
       .duration(2000)
       .attr("fill-opacity", 0.3);
     
-    // Add testosterone path with animation
+    // Add testosterone path with animation - updated color to match theme
     const testosteronePath = svg.append("path")
       .datum(roundedData)
       .attr("fill", "none")
-      .attr("stroke", "rgb(var(--orange))")
+      .attr("stroke", "hsl(var(--primary))")
       .attr("stroke-width", 3)
       .attr("d", testosteroneLine);
     
@@ -197,11 +199,11 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) =
       .duration(2000)
       .attr("stroke-dashoffset", 0);
     
-    // Add cortisol path with animation
+    // Add cortisol path with animation - updated color to match theme
     const cortisolPath = svg.append("path")
       .datum(roundedData)
       .attr("fill", "none")
-      .attr("stroke", "#888")
+      .attr("stroke", "hsl(var(--muted-foreground))")
       .attr("stroke-width", 3)
       .attr("d", cortisolLine);
     
@@ -214,7 +216,7 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) =
       .duration(2000)
       .attr("stroke-dashoffset", 0);
     
-    // Add animated data points
+    // Add animated data points with updated colors
     svg.selectAll(".testosteronePoint")
       .data(roundedData)
       .enter()
@@ -223,7 +225,7 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) =
       .attr("cx", d => (x(d.name) || 0) + x.bandwidth() / 2)
       .attr("cy", d => y(d.testosterone))
       .attr("r", 0)
-      .attr("fill", "rgb(var(--orange))")
+      .attr("fill", "hsl(var(--primary))")
       .transition()
       .delay((d, i) => i * 300)
       .duration(500)
@@ -237,13 +239,13 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) =
       .attr("cx", d => (x(d.name) || 0) + x.bandwidth() / 2)
       .attr("cy", d => y(d.cortisol))
       .attr("r", 0)
-      .attr("fill", "#888")
+      .attr("fill", "hsl(var(--muted-foreground))")
       .transition()
       .delay((d, i) => i * 300)
       .duration(500)
       .attr("r", 6);
     
-    // Add animated data labels with responsive font size
+    // Add animated data labels with responsive font size and updated colors
     const fontSize = Math.max(10, Math.min(12, parentWidth / 50));
     
     svg.selectAll(".testosteroneLabel")
@@ -255,7 +257,7 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) =
       .attr("y", d => y(d.testosterone) - 15)
       .attr("text-anchor", "middle")
       .style("font-size", `${fontSize}px`)
-      .style("fill", "rgb(var(--orange))")
+      .style("fill", "hsl(var(--primary))")
       .style("opacity", 0)
       .text(d => d.testosterone + "%")
       .transition()
@@ -272,7 +274,7 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) =
       .attr("y", d => y(d.cortisol) - 15)
       .attr("text-anchor", "middle")
       .style("font-size", `${fontSize}px`)
-      .style("fill", "#888")
+      .style("fill", "hsl(var(--muted-foreground))")
       .style("opacity", 0)
       .text(d => d.cortisol + "%")
       .transition()
@@ -286,7 +288,7 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) =
       .attr("y", -20)
       .attr("text-anchor", "middle")
       .style("font-size", "20px")
-      .style("fill", "#fff")
+      .style("fill", "hsl(var(--foreground))")
       .style("font-weight", "bold")
       .text("Your Hormone Balance");
     
@@ -296,7 +298,7 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) =
       .attr("y", height + 50)
       .attr("text-anchor", "middle")
       .style("font-size", "14px")
-      .style("fill", "#888")
+      .style("fill", "hsl(var(--muted-foreground))")
       .text("Timeline");
     
     // Add y-axis label
@@ -306,75 +308,41 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) =
       .attr("y", -40)
       .attr("text-anchor", "middle")
       .style("font-size", "14px")
-      .style("fill", "#888")
+      .style("fill", "hsl(var(--muted-foreground))")
       .text("Percentage (%)");
     
-    // Add legend with responsive position
-    const legendX = width > 400 ? width + 20 : width - 100;
-    const legendY = width > 400 ? 0 : -40;
-    
+    // Improved legend positioning to ensure line indicators are fully visible
+    // Instead of positioning it to the right, we'll position it at the top for better visibility
     const legend = svg.append("g")
-      .attr("transform", `translate(${legendX}, ${legendY})`);
+      .attr("transform", `translate(10, -40)`);
     
-    if (width <= 400) {
-      // For smaller screens, create a horizontal legend
-      legend.append("rect")
-        .attr("x", 0)
-        .attr("y", 0)
-        .attr("width", 12)
-        .attr("height", 12)
-        .attr("fill", "rgb(var(--orange))");
-      
-      legend.append("text")
-        .attr("x", 18)
-        .attr("y", 10)
-        .text("Testosterone")
-        .style("font-size", "12px")
-        .style("fill", "#ccc");
-      
-      legend.append("rect")
-        .attr("x", 100)
-        .attr("y", 0)
-        .attr("width", 12)
-        .attr("height", 12)
-        .attr("fill", "#888");
-      
-      legend.append("text")
-        .attr("x", 118)
-        .attr("y", 10)
-        .text("Cortisol (Stress)")
-        .style("font-size", "12px")
-        .style("fill", "#ccc");
-    } else {
-      // For larger screens, create a vertical legend
-      legend.append("rect")
-        .attr("x", 0)
-        .attr("y", 0)
-        .attr("width", 15)
-        .attr("height", 15)
-        .attr("fill", "rgb(var(--orange))");
-      
-      legend.append("text")
-        .attr("x", 25)
-        .attr("y", 12.5)
-        .text("Testosterone")
-        .style("font-size", "14px")
-        .style("fill", "#ccc");
-      
-      legend.append("rect")
-        .attr("x", 0)
-        .attr("y", 30)
-        .attr("width", 15)
-        .attr("height", 15)
-        .attr("fill", "#888");
-      
-      legend.append("text")
-        .attr("x", 25)
-        .attr("y", 42.5)
-        .text("Cortisol (Stress)")
-        .style("font-size", "14px")
-        .style("fill", "#ccc");
-    }
+    legend.append("rect")
+      .attr("x", 0)
+      .attr("y", 0)
+      .attr("width", 15)
+      .attr("height", 15)
+      .attr("fill", "hsl(var(--primary))");
+    
+    legend.append("text")
+      .attr("x", 25)
+      .attr("y", 12.5)
+      .text("Testosterone")
+      .style("font-size", "14px")
+      .style("fill", "hsl(var(--foreground))");
+    
+    legend.append("rect")
+      .attr("x", 150)
+      .attr("y", 0)
+      .attr("width", 15)
+      .attr("height", 15)
+      .attr("fill", "hsl(var(--muted-foreground))");
+    
+    legend.append("text")
+      .attr("x", 175)
+      .attr("y", 12.5)
+      .text("Cortisol (Stress)")
+      .style("font-size", "14px")
+      .style("fill", "hsl(var(--foreground))");
     
     // Handle resize
     const handleResize = () => {
