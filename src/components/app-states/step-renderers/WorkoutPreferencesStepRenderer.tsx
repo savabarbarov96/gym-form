@@ -88,8 +88,8 @@ const WorkoutPreferencesStepRenderer: React.FC<WorkoutPreferencesStepRendererPro
           preferences={formData.exercisePreferences}
           onPreferenceChange={(exercisePreferences) => {
             setFormData(prev => ({ ...prev, exercisePreferences }));
-            handleNext();
           }}
+          onStepComplete={handleNext}
         />
       );
     

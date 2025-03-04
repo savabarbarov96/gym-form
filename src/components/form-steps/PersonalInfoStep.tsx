@@ -3,10 +3,18 @@ import React, { useState } from 'react';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { format } from 'date-fns';
+import { format, isValid, parseISO } from 'date-fns';
 import { AlertCircle, User, Calendar, Mail, CheckCircle2 } from 'lucide-react';
 import { useSurvey } from '@/contexts/SurveyContext';
 import { motion } from 'framer-motion';
+import { 
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { cn } from "@/lib/utils";
 
 interface PersonalInfoStepProps {
   name?: string | null;
@@ -91,14 +99,15 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
     }
   };
 
-  const handleDobChange = (value: string) => {
-    const dobError = validateDob(value);
+  const handleDobChange = (date: Date | undefined) => {
+    const dateStr = date ? format(date, 'yyyy-MM-dd') : '';
+    const dobError = validateDob(dateStr);
     setErrors(prev => ({ ...prev, dob: dobError }));
     
     if (onChange) {
-      onChange({ ...personalInfo, dob: value });
+      onChange({ ...personalInfo, dob: dateStr });
     } else if (onChangeDob) {
-      onChangeDob(value);
+      onChangeDob(dateStr);
     }
   };
 
@@ -165,14 +174,40 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
               <Calendar size={16} className="text-orange" />
               Date of Birth
             </Label>
-            <Input 
-              id="dob" 
-              type="date" 
-              value={dob || ''} 
-              onChange={(e) => handleDobChange(e.target.value)}
-              max={format(new Date(), 'yyyy-MM-dd')}
-              className={`border-orange/20 focus:border-orange/50 focus:ring-orange/30 ${errors.dob ? "border-red-500" : ""}`}
-            />
+            
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  id="dob"
+                  variant={"outline"}
+                  className={cn(
+                    "w-full justify-start text-left font-normal border-orange/20 hover:bg-orange/5 hover:text-orange py-6",
+                    !dob && "text-muted-foreground",
+                    errors.dob && "border-red-500"
+                  )}
+                >
+                  <Calendar className="mr-2 h-4 w-4" />
+                  {dob && isValid(parseISO(dob)) ? format(parseISO(dob), 'PPP') : "Select your birth date"}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <CalendarComponent
+                  mode="single"
+                  selected={dob ? parseISO(dob) : undefined}
+                  onSelect={handleDobChange}
+                  disabled={(date) => {
+                    // Disable future dates and dates more than 80 years in the past
+                    const today = new Date();
+                    const minDate = new Date();
+                    minDate.setFullYear(today.getFullYear() - 80);
+                    return date > today || date < minDate;
+                  }}
+                  initialFocus
+                  className="rounded-md border border-orange/20"
+                />
+              </PopoverContent>
+            </Popover>
+            
             {errors.dob && (
               <div className="text-red-500 flex items-center gap-1 text-sm mt-1">
                 <AlertCircle className="h-4 w-4" />
