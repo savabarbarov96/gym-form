@@ -16,7 +16,7 @@ const ExercisePreferencesStepRenderer = ({
 }: ExercisePreferencesStepRendererProps) => {
   return (
     <ExercisePreferencesStep
-      preferences={formData.exercisePreferences}
+      preferences={formData.exercisePreferences || {}}
       onPreferenceChange={(exercisePreferences) => 
         setFormData(prev => ({ ...prev, exercisePreferences }))
       }

@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
-import { ThumbsUp, ThumbsDown, Meh } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
+import { ExerciseCard, ProgressIndicator } from "./exercise-preferences";
 
 type Preference = "like" | "neutral" | "dislike" | null;
 
@@ -62,63 +62,19 @@ const ExercisePreferencesStep = ({
       
       <div className="max-w-md mx-auto">
         <AnimatePresence mode="wait">
-          <motion.div
+          <ExerciseCard
             key={currentExercise}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className="mb-8"
-          >
-            <div className="bg-card p-8 rounded-xl shadow-lg mb-8 h-56 flex items-center justify-center">
-              <h2 className="text-3xl font-bold">{currentExercise}</h2>
-            </div>
-
-            <div className="flex justify-center gap-8">
-              <button 
-                onClick={() => handlePreference(currentExercise, "dislike")}
-                className={`p-4 rounded-full transition-all ${localPreferences[currentExercise] === "dislike" ? "bg-red-500" : "bg-secondary hover:bg-muted"}`}
-                aria-label="Dislike"
-              >
-                <ThumbsDown className="w-8 h-8" />
-              </button>
-              
-              <button 
-                onClick={() => handlePreference(currentExercise, "neutral")}
-                className={`p-4 rounded-full transition-all ${localPreferences[currentExercise] === "neutral" ? "bg-blue-500" : "bg-secondary hover:bg-muted"}`}
-                aria-label="Neutral"
-              >
-                <Meh className="w-8 h-8" />
-              </button>
-              
-              <button 
-                onClick={() => handlePreference(currentExercise, "like")}
-                className={`p-4 rounded-full transition-all ${localPreferences[currentExercise] === "like" ? "bg-green-500" : "bg-secondary hover:bg-muted"}`}
-                aria-label="Like"
-              >
-                <ThumbsUp className="w-8 h-8" />
-              </button>
-            </div>
-          </motion.div>
+            exercise={currentExercise}
+            preference={localPreferences[currentExercise] || null}
+            onPreferenceSelect={(preference) => handlePreference(currentExercise, preference)}
+          />
         </AnimatePresence>
         
-        <div className="flex justify-center mt-6">
-          {exercises.map((_, index) => (
-            <div 
-              key={index}
-              className={`w-2 h-2 rounded-full mx-1 ${
-                index === currentExerciseIndex ? "bg-orange" : "bg-muted"
-              }`}
-            />
-          ))}
-        </div>
-        
-        <p className="mt-6 text-muted-foreground">
-          {isLastExercise ? 
-            "Press Continue to proceed" : 
-            `${currentExerciseIndex + 1} of ${exercises.length}`
-          }
-        </p>
+        <ProgressIndicator
+          totalSteps={exercises.length}
+          currentStep={currentExerciseIndex}
+          isLastStep={isLastExercise}
+        />
       </div>
     </div>
   );

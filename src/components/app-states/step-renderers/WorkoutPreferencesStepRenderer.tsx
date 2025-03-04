@@ -51,7 +51,7 @@ const WorkoutPreferencesStepRenderer = ({
     case 6: // Global step 19
       return <WorkoutDurationStepRenderer formData={formData} setFormData={setFormData} />;
     case 7: // Global step 20
-      return <ExercisePreferencesStepRenderer formData={formData} setFormData={setFormData} />;
+      return <ExercisePreferencesStepRenderer formData={formData} setFormData={setFormData} handleNext={handleNext} />;
     case 8: // Global step 21
       return <DesiredBodyStepRenderer formData={formData} setFormData={setFormData} />;
     default:
