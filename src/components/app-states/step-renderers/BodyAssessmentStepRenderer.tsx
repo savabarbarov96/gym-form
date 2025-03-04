@@ -28,6 +28,8 @@ const BodyAssessmentStepRenderer = ({
   // Adjust for the correct step range (step - 6)
   const localStep = step - 6;
   
+  console.log("Body Assessment Step Renderer", { step, localStep, formData });
+  
   switch (localStep) {
     case 1:
       return <HeightInputStepRenderer formData={formData} setFormData={setFormData} />;
@@ -51,6 +53,7 @@ const BodyAssessmentStepRenderer = ({
     case 7:
       return <HealthConcernsStepRenderer formData={formData} setFormData={setFormData} />;
     default:
+      console.log("No matching case for localStep:", localStep);
       return null;
   }
 };

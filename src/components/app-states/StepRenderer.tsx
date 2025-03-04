@@ -25,6 +25,8 @@ const StepRenderer: React.FC<StepRendererProps> = ({
   handleNext,
   animationDirection
 }) => {
+  console.log("StepRenderer rendering step:", step);
+  
   const slideVariants = {
     enter: (direction: string) => ({
       x: direction === "next" ? "100%" : "-100%",
@@ -84,6 +86,7 @@ const StepRenderer: React.FC<StepRendererProps> = ({
       />;
     }
     
+    console.log("No matching step range for step:", step);
     return null;
   };
 

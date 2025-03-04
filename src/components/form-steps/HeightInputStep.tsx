@@ -9,6 +9,8 @@ interface HeightInputStepProps {
 }
 
 const HeightInputStep: React.FC<HeightInputStepProps> = ({ value, onChange }) => {
+  console.log("Rendering HeightInputStep with value:", value);
+  
   const [unit, setUnit] = useState<"cm" | "ft">(!value || value.includes("cm") ? "cm" : "ft");
   const [cmValue, setCmValue] = useState<string>(value && value.includes("cm") ? value.replace(" cm", "") : "");
   const [ftValue, setFtValue] = useState<string>(value && value.includes("ft") ? value.replace(/ ft.*/, "") : "");

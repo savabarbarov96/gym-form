@@ -12,6 +12,8 @@ const HeightInputStepRenderer = ({
   formData,
   setFormData
 }: HeightInputStepRendererProps) => {
+  console.log("Rendering HeightInputStepRenderer with value:", formData.height);
+  
   return (
     <HeightInputStep
       value={formData.height}
