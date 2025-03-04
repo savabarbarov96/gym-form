@@ -39,7 +39,7 @@ const getBodyAssessmentStep = (
     ),
     3: <WeightChangeStepRenderer formData={formData} setFormData={setFormData} />,
     4: <ProgressGraphStepRenderer formData={formData} />,
-    5: <HormoneGraphStepRenderer handleNext={handleNext} />,
+    5: <HormoneGraphStepRenderer handleNext={handleNext} formData={formData} />,
     6: <HealthConcernsStepRenderer formData={formData} setFormData={setFormData} />,
   };
   

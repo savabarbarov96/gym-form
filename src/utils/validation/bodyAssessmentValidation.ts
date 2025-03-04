@@ -109,6 +109,7 @@ export const validateBodyAssessmentStep = (
     case 11:
       return true; // Hormone graph step doesn't need validation
     case 12:
+      console.log("Validating health concerns step, next we should see step 13 (FitnessGoalStep)");
       return validateHealthConcernsStep(formData, toast);
     default:
       console.log(`No specific validation for body assessment step ${step}`);
