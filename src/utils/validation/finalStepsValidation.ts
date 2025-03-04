@@ -87,24 +87,22 @@ const validatePersonalInfoStep = (formData: FormData, toast: (props: ToastParams
     return false;
   }
   
-  // Date of birth validation - Check if DOB exists and is valid
+  // Date of birth validation
   if (!formData.personalInfo.dob) {
     toast({
       title: "Date of Birth Required",
-      description: "Please select your date of birth",
+      description: "Please enter your date of birth",
       variant: "destructive",
     });
     return false;
   }
   
-  // Log the date for debugging
-  console.log("DoB value being validated:", formData.personalInfo.dob);
-  
-  // Make sure the dob is a valid date string
+  // Date of birth format and age validation
   try {
     const dobDate = new Date(formData.personalInfo.dob);
+    const today = new Date();
     
-    // Check if date is valid by ensuring it's not NaN
+    // Check if date is valid
     if (isNaN(dobDate.getTime())) {
       toast({
         title: "Invalid Date",
@@ -114,38 +112,37 @@ const validatePersonalInfoStep = (formData: FormData, toast: (props: ToastParams
       return false;
     }
     
-    // Additional age validation
-    const today = new Date();
-    let age = today.getFullYear() - dobDate.getFullYear();
+    // Check if date is in the future
+    if (dobDate > today) {
+      toast({
+        title: "Invalid Date",
+        description: "Date of birth cannot be in the future",
+        variant: "destructive",
+      });
+      return false;
+    }
+    
+    // Calculate age
+    const age = today.getFullYear() - dobDate.getFullYear();
     const monthDiff = today.getMonth() - dobDate.getMonth();
     
     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dobDate.getDate())) {
-      age--;
+      const adjustedAge = age - 1;
+      
+      // Check if user is at least 16 years old
+      if (adjustedAge < 16) {
+        toast({
+          title: "Age Restriction",
+          description: "You must be at least 16 years old to use this service",
+          variant: "destructive",
+        });
+        return false;
+      }
     }
-    
-    if (age < 10) {
-      toast({
-        title: "Age Restriction",
-        description: "You must be at least 10 years old",
-        variant: "destructive",
-      });
-      return false;
-    }
-    
-    if (age > 80) {
-      toast({
-        title: "Age Restriction",
-        description: "Maximum age is 80 years old",
-        variant: "destructive",
-      });
-      return false;
-    }
-    
   } catch (error) {
-    console.error("Error validating date:", error);
     toast({
       title: "Invalid Date Format",
-      description: "Please enter a valid date of birth",
+      description: "Please enter your date of birth in the format YYYY-MM-DD",
       variant: "destructive",
     });
     return false;
@@ -172,7 +169,6 @@ export const validateFinalStepsStep = (
     case 29:
       return validateDietConsistencyStep(formData, toast);
     case 30:
-      console.log("Validating Personal Info Step:", formData.personalInfo);
       return validatePersonalInfoStep(formData, toast);
     default:
       console.log(`No specific validation for final steps step ${step}`);

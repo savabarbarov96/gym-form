@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { useSurvey } from '@/contexts/SurveyContext';
 
 interface SelfAssessmentStepProps {
   question?: string;
@@ -20,8 +19,6 @@ const SelfAssessmentStep: React.FC<SelfAssessmentStepProps> = ({
   type,
   onValidate 
 }) => {
-  const { handleNext } = useSurvey();
-
   // Determine question text based on the type or assessmentKey
   const getQuestionText = () => {
     if (question) return question;
@@ -50,24 +47,6 @@ const SelfAssessmentStep: React.FC<SelfAssessmentStepProps> = ({
     { value: 5, label: 'Extremely' }
   ];
 
-  const handleOptionSelect = (value: number) => {
-    // Update state immediately
-    onChange(value);
-    
-    // Give a small delay before advancing to the next question
-    setTimeout(() => {
-      if (onValidate) {
-        // Only attempt to validate - we don't check the result since the validation
-        // will already show an error if needed
-        onValidate();
-        // Always proceed regardless of validation result since we already have a value
-        handleNext();
-      } else {
-        handleNext();
-      }
-    }, 400);
-  };
-
   return (
     <div className="max-w-2xl mx-auto w-full">
       <h2 className="text-2xl font-bold text-center mb-6">How much do you relate to this statement?</h2>
@@ -84,7 +63,7 @@ const SelfAssessmentStep: React.FC<SelfAssessmentStepProps> = ({
               "option-card p-6 transition-all hover:scale-[1.01] cursor-pointer border border-border rounded-lg",
               value === rating.value ? "bg-muted border-orange" : "bg-card"
             )}
-            onClick={() => handleOptionSelect(rating.value)}
+            onClick={() => onChange(rating.value)}
           >
             <div className="flex justify-between items-center">
               <span className="text-lg">{rating.label}</span>

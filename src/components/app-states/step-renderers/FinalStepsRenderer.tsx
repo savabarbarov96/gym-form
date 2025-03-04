@@ -91,16 +91,7 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
         />
       );
       
-    case 6: // Step 31
-      return (
-        <StartCommitmentStep
-          selected={formData.startCommitment}
-          onSelect={handleStartCommitmentChange}
-        />
-      );
-      
     default:
-      console.log(`No component for local step ${localStep} (global step ${step})`);
       return null;
   }
 };

@@ -1,9 +1,7 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
 import { ExerciseCard, ProgressIndicator } from "./exercise-preferences";
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
 
 type Preference = "like" | "neutral" | "dislike" | null;
 
@@ -25,10 +23,20 @@ const ExercisePreferencesStep = ({
   
   const currentExercise = exercises[currentExerciseIndex];
   const isLastExercise = currentExerciseIndex === exercises.length - 1;
-  const allExercisesRated = exercises.every(exercise => 
-    localPreferences[exercise] !== undefined && 
-    localPreferences[exercise] !== null
-  );
+
+  // Handle auto-advancing to next step after rating last exercise
+  useEffect(() => {
+    // If this is the last exercise and it has a preference, auto-advance after a delay
+    if (isLastExercise && 
+        localPreferences[currentExercise] !== undefined && 
+        localPreferences[currentExercise] !== null) {
+      const timer = setTimeout(() => {
+        if (onStepComplete) onStepComplete();
+      }, 800);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isLastExercise, localPreferences, currentExercise, onStepComplete]);
 
   const handlePreference = (exercise: string, preference: Preference) => {
     const updatedPreferences = {
@@ -37,8 +45,6 @@ const ExercisePreferencesStep = ({
     };
     
     setLocalPreferences(updatedPreferences);
-    
-    // Update parent state
     onPreferenceChange(updatedPreferences);
     
     // Move to next exercise if not the last one
@@ -47,12 +53,7 @@ const ExercisePreferencesStep = ({
         setCurrentExerciseIndex(prev => prev + 1);
       }, 300);
     }
-  };
-  
-  const handleComplete = () => {
-    if (onStepComplete) {
-      onStepComplete();
-    }
+    // We don't need an else statement here as the useEffect will handle advancing to the next step
   };
 
   return (
@@ -74,15 +75,6 @@ const ExercisePreferencesStep = ({
           currentStep={currentExerciseIndex}
           isLastStep={isLastExercise}
         />
-        
-        {isLastExercise && allExercisesRated && (
-          <Button 
-            onClick={handleComplete}
-            className="mt-6 bg-orange hover:bg-orange/90 text-white"
-          >
-            Continue <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        )}
       </div>
     </div>
   );

@@ -27,7 +27,7 @@ const LifestyleStepRenderer: React.FC<LifestyleStepRendererProps> = ({
     case 1: // Step 21
       return (
         <SugaryFoodsStep
-          selected={formData.sugaryFoods}
+          selectedOption={formData.sugaryFoods}
           onSelect={(sugaryFoods) => setFormData(prev => ({ ...prev, sugaryFoods }))}
         />
       );
@@ -43,7 +43,7 @@ const LifestyleStepRenderer: React.FC<LifestyleStepRendererProps> = ({
     case 3: // Step 23
       return (
         <TypicalDayStep
-          selected={formData.typicalDay}
+          selectedOption={formData.typicalDay}
           onSelect={(typicalDay) => setFormData(prev => ({ ...prev, typicalDay }))}
         />
       );

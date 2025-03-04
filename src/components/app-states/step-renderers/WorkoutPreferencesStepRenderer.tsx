@@ -36,7 +36,7 @@ const WorkoutPreferencesStepRenderer: React.FC<WorkoutPreferencesStepRendererPro
       return (
         <ProblemAreasStep
           selectedAreas={formData.problemAreas}
-          onSelectArea={(problemAreas) => setFormData(prev => ({ ...prev, problemAreas }))}
+          onSelect={(problemAreas) => setFormData(prev => ({ ...prev, problemAreas }))}
         />
       );
     
@@ -45,8 +45,8 @@ const WorkoutPreferencesStepRenderer: React.FC<WorkoutPreferencesStepRendererPro
         <ActivitiesStep
           selectedActivities={formData.activities}
           customActivity={formData.customActivity}
-          onSelectionsChange={(activities) => setFormData(prev => ({ ...prev, activities }))}
-          onCustomActivityChange={(customActivity) => setFormData(prev => ({ ...prev, customActivity }))}
+          onSelect={(activities) => setFormData(prev => ({ ...prev, activities }))}
+          onCustomChange={(customActivity) => setFormData(prev => ({ ...prev, customActivity }))}
         />
       );
     
@@ -69,7 +69,7 @@ const WorkoutPreferencesStepRenderer: React.FC<WorkoutPreferencesStepRendererPro
     case 5: // Step 17
       return (
         <WorkoutFrequencyStep
-          selected={formData.workoutFrequency}
+          selectedFrequency={formData.workoutFrequency}
           onSelect={(workoutFrequency) => setFormData(prev => ({ ...prev, workoutFrequency }))}
         />
       );
@@ -77,7 +77,7 @@ const WorkoutPreferencesStepRenderer: React.FC<WorkoutPreferencesStepRendererPro
     case 6: // Step 18
       return (
         <WorkoutDurationStep
-          selected={formData.workoutDuration}
+          selectedDuration={formData.workoutDuration}
           onSelect={(workoutDuration) => setFormData(prev => ({ ...prev, workoutDuration }))}
         />
       );
@@ -86,17 +86,17 @@ const WorkoutPreferencesStepRenderer: React.FC<WorkoutPreferencesStepRendererPro
       return (
         <ExercisePreferencesStep
           preferences={formData.exercisePreferences}
-          onPreferenceChange={(exercisePreferences) => {
+          onChange={(exercisePreferences) => {
             setFormData(prev => ({ ...prev, exercisePreferences }));
+            handleNext();
           }}
-          onStepComplete={handleNext}
         />
       );
     
     case 8: // Step 20
       return (
         <DesiredBodyStep
-          selectedBody={formData.desiredBody}
+          selectedBodyType={formData.desiredBody}
           onSelect={(desiredBody) => setFormData(prev => ({ ...prev, desiredBody }))}
         />
       );

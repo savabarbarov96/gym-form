@@ -1,14 +1,12 @@
 
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { format } from 'date-fns';
+import { AlertCircle, User, Calendar, Mail, CheckCircle2 } from 'lucide-react';
 import { useSurvey } from '@/contexts/SurveyContext';
-import {
-  NameInput,
-  DateOfBirthInput,
-  EmailInput,
-  ConsentCheckbox,
-  MotivationalQuote
-} from './personal-info';
+import { motion } from 'framer-motion';
 
 interface PersonalInfoStepProps {
   name?: string | null;
@@ -54,20 +52,6 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
     email: ''
   });
 
-  // Parse the dob to get day, month, year if available
-  const parsedDob = dob ? new Date(dob) : null;
-  const [day, setDay] = useState<string>(parsedDob ? parsedDob.getDate().toString() : '');
-  const [month, setMonth] = useState<string>(parsedDob ? (parsedDob.getMonth() + 1).toString() : '');
-  const [year, setYear] = useState<string>(parsedDob ? parsedDob.getFullYear().toString() : '');
-
-  // Debug state updates
-  useEffect(() => {
-    console.log("PersonalInfoStep state:", { 
-      name, dob, email, emailConsent, 
-      dayMonthYear: { day, month, year } 
-    });
-  }, [name, dob, email, emailConsent, day, month, year]);
-
   const handleNameBlur = () => {
     setNameEntered(!!name);
   };
@@ -77,12 +61,6 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
     
     const today = new Date();
     const birthDate = new Date(dateStr);
-    
-    // Check if the date is valid
-    if (isNaN(birthDate.getTime())) {
-      return "Please enter a valid date of birth";
-    }
-    
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
     
@@ -113,64 +91,15 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
     }
   };
 
-  const updateDob = () => {
-    if (day && month && year) {
-      // Format as YYYY-MM-DD
-      const paddedMonth = month.padStart(2, '0');
-      const paddedDay = day.padStart(2, '0');
-      const dateStr = `${year}-${paddedMonth}-${paddedDay}`;
-      
-      const dobError = validateDob(dateStr);
-      setErrors(prev => ({ ...prev, dob: dobError }));
-      
-      if (!dobError) {
-        console.log("Setting DOB:", dateStr);
-        if (onChange) {
-          onChange({ ...personalInfo, dob: dateStr });
-        } else if (onChangeDob) {
-          onChangeDob(dateStr);
-        }
-      }
-    } else {
-      setErrors(prev => ({ ...prev, dob: "Date of birth is required" }));
+  const handleDobChange = (value: string) => {
+    const dobError = validateDob(value);
+    setErrors(prev => ({ ...prev, dob: dobError }));
+    
+    if (onChange) {
+      onChange({ ...personalInfo, dob: value });
+    } else if (onChangeDob) {
+      onChangeDob(value);
     }
-  };
-
-  const handleDayChange = (value: string) => {
-    setDay(value);
-    setTimeout(() => {
-      updateDob();
-    }, 0);
-  };
-
-  const handleMonthChange = (value: string) => {
-    setMonth(value);
-    // If day is greater than the days in the new month, adjust it
-    const daysInNewMonth = getDaysInMonth(parseInt(value), parseInt(year || '2000'));
-    if (parseInt(day) > daysInNewMonth) {
-      setDay(daysInNewMonth.toString());
-    }
-    setTimeout(() => {
-      updateDob();
-    }, 0);
-  };
-
-  const handleYearChange = (value: string) => {
-    setYear(value);
-    // Check if it's February in a leap year
-    if (month === '2') {
-      const daysInNewMonth = getDaysInMonth(2, parseInt(value));
-      if (parseInt(day) > daysInNewMonth) {
-        setDay(daysInNewMonth.toString());
-      }
-    }
-    setTimeout(() => {
-      updateDob();
-    }, 0);
-  };
-
-  const getDaysInMonth = (month: number, year: number) => {
-    return new Date(year, month, 0).getDate();
   };
 
   const handleEmailChange = (value: string) => {
@@ -206,36 +135,98 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
         <p className="text-muted-foreground text-center mb-10">Just a few more details to customize your fitness journey</p>
         
         <div className="bg-card rounded-xl shadow-lg p-8 space-y-8">
-          <NameInput 
-            name={name} 
-            onChange={handleNameChange} 
-            onBlur={handleNameBlur} 
-          />
+          <div className="space-y-2">
+            <Label htmlFor="name" className="flex items-center gap-2 text-base">
+              <User size={16} className="text-orange" />
+              Your Name
+            </Label>
+            <Input 
+              id="name" 
+              value={name || ''} 
+              onChange={(e) => handleNameChange(e.target.value)}
+              onBlur={handleNameBlur}
+              placeholder="Your name"
+              className="text-lg py-6 border-orange/20 focus:border-orange/50 focus:ring-orange/30"
+            />
+          </div>
           
           {nameEntered && name && (
-            <MotivationalQuote quote={motivationalQuote} />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="bg-gradient-to-r from-orange/10 to-orange/20 p-6 rounded-lg border border-orange/20"
+            >
+              <p className="text-xl font-semibold text-orange">{motivationalQuote}</p>
+            </motion.div>
           )}
           
-          <DateOfBirthInput 
-            day={day}
-            month={month}
-            year={year}
-            error={errors.dob}
-            onDayChange={handleDayChange}
-            onMonthChange={handleMonthChange}
-            onYearChange={handleYearChange}
-          />
+          <div className="space-y-2">
+            <Label htmlFor="dob" className="flex items-center gap-2 text-base">
+              <Calendar size={16} className="text-orange" />
+              Date of Birth
+            </Label>
+            <Input 
+              id="dob" 
+              type="date" 
+              value={dob || ''} 
+              onChange={(e) => handleDobChange(e.target.value)}
+              max={format(new Date(), 'yyyy-MM-dd')}
+              className={`border-orange/20 focus:border-orange/50 focus:ring-orange/30 ${errors.dob ? "border-red-500" : ""}`}
+            />
+            {errors.dob && (
+              <div className="text-red-500 flex items-center gap-1 text-sm mt-1">
+                <AlertCircle className="h-4 w-4" />
+                <span>{errors.dob}</span>
+              </div>
+            )}
+            <p className="text-xs text-muted-foreground mt-1">
+              This helps us tailor your workouts to your age group
+            </p>
+          </div>
           
-          <EmailInput 
-            email={email} 
-            error={errors.email} 
-            onChange={handleEmailChange} 
-          />
+          <div className="space-y-2">
+            <Label htmlFor="email" className="flex items-center gap-2 text-base">
+              <Mail size={16} className="text-orange" />
+              Email Address
+            </Label>
+            <Input 
+              id="email" 
+              type="email" 
+              value={email || ''} 
+              onChange={(e) => handleEmailChange(e.target.value)}
+              placeholder="your.email@example.com"
+              className={`border-orange/20 focus:border-orange/50 focus:ring-orange/30 ${errors.email ? "border-red-500" : ""}`}
+            />
+            {errors.email && (
+              <div className="text-red-500 flex items-center gap-1 text-sm mt-1">
+                <AlertCircle className="h-4 w-4" />
+                <span>{errors.email}</span>
+              </div>
+            )}
+          </div>
           
-          <ConsentCheckbox 
-            checked={emailConsent} 
-            onChange={handleConsentChange} 
-          />
+          <div className="bg-card p-5 rounded-lg flex items-start gap-3 border border-orange/10">
+            <div className="pt-0.5">
+              <Checkbox 
+                id="emailConsent" 
+                checked={emailConsent} 
+                onCheckedChange={(checked) => handleConsentChange(checked as boolean)}
+                className="text-orange border-orange/30"
+              />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="emailConsent" className="font-medium flex items-center gap-2">
+                <CheckCircle2 size={16} className="text-orange" />
+                Stay Updated
+              </Label>
+              <p className="text-sm text-muted-foreground">
+                May we send product updates to your email — expert tips, promotions, special offers?
+              </p>
+              <p className="text-xs text-muted-foreground">
+                You can change your mind at any time by clicking the unsubscribe link in the footer of any email you receive from us.
+              </p>
+            </div>
+          </div>
         </div>
       </motion.div>
     </div>
