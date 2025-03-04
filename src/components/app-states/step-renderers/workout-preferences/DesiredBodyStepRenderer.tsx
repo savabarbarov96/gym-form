@@ -14,7 +14,7 @@ const DesiredBodyStepRenderer = ({
 }: DesiredBodyStepRendererProps) => {
   return (
     <DesiredBodyStep
-      selectedBodyType={formData.desiredBody}
+      selectedBody={formData.desiredBody}
       onSelect={(desiredBody) => 
         setFormData(prev => ({ ...prev, desiredBody }))
       }

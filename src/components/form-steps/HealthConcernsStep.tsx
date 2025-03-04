@@ -1,9 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Check, Ear, Brain, Heart, Wind, Plus, X } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { ConcernOption, CustomConcern, NoneOption, healthConcernOptions } from './health-concerns';
 
 interface HealthConcernsStepProps {
   selectedOptions: string[];
@@ -19,7 +16,6 @@ const HealthConcernsStep = ({
   onCustomOptionChange
 }: HealthConcernsStepProps) => {
   const [showCustomInput, setShowCustomInput] = useState(!!customOption);
-  const [inputValue, setInputValue] = useState(customOption || '');
   
   // Handle auto-continuing after adding custom concern
   useEffect(() => {
@@ -28,69 +24,6 @@ const HealthConcernsStep = ({
       setShowCustomInput(false);
     }
   }, [customOption]);
-  
-  const options = [
-    { 
-      id: 'knees', 
-      label: 'Knee Pain', 
-      icon: <motion.div className="relative"><motion.div className="w-6 h-1 absolute top-3.5 left-0 bg-orange"></motion.div><motion.div className="w-1 h-8 absolute top-0 left-2.5 bg-orange"></motion.div></motion.div>,
-      description: 'Issues when bending, climbing stairs'
-    },
-    { 
-      id: 'back', 
-      label: 'Back Pain', 
-      icon: <motion.div className="relative"><motion.div className="w-6 h-1 absolute top-3.5 left-0 bg-orange transform rotate-90"></motion.div><motion.div className="w-1 h-8 absolute top-0 left-2.5 bg-orange"></motion.div></motion.div>,
-      description: 'Discomfort when sitting or standing'
-    },
-    { 
-      id: 'shoulders', 
-      label: 'Shoulder Issues', 
-      icon: <motion.div className="relative"><motion.div className="w-6 h-1 absolute top-1 left-0 bg-orange transform rotate-45"></motion.div><motion.div className="w-6 h-1 absolute top-1 left-0 bg-orange transform -rotate-45"></motion.div></motion.div>,
-      description: 'Limited range of motion, pain'
-    },
-    { 
-      id: 'wrists', 
-      label: 'Wrist or Hand Problems', 
-      icon: <motion.div className="relative"><motion.div className="w-4 h-4 absolute top-1 left-1 border-2 border-orange rounded"></motion.div></motion.div>,
-      description: 'Weakness, pain during movement'
-    },
-    { 
-      id: 'ankle', 
-      label: 'Ankle/Foot Pain', 
-      icon: <motion.div className="relative"><motion.div className="w-6 h-1 absolute top-3.5 left-0 bg-orange"></motion.div><motion.div className="w-1 h-6 absolute top-1 left-1 bg-orange transform rotate-45"></motion.div></motion.div>,
-      description: 'Issues with stability, discomfort'
-    },
-    { 
-      id: 'hips', 
-      label: 'Hip Problems', 
-      icon: <motion.div className="relative"><motion.div className="w-6 h-1 absolute top-3.5 left-0 bg-orange"></motion.div><motion.div className="w-1 h-8 absolute top-0 left-5 bg-orange transform rotate-45"></motion.div></motion.div>,
-      description: 'Pain during movement or sitting'
-    },
-    { 
-      id: 'heart', 
-      label: 'Heart Conditions', 
-      icon: <Heart className="w-6 h-6 text-orange" />,
-      description: 'Any diagnosed cardiac issues'
-    },
-    { 
-      id: 'breathing', 
-      label: 'Breathing Issues', 
-      icon: <Wind className="w-6 h-6 text-orange" />,
-      description: 'Asthma, shortness of breath'
-    },
-    { 
-      id: 'headaches', 
-      label: 'Frequent Headaches', 
-      icon: <Brain className="w-6 h-6 text-orange" />,
-      description: 'Migraines, tension headaches'
-    },
-    { 
-      id: 'hearing', 
-      label: 'Hearing Problems', 
-      icon: <Ear className="w-6 h-6 text-orange" />,
-      description: 'Tinnitus, hearing loss'
-    }
-  ];
 
   const toggleOption = (id: string) => {
     if (selectedOptions.includes(id)) {
@@ -100,22 +33,12 @@ const HealthConcernsStep = ({
     }
   };
   
-  const handleAddCustom = () => {
-    if (inputValue.trim()) {
-      onCustomOptionChange(inputValue.trim());
-    }
-  };
-  
-  const removeCustom = () => {
-    onCustomOptionChange(null);
-    setInputValue('');
-  };
-  
   const clearAllSelections = () => {
     onSelectionChange([]);
     onCustomOptionChange(null);
-    setInputValue('');
   };
+
+  const hasNoSelections = selectedOptions.length === 0 && !customOption;
 
   return (
     <div className="text-center">
@@ -125,104 +48,46 @@ const HealthConcernsStep = ({
       </p>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
-        {options.map(option => (
-          <motion.div
+        {healthConcernOptions.map(option => (
+          <ConcernOption
             key={option.id}
-            className={`option-card p-4 ${selectedOptions.includes(option.id) ? 'selected' : ''}`}
-            onClick={() => toggleOption(option.id)}
-            whileHover={{ y: -5 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <div className="flex items-center gap-3 mb-2">
-              <div className="bg-muted rounded-full p-2 w-10 h-10 flex items-center justify-center">
-                {option.icon}
-              </div>
-              <h3 className="font-semibold">{option.label}</h3>
-              {selectedOptions.includes(option.id) && (
-                <div className="ml-auto bg-orange rounded-full p-1">
-                  <Check className="w-4 h-4 text-white" />
-                </div>
-              )}
-            </div>
-            <p className="text-sm text-muted-foreground">{option.description}</p>
-          </motion.div>
+            id={option.id}
+            label={option.label}
+            icon={option.icon}
+            description={option.description}
+            isSelected={selectedOptions.includes(option.id)}
+            onToggle={toggleOption}
+          />
         ))}
         
-        {/* Custom option card */}
+        {/* Custom option placeholder - only show if no custom option is already set */}
         {!showCustomInput && !customOption && (
-          <motion.div
-            className="option-card p-4 flex flex-col items-center justify-center min-h-[112px]"
-            onClick={() => setShowCustomInput(true)}
-            whileHover={{ y: -5 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <div className="bg-muted rounded-full p-2 w-10 h-10 flex items-center justify-center mb-2">
-              <Plus className="w-5 h-5 text-orange" />
-            </div>
-            <p className="text-sm text-muted-foreground">Add another concern</p>
-          </motion.div>
+          <CustomConcern
+            customOption={null}
+            showCustomInput={showCustomInput}
+            setShowCustomInput={setShowCustomInput}
+            onCustomOptionChange={onCustomOptionChange}
+          />
         )}
       </div>
       
-      {/* Custom input */}
-      {showCustomInput && (
-        <motion.div 
-          className="bg-card p-4 rounded-lg max-w-md mx-auto mb-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          <label className="text-sm text-muted-foreground mb-2 block text-left">
-            Add your specific concern:
-          </label>
-          <div className="flex gap-2">
-            <Input
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              placeholder="e.g., Elbow pain, neck stiffness"
-              className="flex-1"
-              autoFocus
-            />
-            <Button onClick={handleAddCustom} variant="default">
-              Add
-            </Button>
-          </div>
-        </motion.div>
-      )}
-      
-      {/* Display custom option if set */}
-      {customOption && (
-        <motion.div
-          className="option-card selected p-4 max-w-md mx-auto mb-8 flex justify-between items-center"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-        >
-          <div className="flex items-center gap-3">
-            <div className="bg-orange/20 rounded-full p-2">
-              <Check className="w-5 h-5 text-orange" />
-            </div>
-            <span>{customOption}</span>
-          </div>
-          <Button variant="ghost" size="icon" onClick={removeCustom} className="text-muted-foreground">
-            <X className="w-4 h-4" />
-          </Button>
-        </motion.div>
+      {/* Custom input or display */}
+      {(showCustomInput || customOption) && (
+        <CustomConcern
+          customOption={customOption}
+          showCustomInput={showCustomInput}
+          setShowCustomInput={setShowCustomInput}
+          onCustomOptionChange={onCustomOptionChange}
+        />
       )}
       
       {/* None of the above button */}
-      <motion.button
+      <NoneOption
+        isSelected={hasNoSelections}
         onClick={clearAllSelections}
-        className={`block mx-auto px-6 py-3 rounded-lg border-2 ${
-          selectedOptions.length === 0 && !customOption 
-            ? 'bg-orange/10 border-orange text-orange font-medium'
-            : 'border-muted-foreground/30 text-muted-foreground hover:border-orange hover:text-orange'
-        } transition-colors mb-8`}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        None of the above
-      </motion.button>
+      />
       
-      {selectedOptions.length === 0 && !customOption ? (
+      {hasNoSelections ? (
         <div className="text-lg text-muted-foreground mb-4">
           No issues? Great! Select any that apply or continue.
         </div>
