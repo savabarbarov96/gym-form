@@ -37,7 +37,7 @@ export const SURVEY_STEPS: StepDefinition[] = [
   { id: 13, category: 'workoutPreferences', name: 'Fitness Goal', description: 'Select your specific fitness goal', requiresValidation: true },
   { id: 14, category: 'workoutPreferences', name: 'Problem Areas', description: 'Select your problem areas', requiresValidation: false },
   { id: 15, category: 'workoutPreferences', name: 'Activities', description: 'Select activities you enjoy', requiresValidation: false },
-  { id: 16, category: 'workoutPreferences', name: 'Workout Location', description: 'Where you'll be working out', requiresValidation: true },
+  { id: 16, category: 'workoutPreferences', name: 'Workout Location', description: 'Where you\'ll be working out', requiresValidation: true },
   { id: 17, category: 'workoutPreferences', name: 'Workout Intensity', description: 'Your preferred workout intensity', requiresValidation: true },
   { id: 18, category: 'workoutPreferences', name: 'Workout Frequency', description: 'How often you can work out', requiresValidation: true },
   { id: 19, category: 'workoutPreferences', name: 'Workout Duration', description: 'How long you can work out', requiresValidation: true },
