@@ -20,7 +20,7 @@ export const useSurvey = () => {
 };
 
 export const SurveyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Updated to 31 steps to include gender selection
+  // Updated to 31 steps with correct flow
   const totalSteps = 31;
   
   // Use our custom hooks

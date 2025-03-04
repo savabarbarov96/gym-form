@@ -25,7 +25,7 @@ const BodyAssessmentStepRenderer = ({
   setFormData,
   handleNext
 }: BodyAssessmentStepRendererProps) => {
-  // Adjust for the new gender step (step + 1)
+  // Adjust for the correct step range (step - 6)
   const localStep = step - 6;
   
   switch (localStep) {

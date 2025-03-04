@@ -26,26 +26,26 @@ const WorkoutPreferencesStepRenderer = ({
   setFormData,
   handleNext
 }: WorkoutPreferencesStepRendererProps) => {
-  // Adjust for the new gender step (step + 1)
+  // Adjust for the new step arrangement
   const localStep = step - 13;
   
   switch (localStep) {
     case 1:
-      return <AllergiesStepRenderer formData={formData} setFormData={setFormData} />;
-    case 2:
-      return <WorkoutLocationStepRenderer formData={formData} setFormData={setFormData} />;
-    case 3:
-      return <WorkoutIntensityStepRenderer formData={formData} setFormData={setFormData} />;
-    case 4:
-      return <WorkoutFrequencyStepRenderer formData={formData} setFormData={setFormData} />;
-    case 5:
-      return <WorkoutDurationStepRenderer formData={formData} setFormData={setFormData} />;
-    case 6:
-      return <ProblemAreasStepRenderer formData={formData} setFormData={setFormData} />;
-    case 7:
-      return <ActivitiesStepRenderer formData={formData} setFormData={setFormData} />;
-    case 8:
       return <DesiredBodyStepRenderer formData={formData} setFormData={setFormData} />;
+    case 2:
+      return <AllergiesStepRenderer formData={formData} setFormData={setFormData} />;
+    case 3:
+      return <WorkoutLocationStepRenderer formData={formData} setFormData={setFormData} />;
+    case 4:
+      return <WorkoutIntensityStepRenderer formData={formData} setFormData={setFormData} />;
+    case 5:
+      return <WorkoutFrequencyStepRenderer formData={formData} setFormData={setFormData} />;
+    case 6:
+      return <WorkoutDurationStepRenderer formData={formData} setFormData={setFormData} />;
+    case 7:
+      return <ProblemAreasStepRenderer formData={formData} setFormData={setFormData} />;
+    case 8:
+      return <ActivitiesStepRenderer formData={formData} setFormData={setFormData} />;
     default:
       return null;
   }

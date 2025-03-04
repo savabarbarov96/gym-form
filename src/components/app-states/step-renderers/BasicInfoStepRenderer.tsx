@@ -6,8 +6,7 @@ import {
   AgeSelectionStep,
   BodyTypeStep,
   GoalStep,
-  FitnessGoalStep,
-  DesiredBodyStep
+  FitnessGoalStep
 } from "@/components/form-steps";
 
 interface BasicInfoStepRendererProps {
@@ -64,15 +63,6 @@ const BasicInfoStepRenderer: React.FC<BasicInfoStepRendererProps> = ({
       <FitnessGoalStep 
         selectedGoal={formData.fitnessGoal}
         onSelect={(fitnessGoal) => setFormData({...formData, fitnessGoal})}
-      />
-    );
-  }
-
-  if (step === 6) {
-    return (
-      <DesiredBodyStep 
-        selectedBody={formData.desiredBody}
-        onSelect={(desiredBody) => setFormData({...formData, desiredBody})}
       />
     );
   }
