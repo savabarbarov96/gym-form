@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext } from "react";
 import { SurveyContextType } from "@/types/survey";
 import { 
@@ -20,8 +19,8 @@ export const useSurvey = () => {
 };
 
 export const SurveyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Updated to 31 steps with correct flow (included StartCommitmentStep)
-  const totalSteps = 31;
+  // Updated to 32 steps with correct flow (including AllergiesStep)
+  const totalSteps = 32;
   
   // Use our custom hooks
   const { formData, setFormData, updateFormData } = useSurveyForm();

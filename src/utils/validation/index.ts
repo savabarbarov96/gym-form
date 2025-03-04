@@ -1,4 +1,3 @@
-
 import { ToastParams } from "@/hooks/use-toast";
 import { validateBasicInfoStep } from "./basicInfoValidation";
 import { validateBodyAssessmentStep } from "./bodyAssessmentValidation";
@@ -37,22 +36,22 @@ export const validateStep = (
       console.log(`Basic info validation result: ${isValid}`);
     }
     
-    else if (step >= 6 && step <= 12) {
+    else if (step >= 6 && step <= 13) {
       isValid = validateBodyAssessmentStep(step, formData, toast);
       console.log(`Body assessment validation result: ${isValid}`);
     }
     
-    else if (step >= 13 && step <= 20) {
+    else if (step >= 14 && step <= 21) {
       isValid = validateWorkoutPreferencesStep(step, formData, toast);
       console.log(`Workout preferences validation result: ${isValid}`);
     }
     
-    else if (step >= 21 && step <= 25) {
+    else if (step >= 22 && step <= 26) {
       isValid = validateLifestyleStep(step, formData, toast);
       console.log(`Lifestyle validation result: ${isValid}`);
     }
     
-    else if (step >= 26 && step <= 30) {
+    else if (step >= 27 && step <= 32) {
       isValid = validateFinalStepsStep(step, formData, toast);
       console.log(`Final steps validation result: ${isValid}`);
     }

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { FormData } from '@/types/survey';
 import {
@@ -21,10 +20,11 @@ const LifestyleStepRenderer: React.FC<LifestyleStepRendererProps> = ({
   setFormData
 }) => {
   // This maps the global step number to the local step within this renderer
-  const localStep = step - 20;
+  // Adjusted for the new Allergies step
+  const localStep = step - 21;
   
   switch (localStep) {
-    case 1: // Step 21
+    case 1: // Step 22
       return (
         <SugaryFoodsStep
           selected={formData.sugaryFoods}
@@ -32,7 +32,7 @@ const LifestyleStepRenderer: React.FC<LifestyleStepRendererProps> = ({
         />
       );
     
-    case 2: // Step 22
+    case 2: // Step 23
       return (
         <WaterIntakeStep
           value={formData.waterIntake || 1500}
@@ -40,7 +40,7 @@ const LifestyleStepRenderer: React.FC<LifestyleStepRendererProps> = ({
         />
       );
     
-    case 3: // Step 23
+    case 3: // Step 24
       return (
         <TypicalDayStep
           selected={formData.typicalDay}
@@ -48,7 +48,7 @@ const LifestyleStepRenderer: React.FC<LifestyleStepRendererProps> = ({
         />
       );
     
-    case 4: // Step 24
+    case 4: // Step 25
       return (
         <EnergyLevelsStep
           value={formData.energyLevels}
@@ -56,7 +56,7 @@ const LifestyleStepRenderer: React.FC<LifestyleStepRendererProps> = ({
         />
       );
     
-    case 5: // Step 25
+    case 5: // Step 26
       return (
         <SleepAmountStep
           value={formData.sleepAmount}

@@ -1,4 +1,3 @@
-
 import { FormData } from "@/types/survey";
 import type { ToastParams } from "@/hooks/use-toast";
 
@@ -86,6 +85,11 @@ export const validateWeightInputStep = (formData: FormData, toast: (props: Toast
   return true;
 };
 
+export const validateAllergiesStep = (formData: FormData): boolean => {
+  // Allergies are optional, so we don't need to validate anything here
+  return true;
+};
+
 // Main validation function for this module
 export const validateBodyAssessmentStep = (
   step: number,
@@ -109,8 +113,11 @@ export const validateBodyAssessmentStep = (
     case 11:
       return true; // Hormone graph step doesn't need validation
     case 12:
-      console.log("Validating health concerns step, next we should see step 13 (FitnessGoalStep)");
+      console.log("Validating health concerns step");
       return validateHealthConcernsStep(formData, toast);
+    case 13:
+      console.log("Validating allergies step");
+      return validateAllergiesStep(formData);
     default:
       console.log(`No specific validation for body assessment step ${step}`);
       return true;

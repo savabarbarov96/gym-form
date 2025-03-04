@@ -1,4 +1,3 @@
-
 import { FormData } from "@/types/survey";
 import type { ToastParams } from "@/hooks/use-toast";
 
@@ -12,6 +11,7 @@ const validateOutOfBreathStep = (formData: FormData, toast: (props: ToastParams)
     });
     return false;
   }
+  console.log("outOfBreath validation passed with value:", formData.selfAssessments.outOfBreath);
   return true;
 };
 
@@ -25,6 +25,7 @@ const validateFallingBackStep = (formData: FormData, toast: (props: ToastParams)
     });
     return false;
   }
+  console.log("fallingBack validation passed with value:", formData.selfAssessments.fallingBack);
   return true;
 };
 
@@ -38,6 +39,7 @@ const validateMotivationLevelStep = (formData: FormData, toast: (props: ToastPar
     });
     return false;
   }
+  console.log("motivationLevel validation passed with value:", formData.selfAssessments.motivationLevel);
   return true;
 };
 
@@ -51,6 +53,7 @@ const validateDietConsistencyStep = (formData: FormData, toast: (props: ToastPar
     });
     return false;
   }
+  console.log("dietConsistency validation passed with value:", formData.selfAssessments.dietConsistency);
   return true;
 };
 
@@ -113,17 +116,17 @@ export const validateFinalStepsStep = (
   
   // Map the global step numbers to the specific validation functions
   switch (step) {
-    case 26:
-      return validateOutOfBreathStep(formData, toast);
     case 27:
-      return validateFallingBackStep(formData, toast);
+      return validateOutOfBreathStep(formData, toast);
     case 28:
-      return validateMotivationLevelStep(formData, toast);
+      return validateFallingBackStep(formData, toast);
     case 29:
-      return validateDietConsistencyStep(formData, toast);
+      return validateMotivationLevelStep(formData, toast);
     case 30:
-      return validatePersonalInfoStep(formData, toast);
+      return validateDietConsistencyStep(formData, toast);
     case 31:
+      return validatePersonalInfoStep(formData, toast);
+    case 32:
       return validateStartCommitmentStep(formData, toast);
     default:
       console.log(`No specific validation for final steps step ${step}`);
