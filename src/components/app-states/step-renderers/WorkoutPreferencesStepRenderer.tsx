@@ -2,17 +2,16 @@
 import React from 'react';
 import { FormData } from '@/types/survey';
 import {
-  FitnessGoalStepRenderer,
-  ProblemAreasStepRenderer,
-  ActivitiesStepRenderer,
-  WorkoutLocationStepRenderer,
-  WorkoutIntensityStepRenderer,
-  WorkoutFrequencyStepRenderer,
-  WorkoutDurationStepRenderer,
-  ExercisePreferencesStepRenderer,
-  DesiredBodyStepRenderer,
-  AllergiesStepRenderer
-} from './workout-preferences';
+  ProblemAreasStep,
+  ActivitiesStep,
+  WorkoutLocationStep,
+  WorkoutIntensityStep,
+  WorkoutFrequencyStep,
+  WorkoutDurationStep,
+  ExercisePreferencesStep,
+  DesiredBodyStep
+} from '@/components/form-steps';
+import { useToast } from '@/hooks/use-toast';
 
 interface WorkoutPreferencesStepRendererProps {
   step: number;
@@ -21,41 +20,88 @@ interface WorkoutPreferencesStepRendererProps {
   handleNext: () => void;
 }
 
-const WorkoutPreferencesStepRenderer = ({
+const WorkoutPreferencesStepRenderer: React.FC<WorkoutPreferencesStepRendererProps> = ({
   step,
   formData,
   setFormData,
   handleNext
-}: WorkoutPreferencesStepRendererProps) => {
-  // Calculate local step (step - 13 for global to local mapping)
-  // Step 13 would be local step 0, etc.
-  const localStep = step - 13;
+}) => {
+  const { toast } = useToast();
   
-  console.log("Workout Preferences Step Renderer", { step, localStep, formData });
-
-  // Map local steps to components
+  // This maps the global step number to the local step within this renderer
+  const localStep = step - 12;
+  
   switch (localStep) {
-    case 0: // Global step 13
-      return <FitnessGoalStepRenderer formData={formData} setFormData={setFormData} />;
-    case 1: // Global step 14
-      console.log("Rendering Problem Areas Step in workflow");
-      return <ProblemAreasStepRenderer formData={formData} setFormData={setFormData} handleNext={handleNext} />;
-    case 2: // Global step 15
-      return <ActivitiesStepRenderer formData={formData} setFormData={setFormData} />;
-    case 3: // Global step 16
-      return <WorkoutLocationStepRenderer formData={formData} setFormData={setFormData} />;
-    case 4: // Global step 17
-      return <WorkoutIntensityStepRenderer formData={formData} setFormData={setFormData} />;
-    case 5: // Global step 18
-      return <WorkoutFrequencyStepRenderer formData={formData} setFormData={setFormData} />;
-    case 6: // Global step 19
-      return <WorkoutDurationStepRenderer formData={formData} setFormData={setFormData} />;
-    case 7: // Global step 20
-      return <ExercisePreferencesStepRenderer formData={formData} setFormData={setFormData} handleNext={handleNext} />;
-    case 8: // Global step 21
-      return <DesiredBodyStepRenderer formData={formData} setFormData={setFormData} />;
+    case 1: // Step 13
+      return (
+        <ProblemAreasStep
+          selectedAreas={formData.problemAreas}
+          onSelect={(problemAreas) => setFormData(prev => ({ ...prev, problemAreas }))}
+        />
+      );
+    
+    case 2: // Step 14
+      return (
+        <ActivitiesStep
+          selectedActivities={formData.activities}
+          customActivity={formData.customActivity}
+          onSelect={(activities) => setFormData(prev => ({ ...prev, activities }))}
+          onCustomChange={(customActivity) => setFormData(prev => ({ ...prev, customActivity }))}
+        />
+      );
+    
+    case 3: // Step 15
+      return (
+        <WorkoutLocationStep
+          selectedLocation={formData.workoutLocation}
+          onSelect={(workoutLocation) => setFormData(prev => ({ ...prev, workoutLocation }))}
+        />
+      );
+    
+    case 4: // Step 16
+      return (
+        <WorkoutIntensityStep
+          selectedIntensity={formData.workoutIntensity}
+          onSelect={(workoutIntensity) => setFormData(prev => ({ ...prev, workoutIntensity }))}
+        />
+      );
+    
+    case 5: // Step 17
+      return (
+        <WorkoutFrequencyStep
+          selectedFrequency={formData.workoutFrequency}
+          onSelect={(workoutFrequency) => setFormData(prev => ({ ...prev, workoutFrequency }))}
+        />
+      );
+    
+    case 6: // Step 18
+      return (
+        <WorkoutDurationStep
+          selectedDuration={formData.workoutDuration}
+          onSelect={(workoutDuration) => setFormData(prev => ({ ...prev, workoutDuration }))}
+        />
+      );
+    
+    case 7: // Step 19
+      return (
+        <ExercisePreferencesStep
+          preferences={formData.exercisePreferences}
+          onChange={(exercisePreferences) => {
+            setFormData(prev => ({ ...prev, exercisePreferences }));
+            handleNext();
+          }}
+        />
+      );
+    
+    case 8: // Step 20
+      return (
+        <DesiredBodyStep
+          selectedBodyType={formData.desiredBody}
+          onSelect={(desiredBody) => setFormData(prev => ({ ...prev, desiredBody }))}
+        />
+      );
+      
     default:
-      console.log(`No matching workout preference step: ${localStep}`);
       return null;
   }
 };

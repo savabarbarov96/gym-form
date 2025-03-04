@@ -1,4 +1,3 @@
-
 // This file provides a clear mapping of all survey steps to help maintain the survey flow
 
 export type StepCategory = 
@@ -33,30 +32,29 @@ export const SURVEY_STEPS: StepDefinition[] = [
   { id: 11, category: 'bodyAssessment', name: 'Hormone Graph', description: 'Hormone changes visualization', requiresValidation: false },
   { id: 12, category: 'bodyAssessment', name: 'Health Concerns', description: 'Select any health concerns', requiresValidation: true },
   
-  // Workout Preferences Steps (13-21)
-  { id: 13, category: 'workoutPreferences', name: 'Fitness Goal', description: 'Select your specific fitness goal', requiresValidation: true },
-  { id: 14, category: 'workoutPreferences', name: 'Problem Areas', description: 'Select your problem areas', requiresValidation: false },
-  { id: 15, category: 'workoutPreferences', name: 'Activities', description: 'Select activities you enjoy', requiresValidation: false },
-  { id: 16, category: 'workoutPreferences', name: 'Workout Location', description: 'Where you\'ll be working out', requiresValidation: true },
-  { id: 17, category: 'workoutPreferences', name: 'Workout Intensity', description: 'Your preferred workout intensity', requiresValidation: true },
-  { id: 18, category: 'workoutPreferences', name: 'Workout Frequency', description: 'How often you can work out', requiresValidation: true },
-  { id: 19, category: 'workoutPreferences', name: 'Workout Duration', description: 'How long you can work out', requiresValidation: true },
-  { id: 20, category: 'workoutPreferences', name: 'Exercise Preferences', description: 'Your exercise preferences', requiresValidation: false },
-  { id: 21, category: 'workoutPreferences', name: 'Desired Body', description: 'Your desired body type', requiresValidation: true },
+  // Workout Preferences Steps (13-20) - Removed duplicate Fitness Goal, adjusted subsequent IDs
+  { id: 13, category: 'workoutPreferences', name: 'Problem Areas', description: 'Select your problem areas', requiresValidation: false },
+  { id: 14, category: 'workoutPreferences', name: 'Activities', description: 'Select activities you enjoy', requiresValidation: false },
+  { id: 15, category: 'workoutPreferences', name: 'Workout Location', description: 'Where you\'ll be working out', requiresValidation: true },
+  { id: 16, category: 'workoutPreferences', name: 'Workout Intensity', description: 'Your preferred workout intensity', requiresValidation: true },
+  { id: 17, category: 'workoutPreferences', name: 'Workout Frequency', description: 'How often you can work out', requiresValidation: true },
+  { id: 18, category: 'workoutPreferences', name: 'Workout Duration', description: 'How long you can work out', requiresValidation: true },
+  { id: 19, category: 'workoutPreferences', name: 'Exercise Preferences', description: 'Your exercise preferences', requiresValidation: false },
+  { id: 20, category: 'workoutPreferences', name: 'Desired Body', description: 'Your desired body type', requiresValidation: true },
   
-  // Lifestyle Steps (22-26)
-  { id: 22, category: 'lifestyle', name: 'Sugary Foods', description: 'Your consumption of sugary foods', requiresValidation: true },
-  { id: 23, category: 'lifestyle', name: 'Water Intake', description: 'Your daily water intake', requiresValidation: true },
-  { id: 24, category: 'lifestyle', name: 'Typical Day', description: 'How your typical day looks', requiresValidation: true },
-  { id: 25, category: 'lifestyle', name: 'Energy Levels', description: 'Your typical energy levels', requiresValidation: true },
-  { id: 26, category: 'lifestyle', name: 'Sleep Amount', description: 'How much you sleep', requiresValidation: true },
+  // Lifestyle Steps (21-25) - Adjusted IDs
+  { id: 21, category: 'lifestyle', name: 'Sugary Foods', description: 'Your consumption of sugary foods', requiresValidation: true },
+  { id: 22, category: 'lifestyle', name: 'Water Intake', description: 'Your daily water intake', requiresValidation: true },
+  { id: 23, category: 'lifestyle', name: 'Typical Day', description: 'How your typical day looks', requiresValidation: true },
+  { id: 24, category: 'lifestyle', name: 'Energy Levels', description: 'Your typical energy levels', requiresValidation: true },
+  { id: 25, category: 'lifestyle', name: 'Sleep Amount', description: 'How much you sleep', requiresValidation: true },
   
-  // Final Steps (27-31)
-  { id: 27, category: 'finalSteps', name: 'Self Assessment - Out of Breath', description: 'How quickly you get out of breath', requiresValidation: true },
-  { id: 28, category: 'finalSteps', name: 'Self Assessment - Falling Back', description: 'How often you fall back into old habits', requiresValidation: true },
-  { id: 29, category: 'finalSteps', name: 'Self Assessment - Motivation', description: 'Your motivation level', requiresValidation: true },
-  { id: 30, category: 'finalSteps', name: 'Self Assessment - Diet Consistency', description: 'Your diet consistency', requiresValidation: true },
-  { id: 31, category: 'finalSteps', name: 'Personal Info', description: 'Your personal information', requiresValidation: true },
+  // Final Steps (26-30) - Adjusted IDs
+  { id: 26, category: 'finalSteps', name: 'Self Assessment - Out of Breath', description: 'How quickly you get out of breath', requiresValidation: true },
+  { id: 27, category: 'finalSteps', name: 'Self Assessment - Falling Back', description: 'How often you fall back into old habits', requiresValidation: true },
+  { id: 28, category: 'finalSteps', name: 'Self Assessment - Motivation', description: 'Your motivation level', requiresValidation: true },
+  { id: 29, category: 'finalSteps', name: 'Self Assessment - Diet Consistency', description: 'Your diet consistency', requiresValidation: true },
+  { id: 30, category: 'finalSteps', name: 'Personal Info', description: 'Your personal information', requiresValidation: true },
 ];
 
 export const getStepInfo = (stepNumber: number): StepDefinition | undefined => {

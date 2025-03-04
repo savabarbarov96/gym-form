@@ -15,7 +15,7 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
   const { toast } = useToast();
   
   // This maps the global step number to the local step within this renderer
-  const localStep = step - 26;
+  const localStep = step - 25;
   
   const handleSelfAssessmentChange = (key: keyof FormData['selfAssessments'], value: number | null) => {
     setFormData(prev => ({
@@ -43,7 +43,7 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
   
   // Map the local step to the appropriate component
   switch (localStep) {
-    case 1: // Step 27
+    case 1: // Step 26
       return (
         <SelfAssessmentStep 
           question="I get out of breath easily when exercising"
@@ -53,7 +53,7 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
         />
       );
     
-    case 2: // Step 28 
+    case 2: // Step 27 
       return (
         <SelfAssessmentStep
           question="I've tried to get in shape before but keep falling back into old habits"
@@ -63,7 +63,7 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
         />
       );
     
-    case 3: // Step 29
+    case 3: // Step 28
       return (
         <SelfAssessmentStep
           question="I sometimes struggle to find the motivation to exercise"
@@ -73,7 +73,7 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
         />
       );
     
-    case 4: // Step 30
+    case 4: // Step 29
       return (
         <SelfAssessmentStep
           question="I find it difficult to stay consistent with a healthy diet"
@@ -83,7 +83,7 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
         />
       );
     
-    case 5: // Step 31
+    case 5: // Step 30
       return (
         <PersonalInfoStep
           personalInfo={formData.personalInfo}

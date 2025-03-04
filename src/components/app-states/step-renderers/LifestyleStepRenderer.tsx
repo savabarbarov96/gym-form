@@ -7,7 +7,7 @@ import {
   TypicalDayStep,
   EnergyLevelsStep,
   SleepAmountStep
-} from "@/components/form-steps";
+} from '@/components/form-steps';
 
 interface LifestyleStepRendererProps {
   step: number;
@@ -20,53 +20,53 @@ const LifestyleStepRenderer: React.FC<LifestyleStepRendererProps> = ({
   formData,
   setFormData
 }) => {
-  // Map steps correctly to match the steps from stepMapping.ts
-  if (step === 22) {
-    return (
-      <SugaryFoodsStep
-        selected={formData.sugaryFoods}
-        onSelect={(sugaryFoods) => setFormData({...formData, sugaryFoods})}
-      />
-    );
-  }
+  // This maps the global step number to the local step within this renderer
+  const localStep = step - 20;
   
-  if (step === 23) {
-    return (
-      <WaterIntakeStep
-        value={formData.waterIntake}
-        onChange={(waterIntake) => setFormData({...formData, waterIntake})}
-      />
-    );
+  switch (localStep) {
+    case 1: // Step 21
+      return (
+        <SugaryFoodsStep
+          selectedOption={formData.sugaryFoods}
+          onSelect={(sugaryFoods) => setFormData(prev => ({ ...prev, sugaryFoods }))}
+        />
+      );
+    
+    case 2: // Step 22
+      return (
+        <WaterIntakeStep
+          value={formData.waterIntake || 1500}
+          onChange={(waterIntake) => setFormData(prev => ({ ...prev, waterIntake }))}
+        />
+      );
+    
+    case 3: // Step 23
+      return (
+        <TypicalDayStep
+          selectedOption={formData.typicalDay}
+          onSelect={(typicalDay) => setFormData(prev => ({ ...prev, typicalDay }))}
+        />
+      );
+    
+    case 4: // Step 24
+      return (
+        <EnergyLevelsStep
+          value={formData.energyLevels}
+          onChange={(energyLevels) => setFormData(prev => ({ ...prev, energyLevels }))}
+        />
+      );
+    
+    case 5: // Step 25
+      return (
+        <SleepAmountStep
+          value={formData.sleepAmount}
+          onChange={(sleepAmount) => setFormData(prev => ({ ...prev, sleepAmount }))}
+        />
+      );
+      
+    default:
+      return null;
   }
-  
-  if (step === 24) {
-    return (
-      <TypicalDayStep
-        selected={formData.typicalDay}
-        onSelect={(typicalDay) => setFormData({...formData, typicalDay})}
-      />
-    );
-  }
-  
-  if (step === 25) {
-    return (
-      <EnergyLevelsStep
-        value={formData.energyLevels}
-        onChange={(energyLevels) => setFormData({...formData, energyLevels})}
-      />
-    );
-  }
-  
-  if (step === 26) {
-    return (
-      <SleepAmountStep
-        value={formData.sleepAmount}
-        onChange={(sleepAmount) => setFormData({...formData, sleepAmount})}
-      />
-    );
-  }
-  
-  return null;
 };
 
 export default LifestyleStepRenderer;
