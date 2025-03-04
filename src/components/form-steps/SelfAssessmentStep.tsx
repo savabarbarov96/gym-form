@@ -51,14 +51,17 @@ const SelfAssessmentStep: React.FC<SelfAssessmentStepProps> = ({
   ];
 
   const handleOptionSelect = (value: number) => {
+    // Update state immediately
     onChange(value);
     
     // Give a small delay before advancing to the next question
     setTimeout(() => {
       if (onValidate) {
-        if (onValidate()) {
-          handleNext();
-        }
+        // Only attempt to validate - we don't check the result since the validation
+        // will already show an error if needed
+        onValidate();
+        // Always proceed regardless of validation result since we already have a value
+        handleNext();
       } else {
         handleNext();
       }

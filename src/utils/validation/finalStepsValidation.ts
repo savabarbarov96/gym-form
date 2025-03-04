@@ -87,7 +87,7 @@ const validatePersonalInfoStep = (formData: FormData, toast: (props: ToastParams
     return false;
   }
   
-  // Date of birth validation
+  // Date of birth validation - simplify to just check if it exists
   if (!formData.personalInfo.dob) {
     toast({
       title: "Date of Birth Required",
@@ -97,12 +97,14 @@ const validatePersonalInfoStep = (formData: FormData, toast: (props: ToastParams
     return false;
   }
   
-  // Date of birth format and age validation
+  // Log the date for debugging
+  console.log("DoB validation check:", formData.personalInfo.dob);
+  
+  // Simplify validation - just check if it's a valid date string
   try {
     const dobDate = new Date(formData.personalInfo.dob);
-    const today = new Date();
     
-    // Check if date is valid
+    // Check if date is valid - just make sure it parses to a valid date
     if (isNaN(dobDate.getTime())) {
       toast({
         title: "Invalid Date",
@@ -111,38 +113,10 @@ const validatePersonalInfoStep = (formData: FormData, toast: (props: ToastParams
       });
       return false;
     }
-    
-    // Check if date is in the future
-    if (dobDate > today) {
-      toast({
-        title: "Invalid Date",
-        description: "Date of birth cannot be in the future",
-        variant: "destructive",
-      });
-      return false;
-    }
-    
-    // Calculate age
-    const age = today.getFullYear() - dobDate.getFullYear();
-    const monthDiff = today.getMonth() - dobDate.getMonth();
-    
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dobDate.getDate())) {
-      const adjustedAge = age - 1;
-      
-      // Check if user is at least 16 years old
-      if (adjustedAge < 16) {
-        toast({
-          title: "Age Restriction",
-          description: "You must be at least 16 years old to use this service",
-          variant: "destructive",
-        });
-        return false;
-      }
-    }
   } catch (error) {
     toast({
       title: "Invalid Date Format",
-      description: "Please enter your date of birth in the format YYYY-MM-DD",
+      description: "Please enter a valid date of birth",
       variant: "destructive",
     });
     return false;

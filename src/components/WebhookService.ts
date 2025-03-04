@@ -9,7 +9,10 @@ const mapFormDataToParams = (formData: FormData): Record<string, string> => {
   const params: Record<string, string> = {};
   
   // Basic Information with clear context
-  if (formData.gender) params['gender'] = formData.gender;
+  if (formData.gender) {
+    params['gender'] = formData.gender;
+    console.log("Added gender to params:", formData.gender);
+  }
   if (formData.age) params['age'] = formData.age;
   if (formData.bodyType) params['bodyType'] = formData.bodyType;
   params['targetBodyFatPercentage'] = formData.goal.toString();
@@ -315,6 +318,7 @@ const generateContextualParameters = (formData: FormData): Record<string, string
 export const submitToWebhook = async (formData: FormData): Promise<boolean> => {
   try {
     console.log("Preparing to submit survey data to webhook");
+    console.log("Gender from form data:", formData.gender); // Log gender for debugging
     
     // Get base parameters from form data
     const baseParams = mapFormDataToParams(formData);
