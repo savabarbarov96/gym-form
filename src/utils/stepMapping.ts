@@ -1,3 +1,4 @@
+
 // This file provides a clear mapping of all survey steps to help maintain the survey flow
 
 export type StepCategory = 
@@ -32,7 +33,7 @@ export const SURVEY_STEPS: StepDefinition[] = [
   { id: 11, category: 'bodyAssessment', name: 'Hormone Graph', description: 'Hormone changes visualization', requiresValidation: false },
   { id: 12, category: 'bodyAssessment', name: 'Health Concerns', description: 'Select any health concerns', requiresValidation: true },
   
-  // Workout Preferences Steps (13-20) - Removed duplicate Fitness Goal, adjusted subsequent IDs
+  // Workout Preferences Steps (13-20)
   { id: 13, category: 'workoutPreferences', name: 'Problem Areas', description: 'Select your problem areas', requiresValidation: false },
   { id: 14, category: 'workoutPreferences', name: 'Activities', description: 'Select activities you enjoy', requiresValidation: false },
   { id: 15, category: 'workoutPreferences', name: 'Workout Location', description: 'Where you\'ll be working out', requiresValidation: true },
@@ -42,19 +43,20 @@ export const SURVEY_STEPS: StepDefinition[] = [
   { id: 19, category: 'workoutPreferences', name: 'Exercise Preferences', description: 'Your exercise preferences', requiresValidation: false },
   { id: 20, category: 'workoutPreferences', name: 'Desired Body', description: 'Your desired body type', requiresValidation: true },
   
-  // Lifestyle Steps (21-25) - Adjusted IDs
+  // Lifestyle Steps (21-25)
   { id: 21, category: 'lifestyle', name: 'Sugary Foods', description: 'Your consumption of sugary foods', requiresValidation: true },
   { id: 22, category: 'lifestyle', name: 'Water Intake', description: 'Your daily water intake', requiresValidation: true },
   { id: 23, category: 'lifestyle', name: 'Typical Day', description: 'How your typical day looks', requiresValidation: true },
   { id: 24, category: 'lifestyle', name: 'Energy Levels', description: 'Your typical energy levels', requiresValidation: true },
   { id: 25, category: 'lifestyle', name: 'Sleep Amount', description: 'How much you sleep', requiresValidation: true },
   
-  // Final Steps (26-30) - Adjusted IDs
+  // Final Steps (26-31)
   { id: 26, category: 'finalSteps', name: 'Self Assessment - Out of Breath', description: 'How quickly you get out of breath', requiresValidation: true },
   { id: 27, category: 'finalSteps', name: 'Self Assessment - Falling Back', description: 'How often you fall back into old habits', requiresValidation: true },
   { id: 28, category: 'finalSteps', name: 'Self Assessment - Motivation', description: 'Your motivation level', requiresValidation: true },
   { id: 29, category: 'finalSteps', name: 'Self Assessment - Diet Consistency', description: 'Your diet consistency', requiresValidation: true },
   { id: 30, category: 'finalSteps', name: 'Personal Info', description: 'Your personal information', requiresValidation: true },
+  { id: 31, category: 'finalSteps', name: 'Start Commitment', description: 'When you want to start', requiresValidation: true },
 ];
 
 export const getStepInfo = (stepNumber: number): StepDefinition | undefined => {

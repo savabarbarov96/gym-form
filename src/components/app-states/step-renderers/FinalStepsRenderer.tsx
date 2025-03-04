@@ -35,6 +35,7 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
   };
   
   const handleStartCommitmentChange = (value: string | null) => {
+    console.log("Setting start commitment to:", value);
     setFormData(prev => ({
       ...prev,
       startCommitment: value
@@ -91,7 +92,16 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
         />
       );
       
+    case 6: // Step 31
+      return (
+        <StartCommitmentStep
+          selected={formData.startCommitment}
+          onSelect={handleStartCommitmentChange}
+        />
+      );
+      
     default:
+      console.log("No matching component for final step:", localStep);
       return null;
   }
 };

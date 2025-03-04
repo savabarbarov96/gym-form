@@ -87,67 +87,19 @@ const validatePersonalInfoStep = (formData: FormData, toast: (props: ToastParams
     return false;
   }
   
-  // Date of birth validation
-  if (!formData.personalInfo.dob) {
+  return true;
+};
+
+// Validate the start commitment step
+const validateStartCommitmentStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
+  if (!formData.startCommitment) {
     toast({
-      title: "Date of Birth Required",
-      description: "Please enter your date of birth",
+      title: "Selection Required",
+      description: "Please select when you want to start",
       variant: "destructive",
     });
     return false;
   }
-  
-  // Date of birth format and age validation
-  try {
-    const dobDate = new Date(formData.personalInfo.dob);
-    const today = new Date();
-    
-    // Check if date is valid
-    if (isNaN(dobDate.getTime())) {
-      toast({
-        title: "Invalid Date",
-        description: "Please enter a valid date of birth",
-        variant: "destructive",
-      });
-      return false;
-    }
-    
-    // Check if date is in the future
-    if (dobDate > today) {
-      toast({
-        title: "Invalid Date",
-        description: "Date of birth cannot be in the future",
-        variant: "destructive",
-      });
-      return false;
-    }
-    
-    // Calculate age
-    const age = today.getFullYear() - dobDate.getFullYear();
-    const monthDiff = today.getMonth() - dobDate.getMonth();
-    
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dobDate.getDate())) {
-      const adjustedAge = age - 1;
-      
-      // Check if user is at least 16 years old
-      if (adjustedAge < 16) {
-        toast({
-          title: "Age Restriction",
-          description: "You must be at least 16 years old to use this service",
-          variant: "destructive",
-        });
-        return false;
-      }
-    }
-  } catch (error) {
-    toast({
-      title: "Invalid Date Format",
-      description: "Please enter your date of birth in the format YYYY-MM-DD",
-      variant: "destructive",
-    });
-    return false;
-  }
-  
   return true;
 };
 
@@ -157,6 +109,7 @@ export const validateFinalStepsStep = (
   formData: FormData,
   toast: (props: ToastParams) => void
 ): boolean => {
+  console.log("Validating final step:", step);
   
   // Map the global step numbers to the specific validation functions
   switch (step) {
@@ -170,6 +123,8 @@ export const validateFinalStepsStep = (
       return validateDietConsistencyStep(formData, toast);
     case 30:
       return validatePersonalInfoStep(formData, toast);
+    case 31:
+      return validateStartCommitmentStep(formData, toast);
     default:
       console.log(`No specific validation for final steps step ${step}`);
       return true;
