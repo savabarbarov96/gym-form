@@ -39,9 +39,9 @@ const HealthConcernsStep = ({
 
   return (
     <div className="text-center">
-      <h1 className="text-4xl sm:text-5xl font-bold mb-4">Do you have any physical limitations or areas of pain?</h1>
+      <h1 className="text-4xl sm:text-5xl font-bold mb-4">Имате ли физически ограничения или зони на болка?</h1>
       <p className="text-muted-foreground text-lg mb-10 max-w-2xl mx-auto">
-        Select any areas where you experience pain or have limitations to help us customize your workout plan
+        Изберете всички зони, в които изпитвате болка или имате ограничения, за да ни помогнете да персонализираме Вашия тренировъчен план
       </p>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
@@ -83,11 +83,11 @@ const HealthConcernsStep = ({
       
       {hasNoSelections ? (
         <div className="text-lg text-muted-foreground mb-4">
-          No issues? Great! Select any that apply or continue.
+          Нямате здравословни проблеми? Чудесно! Изберете приложимите или продължете напред.
         </div>
       ) : (
         <div className="mt-4 text-orange font-medium">
-          Your plan will account for the selected limitations.
+          Вашият план ще отчете избраните ограничения.
         </div>
       )}
     </div>

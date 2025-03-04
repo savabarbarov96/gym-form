@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { ThumbsUp, ThumbsDown, Meh } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -37,6 +36,17 @@ const PreferenceButton = ({ type, isSelected, onClick }: PreferenceButtonProps) 
     }
   };
 
+  const getAriaLabel = () => {
+    switch (type) {
+      case "like":
+        return "харесвам";
+      case "neutral":
+        return "неутрално";
+      case "dislike":
+        return "не харесвам";
+    }
+  };
+
   return (
     <button 
       onClick={onClick}
@@ -44,7 +54,7 @@ const PreferenceButton = ({ type, isSelected, onClick }: PreferenceButtonProps) 
         "p-4 rounded-full transition-all",
         getBackgroundColor()
       )}
-      aria-label={type}
+      aria-label={getAriaLabel()}
     >
       {getIcon()}
     </button>

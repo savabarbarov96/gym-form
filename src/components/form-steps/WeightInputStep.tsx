@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -41,7 +40,7 @@ const WeightInputStep = ({
 
   return (
     <div className="text-center">
-      <h1 className="text-4xl sm:text-5xl font-bold mb-12">What's your current and target weight?</h1>
+      <h1 className="text-4xl sm:text-5xl font-bold mb-12">Какво е Вашето текущо и целево тегло?</h1>
       
       <div className="max-w-md mx-auto space-y-8">
         <div className="flex justify-center mb-6">
@@ -52,11 +51,11 @@ const WeightInputStep = ({
           >
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="kg" id="kg" className="text-orange" />
-              <label htmlFor="kg" className="text-lg cursor-pointer">kg</label>
+              <label htmlFor="kg" className="text-lg cursor-pointer">кг</label>
             </div>
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="lbs" id="lbs" className="text-orange" />
-              <label htmlFor="lbs" className="text-lg cursor-pointer">lbs</label>
+              <label htmlFor="lbs" className="text-lg cursor-pointer">паунда</label>
             </div>
           </RadioGroup>
         </div>
@@ -64,7 +63,7 @@ const WeightInputStep = ({
         <div className="space-y-6">
           <div className="space-y-2">
             <label htmlFor="current-weight" className="block text-lg font-medium text-left">
-              Current weight ({localWeightUnit})
+              Текущо тегло ({localWeightUnit === "kg" ? "кг" : "паунда"})
             </label>
             <Input
               id="current-weight"
@@ -72,13 +71,13 @@ const WeightInputStep = ({
               value={localCurrentWeight}
               onChange={handleCurrentWeightChange}
               className="w-full text-lg py-6"
-              placeholder={`Enter your current weight in ${localWeightUnit}`}
+              placeholder={`Въведете текущото си тегло в ${localWeightUnit === "kg" ? "кг" : "паунда"}`}
             />
           </div>
           
           <div className="space-y-2">
             <label htmlFor="target-weight" className="block text-lg font-medium text-left">
-              Target weight ({localWeightUnit})
+              Целево тегло ({localWeightUnit === "kg" ? "кг" : "паунда"})
             </label>
             <Input
               id="target-weight"
@@ -86,7 +85,7 @@ const WeightInputStep = ({
               value={localTargetWeight}
               onChange={handleTargetWeightChange}
               className="w-full text-lg py-6"
-              placeholder={`Enter your target weight in ${localWeightUnit}`}
+              placeholder={`Въведете целевото си тегло в ${localWeightUnit === "kg" ? "кг" : "паунда"}`}
             />
           </div>
         </div>

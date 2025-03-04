@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { ExerciseCard, ProgressIndicator } from "./exercise-preferences";
@@ -19,7 +18,7 @@ const ExercisePreferencesStep = ({
   onStepComplete
 }: ExercisePreferencesStepProps) => {
   // List of exercises - limiting to exactly 6
-  const exercises = ["Cardio", "Stretching", "Lifting Weights", "Pull Ups", "Hiking", "Physical Labor"];
+  const exercises = ["Кардио", "Разтягане", "Вдигане на тежести", "Набирания", "Туризъм", "Физически труд"];
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [localPreferences, setLocalPreferences] = useState<{[key: string]: Preference}>(preferences || {});
   
@@ -57,7 +56,7 @@ const ExercisePreferencesStep = ({
 
   return (
     <div className="text-center">
-      <h1 className="text-4xl sm:text-5xl font-bold mb-12">How do you feel about these exercises?</h1>
+      <h1 className="text-4xl sm:text-5xl font-bold mb-12">Как се чувствате спрямо тези упражнения?</h1>
       
       <div className="max-w-md mx-auto">
         <AnimatePresence mode="wait">
@@ -80,7 +79,7 @@ const ExercisePreferencesStep = ({
             onClick={handleComplete}
             className="mt-6 bg-orange hover:bg-orange/90 text-white"
           >
-            Continue <ArrowRight className="ml-2 h-4 w-4" />
+            Продължи <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         )}
       </div>

@@ -1,4 +1,3 @@
-
 import React from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
@@ -11,30 +10,30 @@ const WorkoutIntensityStep = ({ selectedIntensity, onSelect }: WorkoutIntensityS
   const intensities = [
     {
       id: "light",
-      label: "Keep it light",
-      description: "Lower intensity, suitable for beginners or recovery"
+      label: "Леко натоварване",
+      description: "По-ниска интензивност, подходяща за начинаещи или възстановяване"
     },
     {
       id: "moderate",
-      label: "Moderate",
-      description: "Balanced intensity, suitable for most fitness levels"
+      label: "Умерено натоварване",
+      description: "Балансирана интензивност, подходяща за повечето нива на физическа подготовка"
     },
     {
       id: "heavy",
-      label: "Heavy",
-      description: "High intensity, challenging workouts for experienced users"
+      label: "Тежко натоварване",
+      description: "Висока интензивност, предизвикателни тренировки за опитни потребители"
     },
     {
       id: "auto",
-      label: "Let us decide",
-      description: "We'll optimize based on your goals and fitness level"
+      label: "Оставете на нас",
+      description: "Ще оптимизираме според Вашите цели и ниво на физическа подготовка"
     }
   ];
 
   return (
     <div className="text-center">
-      <h1 className="text-4xl sm:text-5xl font-bold mb-12">Choose your preferred level of workouts</h1>
-      <p className="text-xl mb-8">We'll adjust the intensity of your exercises accordingly</p>
+      <h1 className="text-4xl sm:text-5xl font-bold mb-12">Изберете предпочитаното ниво на тренировки</h1>
+      <p className="text-xl mb-8">Ще коригираме интензивността на упражненията съответно</p>
       
       <div className="max-w-3xl mx-auto">
         <RadioGroup value={selectedIntensity || ""} onValueChange={onSelect} className="grid grid-cols-1 md:grid-cols-2 gap-6">

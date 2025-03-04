@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
@@ -359,7 +358,7 @@ const ProgressGraphStep = ({ goalValue, currentBodyFat = 25 }: ProgressGraphStep
       legend.append("text")
         .attr("x", 25)
         .attr("y", 12.5)
-        .text("Body Fat %")
+        .text("Телесни мазнини %")
         .style("font-size", "14px")
         .style("fill", "#ccc");
       
@@ -373,7 +372,7 @@ const ProgressGraphStep = ({ goalValue, currentBodyFat = 25 }: ProgressGraphStep
       legend.append("text")
         .attr("x", 25)
         .attr("y", 42.5)
-        .text("Muscle Mass %")
+        .text("Мускулна маса %")
         .style("font-size", "14px")
         .style("fill", "#ccc");
     }
@@ -392,7 +391,7 @@ const ProgressGraphStep = ({ goalValue, currentBodyFat = 25 }: ProgressGraphStep
 
   return (
     <div className="text-center">
-      <h1 className="text-4xl sm:text-5xl font-bold mb-12">Your Fitness Journey</h1>
+      <h1 className="text-4xl sm:text-5xl font-bold mb-12">Вашето фитнес пътуване</h1>
       
       <div className="max-w-4xl mx-auto">
         <div 
@@ -401,7 +400,7 @@ const ProgressGraphStep = ({ goalValue, currentBodyFat = 25 }: ProgressGraphStep
         ></div>
         
         <div className="text-center mt-4 text-orange font-medium text-xl">
-          You can achieve your goal in approximately 6 months!
+          Можете да постигнете целта си за приблизително 6 месеца!
         </div>
       </div>
     </div>

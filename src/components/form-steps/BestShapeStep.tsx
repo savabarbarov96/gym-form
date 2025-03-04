@@ -1,4 +1,3 @@
-
 import React from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { BadgeCheck, Clock, CalendarClock, XCircle } from "lucide-react";
@@ -12,35 +11,35 @@ interface BestShapeStepProps {
 const BestShapeStep = ({ selected, onSelect }: BestShapeStepProps) => {
   const options = [
     { 
-      label: "Less than a year ago", 
+      label: "Преди по-малко от година", 
       id: "less-than-year", 
       icon: BadgeCheck,
-      description: "You've maintained good fitness recently"
+      description: "Поддържали сте добра форма наскоро"
     },
     { 
-      label: "1-3 years ago", 
+      label: "Преди 1-3 години", 
       id: "1-3-years", 
       icon: Clock,
-      description: "You've had fitness success in the recent past"
+      description: "Имали сте успехи във фитнеса в близкото минало"
     },
     { 
-      label: "More than 3 years ago", 
+      label: "Преди повече от 3 години", 
       id: "more-than-3-years", 
       icon: CalendarClock,
-      description: "It's been a while since you were in peak condition"
+      description: "Минало е доста време откакто сте били в най-добра форма"
     },
     { 
-      label: "Never", 
+      label: "Никога", 
       id: "never", 
       icon: XCircle,
-      description: "You haven't reached your ideal fitness level yet"
+      description: "Все още не сте достигнали идеалното ниво на физическа форма"
     },
   ];
 
   return (
     <div className="text-center">
-      <h1 className="text-4xl sm:text-5xl font-bold mb-6">How long ago were you in the best shape of your life?</h1>
-      <p className="text-muted-foreground text-xl mb-8">This helps us understand your fitness history</p>
+      <h1 className="text-4xl sm:text-5xl font-bold mb-6">Откога бяхте в най-добрата форма на живота си?</h1>
+      <p className="text-muted-foreground text-xl mb-8">Това ни помага да разберем Вашата фитнес история</p>
       
       <div className="max-w-2xl mx-auto">
         <div className="grid grid-cols-1 gap-4">

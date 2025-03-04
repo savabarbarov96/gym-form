@@ -1,4 +1,3 @@
-
 import React from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
@@ -9,14 +8,14 @@ interface WeightChangeStepProps {
 
 const WeightChangeStep = ({ selected, onSelect }: WeightChangeStepProps) => {
   const options = [
-    { label: "I gain weight fast but lose slowly", id: "gain-fast-lose-slow" },
-    { label: "I gain and lose weight easily", id: "gain-lose-easily" },
-    { label: "I struggle to gain weight or muscle", id: "struggle-gain" },
+    { label: "Качвам тегло бързо, но губя бавно", id: "gain-fast-lose-slow" },
+    { label: "Качвам и губя тегло лесно", id: "gain-lose-easily" },
+    { label: "Трудно качвам тегло или мускули", id: "struggle-gain" },
   ];
 
   return (
     <div className="text-center">
-      <h1 className="text-4xl sm:text-5xl font-bold mb-12">How does your weight typically change?</h1>
+      <h1 className="text-4xl sm:text-5xl font-bold mb-12">Как обикновено се променя Вашето тегло?</h1>
       
       <div className="max-w-2xl mx-auto">
         <RadioGroup value={selected || ""} onValueChange={onSelect}>

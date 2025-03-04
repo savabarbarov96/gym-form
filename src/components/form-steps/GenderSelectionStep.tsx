@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { User, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -13,15 +12,15 @@ const GenderSelectionStep: React.FC<GenderSelectionStepProps> = ({
   onSelect 
 }) => {
   const genderOptions = [
-    { id: 'male', label: 'Male', icon: User },
-    { id: 'female', label: 'Female', icon: Users },
+    { id: 'male', label: 'Мъж', icon: User },
+    { id: 'female', label: 'Жена', icon: Users },
   ];
 
   return (
     <div className="text-center">
-      <h1 className="text-4xl sm:text-5xl font-bold mb-4">What is your gender?</h1>
+      <h1 className="text-4xl sm:text-5xl font-bold mb-4">Какъв е Вашият пол?</h1>
       <p className="text-muted-foreground text-lg mb-10 max-w-2xl mx-auto">
-        This helps us tailor your fitness and nutrition plan to your specific needs
+        Това ни помага да адаптираме Вашия план за фитнес и хранене според специфичните Ви нужди
       </p>
       
       <div className="flex flex-col sm:flex-row gap-6 justify-center max-w-3xl mx-auto mb-8">
@@ -60,7 +59,7 @@ const GenderSelectionStep: React.FC<GenderSelectionStepProps> = ({
       </div>
       
       <div className="text-lg text-muted-foreground">
-        Select your gender to continue
+        Изберете своя пол, за да продължите
       </div>
     </div>
   );

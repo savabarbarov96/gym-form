@@ -1,4 +1,3 @@
-
 import React from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { motion } from "framer-motion";
@@ -26,10 +25,10 @@ const WorkoutDurationStep: React.FC<WorkoutDurationStepProps> = ({ selected, onS
   };
 
   const options = [
-    { value: "10-15", label: "10-15 minutes" },
-    { value: "20-30", label: "20-30 minutes" },
-    { value: "30-40", label: "30-40 minutes" },
-    { value: "auto", label: "Let us decide" }
+    { value: "10-15", label: "10-15 минути" },
+    { value: "20-30", label: "20-30 минути" },
+    { value: "30-40", label: "30-40 минути" },
+    { value: "auto", label: "Оставете на нас" }
   ];
 
   const handleChange = (value: string) => {
@@ -44,7 +43,7 @@ const WorkoutDurationStep: React.FC<WorkoutDurationStepProps> = ({ selected, onS
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        How long do you want your workouts to be?
+        Колко дълги искате да бъдат Вашите тренировки?
       </motion.h1>
       
       <motion.div

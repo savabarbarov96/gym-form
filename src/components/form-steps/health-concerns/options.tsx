@@ -11,63 +11,63 @@ export interface HealthConcernOption {
 const healthConcernOptions: HealthConcernOption[] = [
   { 
     id: 'knees', 
-    label: 'Knee Pain', 
+    label: 'Болки в коленете', 
     icon: <SquareDashedBottom className="w-5 h-5 text-orange" />,
-    description: 'Issues when bending, climbing stairs'
+    description: 'Проблеми при сгъване, изкачване на стълби'
   },
   { 
     id: 'back', 
-    label: 'Back Pain', 
+    label: 'Болки в гърба', 
     icon: <ArrowUpFromLine className="w-5 h-5 text-orange" />,
-    description: 'Discomfort when sitting or standing'
+    description: 'Дискомфорт при седене или стоене'
   },
   { 
     id: 'shoulders', 
-    label: 'Shoulder Issues', 
+    label: 'Проблеми с раменете', 
     icon: <Dumbbell className="w-5 h-5 text-orange" />,
-    description: 'Limited range of motion, pain'
+    description: 'Ограничен обхват на движение, болка'
   },
   { 
     id: 'wrists', 
-    label: 'Wrist or Hand Problems', 
+    label: 'Проблеми с китките/ръцете', 
     icon: <HandMetal className="w-5 h-5 text-orange" />,
-    description: 'Weakness, pain during movement'
+    description: 'Слабост, болка при движение'
   },
   { 
     id: 'ankle', 
-    label: 'Ankle/Foot Pain', 
+    label: 'Болки в глезена/стъпалото', 
     icon: <Footprints className="w-5 h-5 text-orange" />,
-    description: 'Issues with stability, discomfort'
+    description: 'Проблеми със стабилността, дискомфорт'
   },
   { 
     id: 'hips', 
-    label: 'Hip Problems', 
+    label: 'Проблеми с тазобедрената става', 
     icon: <Activity className="w-5 h-5 text-orange" />,
-    description: 'Pain during movement or sitting'
+    description: 'Болка при движение или седене'
   },
   { 
     id: 'heart', 
-    label: 'Heart Conditions', 
+    label: 'Сърдечни заболявания', 
     icon: <Heart className="w-5 h-5 text-orange" />,
-    description: 'Any diagnosed cardiac issues'
+    description: 'Диагностицирани сърдечни проблеми'
   },
   { 
     id: 'breathing', 
-    label: 'Breathing Issues', 
+    label: 'Проблеми с дишането', 
     icon: <Wind className="w-5 h-5 text-orange" />,
-    description: 'Asthma, shortness of breath'
+    description: 'Астма, задух'
   },
   { 
     id: 'headaches', 
-    label: 'Frequent Headaches', 
+    label: 'Чести главоболия', 
     icon: <Brain className="w-5 h-5 text-orange" />,
-    description: 'Migraines, tension headaches'
+    description: 'Мигрени, напрежение'
   },
   { 
     id: 'hearing', 
-    label: 'Hearing Problems', 
+    label: 'Проблеми със слуха', 
     icon: <Ear className="w-5 h-5 text-orange" />,
-    description: 'Tinnitus, hearing loss'
+    description: 'Шум в ушите, загуба на слух'
   }
 ];
 

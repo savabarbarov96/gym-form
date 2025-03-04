@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 
 interface FeetInchesInputProps {
@@ -47,9 +46,9 @@ export const FeetInchesInput: React.FC<FeetInchesInputProps> = ({ value, onChang
           value={ftValue}
           onChange={handleFtChange}
           className="w-full p-3 bg-input border border-border rounded-lg text-foreground text-center text-xl"
-          placeholder="Feet"
+          placeholder="Футове"
         />
-        <span className="ml-2 text-xl">ft</span>
+        <span className="ml-2 text-xl">фт</span>
       </div>
       <div className="flex items-center flex-1">
         <input
@@ -59,9 +58,9 @@ export const FeetInchesInput: React.FC<FeetInchesInputProps> = ({ value, onChang
           value={inValue}
           onChange={handleInChange}
           className="w-full p-3 bg-input border border-border rounded-lg text-foreground text-center text-xl"
-          placeholder="Inches"
+          placeholder="Инчове"
         />
-        <span className="ml-2 text-xl">in</span>
+        <span className="ml-2 text-xl">ин</span>
       </div>
     </div>
   );

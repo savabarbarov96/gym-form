@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Calendar, CalendarCheck, XCircle } from 'lucide-react';
@@ -29,28 +28,28 @@ const StartCommitmentStep: React.FC<StartCommitmentStepProps> = ({
   const options = [
     { 
       value: 'today', 
-      label: 'I will start my workout today!', 
+      label: 'Ще започна тренировката си днес!', 
       icon: CalendarCheck, 
-      description: 'Great choice! Starting today puts you on the fast track to results.' 
+      description: 'Чудесен избор! Започването днес Ви поставя на бързия път към резултати.' 
     },
     { 
       value: 'tomorrow', 
-      label: 'I will start my first workout tomorrow!', 
+      label: 'Ще започна първата си тренировка утре!', 
       icon: Calendar, 
-      description: 'Perfect! Taking a day to prepare sets you up for success.' 
+      description: 'Перфектно! Отделянето на ден за подготовка Ви настройва за успех.' 
     },
     { 
       value: 'notReady', 
-      label: 'I am not ready to make the commitment', 
+      label: 'Не съм готов/а да поема ангажимент', 
       icon: XCircle, 
-      description: 'No problem. Your plan will be ready when you are.' 
+      description: 'Няма проблем. Вашият план ще бъде готов, когато Вие сте готови.' 
     },
   ];
 
   return (
     <div className="max-w-2xl mx-auto w-full">
-      <h2 className="text-3xl font-bold text-center mb-2">Almost ready!</h2>
-      <p className="text-muted-foreground text-center mb-8">When are you going to start your fitness journey?</p>
+      <h2 className="text-3xl font-bold text-center mb-2">Почти сте готови!</h2>
+      <p className="text-muted-foreground text-center mb-8">Кога ще започнете Вашето фитнес пътуване?</p>
 
       <div className="grid gap-4">
         {options.map((option) => {

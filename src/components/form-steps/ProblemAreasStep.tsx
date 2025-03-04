@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Check, Dumbbell, BoneIcon, HeartIcon, ThermometerSunIcon, Footprints, UsersRound } from "lucide-react";
@@ -13,13 +12,13 @@ interface ProblemAreasStepProps {
 
 const ProblemAreasStep = ({ selectedAreas, onSelectArea, onStepComplete }: ProblemAreasStepProps) => {
   const problemAreas = [
-    { label: "Chest", id: "chest", icon: HeartIcon },
-    { label: "Arms", id: "arms", icon: Dumbbell },
-    { label: "Back", id: "back", icon: UsersRound },
-    { label: "Belly", id: "belly", icon: ThermometerSunIcon },
-    { label: "Legs", id: "legs", icon: Footprints },
-    { label: "Calves", id: "calves", icon: Footprints },
-    { label: "Forearms", id: "forearms", icon: BoneIcon },
+    { label: "Гърди", id: "chest", icon: HeartIcon },
+    { label: "Ръце", id: "arms", icon: Dumbbell },
+    { label: "Гръб", id: "back", icon: UsersRound },
+    { label: "Корем", id: "belly", icon: ThermometerSunIcon },
+    { label: "Крака", id: "legs", icon: Footprints },
+    { label: "Прасци", id: "calves", icon: Footprints },
+    { label: "Предмишници", id: "forearms", icon: BoneIcon },
   ];
 
   const toggleArea = (id: string) => {
@@ -42,8 +41,8 @@ const ProblemAreasStep = ({ selectedAreas, onSelectArea, onStepComplete }: Probl
 
   return (
     <div className="text-center">
-      <h1 className="text-4xl sm:text-5xl font-bold mb-6">Select problem areas</h1>
-      <p className="text-muted-foreground text-xl mb-8">We'll focus on these areas in your program</p>
+      <h1 className="text-4xl sm:text-5xl font-bold mb-6">Изберете проблемни зони</h1>
+      <p className="text-muted-foreground text-xl mb-8">Ще се фокусираме върху тези зони във Вашата програма</p>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-4xl mx-auto">
         <div className="flex justify-center items-center">
@@ -98,7 +97,7 @@ const ProblemAreasStep = ({ selectedAreas, onSelectArea, onStepComplete }: Probl
             )}>
               {selectedAreas.includes("none") && <Check className="w-4 h-4 text-white" />}
             </div>
-            <label className="text-xl cursor-pointer">None of the above</label>
+            <label className="text-xl cursor-pointer">Нито едно от изброените</label>
           </div>
         </div>
       </div>

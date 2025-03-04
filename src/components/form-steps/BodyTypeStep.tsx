@@ -1,4 +1,3 @@
-
 import React from "react";
 import { UserCircle2, User, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -11,29 +10,29 @@ interface BodyTypeStepProps {
 const BodyTypeStep = ({ selectedType, onSelect }: BodyTypeStepProps) => {
   const bodyTypes = [
     { 
-      label: "Slim", 
+      label: "Слабо", 
       id: "slim", 
       icon: UserCircle2,
-      description: "Small frame with lean build"
+      description: "Малка структура с lean телосложение"
     },
     { 
-      label: "Average", 
+      label: "Средно", 
       id: "average", 
       icon: User,
-      description: "Balanced proportions"
+      description: "Балансирани пропорции"
     },
     { 
-      label: "Heavy", 
+      label: "Едро", 
       id: "heavy", 
       icon: Users,
-      description: "Larger frame with more mass"
+      description: "По-голяма структура с повече маса"
     },
   ];
 
   return (
     <div className="text-center">
-      <h1 className="text-4xl sm:text-5xl font-bold mb-6">Choose your body type</h1>
-      <p className="text-muted-foreground text-xl mb-8">Select the option that best describes your current body</p>
+      <h1 className="text-4xl sm:text-5xl font-bold mb-6">Изберете своя тип тяло</h1>
+      <p className="text-muted-foreground text-xl mb-8">Изберете опцията, която най-добре описва сегашното Ви тяло</p>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
         {bodyTypes.map((type) => {

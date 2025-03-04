@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { cn } from '@/lib/utils';
 
@@ -9,15 +8,15 @@ interface TypicalDayStepProps {
 
 const TypicalDayStep: React.FC<TypicalDayStepProps> = ({ selected, onSelect }) => {
   const options = [
-    { value: 'sitting', label: 'I am sitting most of the time' },
-    { value: 'moving', label: 'I am moving most of the time' },
-    { value: 'standing', label: 'I am on my feet all day long but not moving much' },
-    { value: 'active', label: 'I am on my feet and moving a lot' }
+    { value: 'sitting', label: 'Седя през по-голямата част от времето' },
+    { value: 'moving', label: 'Движа се през по-голямата част от времето' },
+    { value: 'standing', label: 'На крак съм през целия ден, но не се движа много' },
+    { value: 'active', label: 'На крак съм и се движа много' }
   ];
 
   return (
     <div className="max-w-2xl mx-auto w-full">
-      <h2 className="text-2xl font-bold text-center mb-6">How would you describe your typical day?</h2>
+      <h2 className="text-2xl font-bold text-center mb-6">Как бихте описали Вашия типичен ден?</h2>
 
       <div className="grid gap-4">
         {options.map((option) => (

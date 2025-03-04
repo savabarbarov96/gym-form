@@ -45,154 +45,154 @@ const TraditionalFoodsStep = ({
   // Common Bulgarian market items with categories
   const marketItems = [
     { 
-      label: "White Bread (Pitka)", 
+      label: "Бял хляб (Питка)", 
       id: "white_bread", 
-      category: "Bakery"
+      category: "Хлебни"
     },
     { 
-      label: "Whole Grain Bread", 
+      label: "Пълнозърнест хляб", 
       id: "whole_grain_bread", 
-      category: "Bakery"
+      category: "Хлебни"
     },
     { 
-      label: "Milk", 
+      label: "Мляко", 
       id: "milk", 
-      category: "Dairy"
+      category: "Млечни"
     },
     { 
-      label: "Bulgarian Yogurt (Kiselo Mlyako)", 
+      label: "Кисело мляко", 
       id: "yogurt", 
-      category: "Dairy"
+      category: "Млечни"
     },
     { 
-      label: "White Brined Cheese (Sirene)", 
+      label: "Сирене", 
       id: "white_cheese", 
-      category: "Dairy"
+      category: "Млечни"
     },
     { 
-      label: "Eggs", 
+      label: "Яйца", 
       id: "eggs", 
-      category: "Dairy"
+      category: "Млечни"
     },
     { 
-      label: "Butter", 
+      label: "Масло", 
       id: "butter", 
-      category: "Dairy"
+      category: "Млечни"
     },
     { 
-      label: "Sunflower Oil", 
+      label: "Слънчогледово олио", 
       id: "sunflower_oil", 
-      category: "Oils"
+      category: "Масла"
     },
     { 
-      label: "Other Vegetable Oils", 
+      label: "Други растителни масла", 
       id: "vegetable_oils", 
-      category: "Oils"
+      category: "Масла"
     },
     { 
-      label: "Sugar", 
+      label: "Захар", 
       id: "sugar", 
-      category: "Baking"
+      category: "За печене"
     },
     { 
-      label: "Flour", 
+      label: "Брашно", 
       id: "flour", 
-      category: "Baking"
+      category: "За печене"
     },
     { 
-      label: "Rice", 
+      label: "Ориз", 
       id: "rice", 
-      category: "Grains"
+      category: "Зърнени"
     },
     { 
-      label: "Pasta", 
+      label: "Макарони", 
       id: "pasta", 
-      category: "Grains"
+      category: "Зърнени"
     },
     { 
-      label: "Potatoes", 
+      label: "Картофи", 
       id: "potatoes", 
-      category: "Vegetables"
+      category: "Зеленчуци"
     },
     { 
-      label: "Tomatoes", 
+      label: "Домати", 
       id: "tomatoes", 
-      category: "Vegetables"
+      category: "Зеленчуци"
     },
     { 
-      label: "Cucumbers", 
+      label: "Краставици", 
       id: "cucumbers", 
-      category: "Vegetables"
+      category: "Зеленчуци"
     },
     { 
-      label: "Bell Peppers", 
+      label: "Чушки", 
       id: "bell_peppers", 
-      category: "Vegetables"
+      category: "Зеленчуци"
     },
     { 
-      label: "Onions", 
+      label: "Лук", 
       id: "onions", 
-      category: "Vegetables"
+      category: "Зеленчуци"
     },
     { 
-      label: "Garlic", 
+      label: "Чесън", 
       id: "garlic", 
-      category: "Vegetables"
+      category: "Зеленчуци"
     },
     { 
-      label: "Carrots", 
+      label: "Моркови", 
       id: "carrots", 
-      category: "Vegetables"
+      category: "Зеленчуци"
     },
     { 
-      label: "Apples", 
+      label: "Ябълки", 
       id: "apples", 
-      category: "Fruits"
+      category: "Плодове"
     },
     { 
-      label: "Bananas", 
+      label: "Банани", 
       id: "bananas", 
-      category: "Fruits"
+      category: "Плодове"
     },
     { 
-      label: "Citrus Fruits", 
+      label: "Цитрусови плодове", 
       id: "citrus_fruits", 
-      category: "Fruits"
+      category: "Плодове"
     },
     { 
-      label: "Chicken Meat", 
+      label: "Пилешко месо", 
       id: "chicken", 
-      category: "Meat"
+      category: "Месо"
     },
     { 
-      label: "Pork Meat", 
+      label: "Свинско месо", 
       id: "pork", 
-      category: "Meat"
+      category: "Месо"
     },
     { 
-      label: "Fish", 
+      label: "Риба", 
       id: "fish", 
-      category: "Seafood"
+      category: "Морски"
     },
     { 
-      label: "Sausages", 
+      label: "Колбаси", 
       id: "sausages", 
-      category: "Processed Meat"
+      category: "Преработени"
     },
     { 
-      label: "Canned Tuna", 
+      label: "Консерва риба тон", 
       id: "canned_tuna", 
-      category: "Seafood"
+      category: "Морски"
     },
     { 
-      label: "Legumes (beans, lentils)", 
+      label: "Бобови (боб, леща)", 
       id: "legumes", 
-      category: "Grains"
+      category: "Зърнени"
     },
     { 
-      label: "Mineral Water", 
+      label: "Минерална вода", 
       id: "mineral_water", 
-      category: "Beverages"
+      category: "Напитки"
     }
   ];
 
@@ -254,11 +254,11 @@ const TraditionalFoodsStep = ({
         transition={{ duration: 0.5 }}
       >
         <h1 className="text-4xl sm:text-5xl font-bold mb-4">
-          What Foods Do You Regularly Eat?
+          Какви храни консумирате редовно?
         </h1>
         
         <p className="text-muted-foreground text-xl mb-8">
-          Your diet plan will be personalized based on your typical Bulgarian market items
+          Вашият хранителен план ще бъде персонализиран въз основа на типичните български хранителни продукти
         </p>
       </motion.div>
       
@@ -271,7 +271,7 @@ const TraditionalFoodsStep = ({
       >
         <div className="flex flex-wrap gap-2 mb-4 min-h-14 p-4 bg-muted/30 rounded-lg">
           {selectedFoods.length === 0 && (
-            <p className="text-muted-foreground italic w-full text-center">Select items you typically buy at the market</p>
+            <p className="text-muted-foreground italic w-full text-center">Изберете продукти, които обикновено купувате от магазина</p>
           )}
           
           {selectedFoods.map(id => {
@@ -322,7 +322,7 @@ const TraditionalFoodsStep = ({
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             type="text"
-            placeholder="Search foods..."
+            placeholder="Търсене на храни..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-9"
@@ -336,7 +336,7 @@ const TraditionalFoodsStep = ({
             onClick={() => setCategory(null)}
             className="whitespace-nowrap"
           >
-            All Items
+            Всички
           </Button>
           {categories.map(cat => (
             <Button
@@ -405,7 +405,7 @@ const TraditionalFoodsStep = ({
             className="gap-2"
           >
             <Plus className="h-4 w-4" />
-            Add Custom Food Item
+            Добавяне на друга храна
           </Button>
         </motion.div>
       ) : (
@@ -416,12 +416,12 @@ const TraditionalFoodsStep = ({
         >
           <h3 className="text-sm font-medium mb-2 flex items-center gap-2">
             <Tag className="h-4 w-4" />
-            Add Custom Food Item
+            Добавяне на друга храна
           </h3>
           <div className="flex gap-3">
             <Input
               type="text"
-              placeholder="Enter food item..."
+              placeholder="Въведете храна..."
               value={customInput}
               onChange={(e) => setCustomInput(e.target.value)}
               className="flex-1"
@@ -433,7 +433,7 @@ const TraditionalFoodsStep = ({
               onClick={handleSaveCustomFood}
               size="sm"
             >
-              Add
+              Добави
             </Button>
             <Button 
               type="button" 
@@ -441,7 +441,7 @@ const TraditionalFoodsStep = ({
               onClick={handleCancelCustomFood}
               size="sm"
             >
-              Cancel
+              Отказ
             </Button>
           </div>
         </motion.div>
@@ -454,7 +454,7 @@ const TraditionalFoodsStep = ({
         transition={{ delay: 0.5 }}
         className="text-center text-sm text-muted-foreground mt-6"
       >
-        <p>Complete your selection to help us create a balanced nutrition plan that incorporates your preferred foods.</p>
+        <p>Завършете избора си, за да ни помогнете да създадем балансиран хранителен план, който включва предпочитаните от Вас храни.</p>
       </motion.div>
     </div>
   );

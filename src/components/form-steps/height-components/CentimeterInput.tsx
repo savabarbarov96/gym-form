@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 
 interface CentimeterInputProps {
@@ -34,9 +33,9 @@ export const CentimeterInput: React.FC<CentimeterInputProps> = ({ value, onChang
         value={cmValue}
         onChange={handleCmChange}
         className="w-full p-3 bg-input border border-border rounded-lg text-foreground text-center text-xl"
-        placeholder="Enter height"
+        placeholder="Въведете височина"
       />
-      <span className="ml-3 text-xl">cm</span>
+      <span className="ml-3 text-xl">см</span>
     </div>
   );
 };

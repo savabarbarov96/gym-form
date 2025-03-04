@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Info } from "lucide-react";
@@ -15,7 +14,7 @@ export const HeightInputHeader: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        What's your height?
+        Каква е Вашата височина?
       </motion.h1>
       
       <div className="relative inline-block">
@@ -29,7 +28,7 @@ export const HeightInputHeader: React.FC = () => {
           whileHover={{ scale: 1.05 }}
         >
           <Info size={16} className="mr-1" />
-          <span>This information helps us calculate your BMI</span>
+          <span>Тази информация ни помага да изчислим Вашия BMI</span>
         </motion.button>
         
         {showInfo && <HeightInfoTooltip />}

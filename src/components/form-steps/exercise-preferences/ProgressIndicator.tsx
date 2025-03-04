@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 interface ProgressIndicatorProps {
@@ -23,8 +22,8 @@ const ProgressIndicator = ({ totalSteps, currentStep, isLastStep }: ProgressIndi
       
       <p className="mt-6 text-muted-foreground">
         {isLastStep ? 
-          "Press Continue to proceed" : 
-          `${currentStep + 1} of ${totalSteps}`
+          "Натиснете Продължи, за да продължите" : 
+          `${currentStep + 1} от ${totalSteps}`
         }
       </p>
     </>

@@ -70,26 +70,26 @@ const SelfAssessmentStep: React.FC<SelfAssessmentStepProps> = ({
     
     switch (type || assessmentKey) {
       case 'outOfBreath':
-        return "I am often out of breath when I climb the stairs";
+        return "Често ми липсва въздух, когато се качвам по стълби";
       case 'fallingBack':
-        return "I keep falling back into bad exercise habits";
+        return "Непрекъснато се връщам към лошите си навици за упражнения";
       case 'suitableWorkouts':
-        return "I struggle to find workouts suitable for my fitness level";
+        return "Трудно ми е да намеря тренировки, подходящи за моето ниво на физическа подготовка";
       case 'motivationLevel':
-        return "I find it hard to stay motivated with exercise";
+        return "Трудно ми е да остана мотивиран/а с тренировките";
       case 'dietConsistency':
-        return "I have trouble maintaining a consistent diet";
+        return "Имам проблеми с поддържането на постоянна диета";
       default:
         return "";
     }
   };
 
   const ratings = [
-    { value: 1, label: 'Not at all' },
-    { value: 2, label: 'Slightly' },
-    { value: 3, label: 'Moderately' },
-    { value: 4, label: 'Very much' },
-    { value: 5, label: 'Extremely' }
+    { value: 1, label: 'Изобщо не' },
+    { value: 2, label: 'Леко' },
+    { value: 3, label: 'Умерено' },
+    { value: 4, label: 'Много' },
+    { value: 5, label: 'Изключително' }
   ];
 
   const handleOptionSelect = (selectedValue: number) => {
@@ -99,11 +99,11 @@ const SelfAssessmentStep: React.FC<SelfAssessmentStepProps> = ({
 
   return (
     <div className="max-w-3xl mx-auto w-full">
-      <h2 className="text-3xl sm:text-4xl font-bold text-center mb-8">How much do you relate to this statement?</h2>
+      <h2 className="text-3xl sm:text-4xl font-bold text-center mb-8">Доколко се идентифицирате с това твърдение?</h2>
       
       <div className="text-xl text-center p-8 mb-10 bg-gradient-to-br from-card to-background rounded-2xl shadow-lg border border-border relative">
         <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-orange/10 text-orange px-4 py-1 rounded-full text-sm font-medium">
-          Statement
+          Твърдение
         </div>
         <span className="text-orange font-medium leading-relaxed">{getQuestionText()}</span>
       </div>
@@ -149,11 +149,11 @@ const SelfAssessmentStep: React.FC<SelfAssessmentStepProps> = ({
         {value !== null && (
           <div className="text-center mt-4 py-4 bg-muted/30 rounded-xl">
             <p className="text-lg">
-              You selected: <span className="font-semibold text-orange">{ratings.find(r => r.value === value)?.label}</span>
+              Избрахте: <span className="font-semibold text-orange">{ratings.find(r => r.value === value)?.label}</span>
             </p>
             {autoAdvance && initialValueRef.current === null && value !== initialValueRef.current && (
               <p className="text-sm text-muted-foreground mt-1">
-                Advancing to next question...
+                Преминаване към следващия въпрос...
               </p>
             )}
           </div>
@@ -161,7 +161,7 @@ const SelfAssessmentStep: React.FC<SelfAssessmentStepProps> = ({
         
         {!autoAdvance && (
           <p className="text-center text-muted-foreground text-sm mt-8">
-            Select your answer and click "Continue" to proceed
+            Изберете своя отговор и кликнете "Продължи", за да продължите
           </p>
         )}
       </div>

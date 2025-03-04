@@ -1,4 +1,3 @@
-
 import React from "react";
 import { ArrowDownRight, Activity, Dumbbell } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -11,29 +10,29 @@ interface DesiredBodyStepProps {
 const DesiredBodyStep = ({ selectedBody, onSelect }: DesiredBodyStepProps) => {
   const bodyTypes = [
     { 
-      label: "A few sizes smaller", 
+      label: "Няколко размера по-малко", 
       id: "smaller", 
       icon: ArrowDownRight,
-      description: "Lose weight while maintaining your natural shape"
+      description: "Отслабване, запазвайки естествената си форма"
     },
     { 
-      label: "Fit", 
+      label: "Стегнато", 
       id: "fit", 
       icon: Activity,
-      description: "Lean with improved muscle definition"
+      description: "Слабо тяло с подобрена мускулна дефиниция"
     },
     { 
-      label: "Athletic", 
+      label: "Атлетично", 
       id: "athletic", 
       icon: Dumbbell,
-      description: "Well-developed muscles with low body fat"
+      description: "Добре развити мускули с ниско телесно тегло"
     },
   ];
 
   return (
     <div className="text-center">
-      <h1 className="text-4xl sm:text-5xl font-bold mb-6">Choose the body you want</h1>
-      <p className="text-muted-foreground text-xl mb-8">Select your ideal physique goal</p>
+      <h1 className="text-4xl sm:text-5xl font-bold mb-6">Изберете тялото, което искате</h1>
+      <p className="text-muted-foreground text-xl mb-8">Изберете Вашата идеална физическа цел</p>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
         {bodyTypes.map((type) => {

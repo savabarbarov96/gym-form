@@ -8,30 +8,31 @@ interface HormoneGraphStepProps {
 }
 
 const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) => {
-  // Skip this step for female users
-  if (gender === "female") {
-    // Auto-advance to next step
-    setTimeout(() => {
-      onNext();
-    }, 100);
-    return null;
-  }
-  
   const chartRef = useRef<HTMLDivElement>(null);
   
+  // Skip this step for female users
   useEffect(() => {
-    if (!chartRef.current) return;
+    if (gender === "female") {
+      // Auto-advance to next step
+      setTimeout(() => {
+        onNext();
+      }, 100);
+    }
+  }, [gender, onNext]);
+  
+  useEffect(() => {
+    if (!chartRef.current || gender === "female") return;
     
     // Clear any existing SVG
     d3.select(chartRef.current).selectAll("*").remove();
     
     // Updated data with lower percentages for testosterone (starting at 20%, ending at 40%)
     const data = [
-      { name: "Now", testosterone: 20, cortisol: 80 },
-      { name: "Week 2", testosterone: 25, cortisol: 65 },
-      { name: "Week 4", testosterone: 30, cortisol: 50 },
-      { name: "Week 8", testosterone: 35, cortisol: 35 },
-      { name: "Week 12", testosterone: 40, cortisol: 20 }
+      { name: "Сега", testosterone: 20, cortisol: 80 },
+      { name: "Седмица 2", testosterone: 25, cortisol: 65 },
+      { name: "Седмица 4", testosterone: 30, cortisol: 50 },
+      { name: "Седмица 8", testosterone: 35, cortisol: 35 },
+      { name: "Седмица 12", testosterone: 40, cortisol: 20 }
     ];
     
     // Round values for cleaner display
@@ -289,7 +290,7 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) =
       .attr("text-anchor", "middle")
       .style("font-size", "14px")
       .style("fill", "hsl(var(--muted-foreground))")
-      .text("Timeline");
+      .text("Времева линия");
     
     // Add y-axis label
     svg.append("text")
@@ -299,7 +300,7 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) =
       .attr("text-anchor", "middle")
       .style("font-size", "14px")
       .style("fill", "hsl(var(--muted-foreground))")
-      .text("Percentage (%)");
+      .text("Процент (%)");
     
     // Improved legend positioning to ensure line indicators are fully visible
     // Instead of positioning it to the right, we'll position it at the top for better visibility
@@ -316,7 +317,7 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) =
     legend.append("text")
       .attr("x", 25)
       .attr("y", 12.5)
-      .text("Testosterone")
+      .text("Тестостерон")
       .style("font-size", "14px")
       .style("fill", "hsl(var(--foreground))");
     
@@ -330,7 +331,7 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) =
     legend.append("text")
       .attr("x", 175)
       .attr("y", 12.5)
-      .text("Cortisol (Stress)")
+      .text("Кортизол (Стрес)")
       .style("font-size", "14px")
       .style("fill", "hsl(var(--foreground))");
     
@@ -344,13 +345,17 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) =
     
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [gender, onNext]);
+
+  if (gender === "female") {
+    return null;
+  }
 
   return (
     <div className="text-center max-w-3xl mx-auto">
-      <h1 className="text-4xl sm:text-5xl font-bold mb-6">Your hormones will improve</h1>
+      <h1 className="text-4xl sm:text-5xl font-bold mb-6">Вашите хормони ще се подобрят</h1>
       <p className="text-xl text-muted-foreground mb-10 max-w-xl mx-auto">
-        As you follow our program, your testosterone will increase and cortisol (stress hormone) will decrease
+        Докато следвате нашата програма, Вашият тестостерон ще се увеличи, а кортизолът (хормон на стреса) ще намалее
       </p>
       
       <div className="bg-card border border-border p-6 rounded-xl mb-10">
@@ -366,7 +371,7 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) =
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >
-        Continue
+        Продължи
       </motion.button>
     </div>
   );

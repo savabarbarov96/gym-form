@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Check, Plus, X } from 'lucide-react';
@@ -24,62 +23,62 @@ const ActivitiesStep = ({
   const activities = [
     { 
       id: 'walking', 
-      label: 'Walking', 
-      description: 'Regular walks or hiking',
+      label: 'Ходене', 
+      description: 'Редовни разходки или туризъм',
       icon: '🚶'
     },
     { 
       id: 'running', 
-      label: 'Running', 
-      description: 'Jogging or running',
+      label: 'Бягане', 
+      description: 'Джогинг или бягане',
       icon: '🏃'
     },
     { 
       id: 'cycling', 
-      label: 'Cycling', 
-      description: 'Indoor or outdoor cycling',
+      label: 'Колоездене', 
+      description: 'Колоездене на закрито или открито',
       icon: '🚴'
     },
     { 
       id: 'swimming', 
-      label: 'Swimming', 
-      description: 'Pool or open water swimming',
+      label: 'Плуване', 
+      description: 'Плуване в басейн или открити води',
       icon: '🏊'
     },
     { 
       id: 'gym', 
-      label: 'Gym Workouts', 
-      description: 'Weight training or machines',
+      label: 'Фитнес тренировки', 
+      description: 'Тренировки с тежести или машини',
       icon: '🏋️'
     },
     { 
       id: 'sports', 
-      label: 'Team Sports', 
-      description: 'Basketball, soccer, etc.',
+      label: 'Отборни спортове', 
+      description: 'Баскетбол, футбол и др.',
       icon: '⚽'
     },
     { 
       id: 'yoga', 
-      label: 'Yoga', 
-      description: 'Regular yoga practice',
+      label: 'Йога', 
+      description: 'Редовна практика на йога',
       icon: '🧘'
     },
     { 
       id: 'dancing', 
-      label: 'Dancing', 
-      description: 'Any style of dance',
+      label: 'Танци', 
+      description: 'Всякакъв стил танци',
       icon: '💃'
     },
     { 
       id: 'martialarts', 
-      label: 'Martial Arts', 
-      description: 'Boxing, karate, etc.',
+      label: 'Бойни изкуства', 
+      description: 'Бокс, карате и др.',
       icon: '🥋'
     },
     { 
       id: 'none', 
-      label: 'No Regular Activity', 
-      description: 'Currently sedentary',
+      label: 'Без редовна активност', 
+      description: 'В момента заседнал начин на живот',
       icon: '🛋️'
     }
   ];
@@ -129,9 +128,9 @@ const ActivitiesStep = ({
 
   return (
     <div className="text-center">
-      <h1 className="text-4xl sm:text-5xl font-bold mb-4">Are any of these activities part of your life?</h1>
+      <h1 className="text-4xl sm:text-5xl font-bold mb-4">Някоя от тези дейности част ли е от живота Ви?</h1>
       <p className="text-muted-foreground text-lg mb-10 max-w-2xl mx-auto">
-        Select all activities you regularly participate in
+        Изберете всички дейности, в които редовно участвате
       </p>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
@@ -167,7 +166,7 @@ const ActivitiesStep = ({
             <div className="bg-muted rounded-full p-2 w-10 h-10 flex items-center justify-center mb-2">
               <Plus className="w-5 h-5 text-orange" />
             </div>
-            <p className="text-sm text-muted-foreground">Add another activity</p>
+            <p className="text-sm text-muted-foreground">Добавете друга дейност</p>
           </motion.div>
         )}
       </div>
@@ -180,18 +179,18 @@ const ActivitiesStep = ({
           animate={{ opacity: 1, y: 0 }}
         >
           <label className="text-sm text-muted-foreground mb-2 block text-left">
-            What other activity do you do regularly?
+            Каква друга дейност извършвате редовно?
           </label>
           <div className="flex gap-2">
             <Input
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              placeholder="e.g., Pilates, Rock Climbing"
+              placeholder="напр. Пилатес, Катерене"
               className="flex-1"
               autoFocus
             />
             <Button onClick={handleAddCustom} variant="default">
-              Add
+              Добави
             </Button>
           </div>
         </motion.div>
@@ -216,8 +215,8 @@ const ActivitiesStep = ({
       
       <div className="mt-4 text-muted-foreground">
         {selectedActivities.length === 0 && !customActivity ? 
-          "Please select any activities you regularly participate in." : 
-          `You've selected ${selectedActivities.length + (customActivity ? 1 : 0)} activities.`
+          "Моля, изберете дейностите, в които редовно участвате." : 
+          `Избрали сте ${selectedActivities.length + (customActivity ? 1 : 0)} дейности.`
         }
       </div>
     </div>

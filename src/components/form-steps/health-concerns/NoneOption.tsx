@@ -23,7 +23,7 @@ const NoneOption: React.FC<NoneOptionProps> = ({ isSelected, onClick }) => {
       transition={{ duration: 0.3 }}
     >
       {isSelected && <Check className="w-4 h-4" />}
-      <span>None of the above</span>
+      <span>Нито едно от изброените</span>
     </motion.button>
   );
 };

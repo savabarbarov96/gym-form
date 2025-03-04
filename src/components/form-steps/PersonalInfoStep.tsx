@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -50,10 +49,10 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
   };
 
   const validateEmail = (email: string) => {
-    if (!email) return "Email is required";
+    if (!email) return "Имейлът е задължителен";
     
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) return "Please enter a valid email address";
+    if (!emailRegex.test(email)) return "Моля, въведете валиден имейл адрес";
     
     return "";
   };
@@ -95,21 +94,21 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h2 className="text-4xl font-bold text-center mb-2">Your personalized workout plan is ready!</h2>
-        <p className="text-muted-foreground text-center mb-10">Just a few more details to customize your fitness journey</p>
+        <h2 className="text-4xl font-bold text-center mb-2">Вашият персонализиран тренировъчен план е готов!</h2>
+        <p className="text-muted-foreground text-center mb-10">Остават само няколко детайла, за да персонализираме Вашето фитнес пътуване</p>
         
         <div className="bg-card rounded-xl shadow-lg p-8 space-y-8">
           <div className="space-y-2">
             <Label htmlFor="name" className="flex items-center gap-2 text-base">
               <User size={16} className="text-orange" />
-              Your Name
+              Вашето име
             </Label>
             <Input 
               id="name" 
               value={name || ''} 
               onChange={(e) => handleNameChange(e.target.value)}
               onBlur={handleNameBlur}
-              placeholder="Your name"
+              placeholder="Вашето име"
               className="text-lg py-6 border-orange/20 focus:border-orange/50 focus:ring-orange/30"
             />
           </div>
@@ -127,14 +126,14 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
           <div className="space-y-2">
             <Label htmlFor="email" className="flex items-center gap-2 text-base">
               <Mail size={16} className="text-orange" />
-              Email Address
+              Имейл адрес
             </Label>
             <Input 
               id="email" 
               type="email" 
               value={email || ''} 
               onChange={(e) => handleEmailChange(e.target.value)}
-              placeholder="your.email@example.com"
+              placeholder="vashiya.email@example.com"
               className={`border-orange/20 focus:border-orange/50 focus:ring-orange/30 ${errors.email ? "border-red-500" : ""}`}
             />
             {errors.email && (
@@ -157,13 +156,13 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
             <div className="space-y-1">
               <Label htmlFor="emailConsent" className="font-medium flex items-center gap-2">
                 <CheckCircle2 size={16} className="text-orange" />
-                Stay Updated
+                Бъдете в крак с новостите
               </Label>
               <p className="text-sm text-muted-foreground">
-                May we send product updates to your email — expert tips, promotions, special offers?
+                Може ли да Ви изпращаме актуализации за продукта на имейл — експертни съвети, промоции, специални оферти?
               </p>
               <p className="text-xs text-muted-foreground">
-                You can change your mind at any time by clicking the unsubscribe link in the footer of any email you receive from us.
+                Можете да промените решението си по всяко време, като кликнете върху връзката за отписване в долната част на всеки имейл, който получавате от нас.
               </p>
             </div>
           </div>

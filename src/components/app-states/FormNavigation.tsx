@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -24,14 +23,14 @@ const FormNavigation: React.FC<FormNavigationProps> = ({
           variant="outline"
           className="px-6 py-3 border border-border rounded-lg hover:bg-secondary transition-colors"
         >
-          Back
+          Назад
         </Button>
       )}
       <Button 
         onClick={handleNext}
         className="px-6 py-3 bg-orange hover:bg-orange-hover text-white rounded-lg ml-auto flex items-center gap-2 transition-colors"
       >
-        {step === totalSteps ? "Complete" : "Continue"}
+        {step === totalSteps ? "Завърши" : "Продължи"}
         <ChevronRight size={18} />
       </Button>
     </div>

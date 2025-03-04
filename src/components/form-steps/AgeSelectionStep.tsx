@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Baby, User, Users, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -18,8 +17,8 @@ const AgeSelectionStep = ({ selectedAge, onSelect }: AgeSelectionStepProps) => {
 
   return (
     <div className="text-center">
-      <h1 className="text-4xl sm:text-5xl font-bold mb-2">BUILD YOUR PERFECT BODY</h1>
-      <p className="text-xl mb-12 text-muted-foreground">ACCORDING TO YOUR AGE AND BODY TYPE</p>
+      <h1 className="text-4xl sm:text-5xl font-bold mb-2">ИЗГРАДЕТЕ ПЕРФЕКТНОТО ТЯЛО</h1>
+      <p className="text-xl mb-12 text-muted-foreground">СЪОБРАЗЕНО С ВАШАТА ВЪЗРАСТ И ТИП ТЯЛО</p>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {ageGroups.map((age) => {
@@ -41,7 +40,7 @@ const AgeSelectionStep = ({ selectedAge, onSelect }: AgeSelectionStepProps) => {
                   </div>
                 </div>
                 <div className="mt-auto bg-orange text-white p-3 rounded-md font-medium">
-                  Age: {age.label}
+                  Възраст: {age.label}
                 </div>
               </div>
             </div>

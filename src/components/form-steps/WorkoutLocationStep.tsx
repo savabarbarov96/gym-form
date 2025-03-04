@@ -1,4 +1,3 @@
-
 import React from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Home, Building2, Repeat } from "lucide-react";
@@ -13,28 +12,28 @@ const WorkoutLocationStep = ({ selectedLocation, onSelect }: WorkoutLocationStep
   const locations = [
     {
       id: "home",
-      label: "Home",
-      description: "Workout at home with minimal equipment",
+      label: "Вкъщи",
+      description: "Тренировка вкъщи с минимално оборудване",
       icon: Home
     },
     {
       id: "gym",
-      label: "Gym",
-      description: "Full access to gym equipment",
+      label: "Фитнес",
+      description: "Пълен достъп до фитнес оборудване",
       icon: Building2
     },
     {
       id: "mixed",
-      label: "Mixed",
-      description: "Combination of home and gym workouts",
+      label: "Смесено",
+      description: "Комбинация от тренировки вкъщи и във фитнес",
       icon: Repeat
     }
   ];
 
   return (
     <div className="text-center">
-      <h1 className="text-4xl sm:text-5xl font-bold mb-6">Where will you be working out?</h1>
-      <p className="text-xl mb-8 text-muted-foreground">We'll customize your plan based on available equipment</p>
+      <h1 className="text-4xl sm:text-5xl font-bold mb-6">Къде ще тренирате?</h1>
+      <p className="text-xl mb-8 text-muted-foreground">Ще персонализираме Вашия план според наличното оборудване</p>
       
       <div className="max-w-3xl mx-auto">
         <RadioGroup value={selectedLocation || ""} onValueChange={onSelect} className="grid grid-cols-1 md:grid-cols-3 gap-6">
