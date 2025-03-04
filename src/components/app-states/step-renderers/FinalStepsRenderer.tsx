@@ -91,6 +91,14 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
         />
       );
       
+    case 6: // Step 31
+      return (
+        <StartCommitmentStep
+          selected={formData.startCommitment}
+          onSelect={handleStartCommitmentChange}
+        />
+      );
+      
     default:
       return null;
   }

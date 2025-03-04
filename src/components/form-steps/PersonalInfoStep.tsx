@@ -7,14 +7,14 @@ import { format, isValid, parseISO } from 'date-fns';
 import { AlertCircle, User, Calendar, Mail, CheckCircle2 } from 'lucide-react';
 import { useSurvey } from '@/contexts/SurveyContext';
 import { motion } from 'framer-motion';
-import { 
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
-import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface PersonalInfoStepProps {
   name?: string | null;
@@ -60,6 +60,41 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
     email: ''
   });
 
+  // Parse the dob to get day, month, year if available
+  const parsedDob = dob ? new Date(dob) : null;
+  const [day, setDay] = useState<string>(parsedDob ? parsedDob.getDate().toString() : '');
+  const [month, setMonth] = useState<string>(parsedDob ? (parsedDob.getMonth() + 1).toString() : '');
+  const [year, setYear] = useState<string>(parsedDob ? parsedDob.getFullYear().toString() : '');
+
+  // Generate years for the dropdown (80 years back from current year)
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 65 }, (_, i) => currentYear - 80 + i).reverse();
+  
+  // Generate months
+  const months = [
+    { value: '1', label: 'January' },
+    { value: '2', label: 'February' },
+    { value: '3', label: 'March' },
+    { value: '4', label: 'April' },
+    { value: '5', label: 'May' },
+    { value: '6', label: 'June' },
+    { value: '7', label: 'July' },
+    { value: '8', label: 'August' },
+    { value: '9', label: 'September' },
+    { value: '10', label: 'October' },
+    { value: '11', label: 'November' },
+    { value: '12', label: 'December' }
+  ];
+  
+  // Generate days based on selected month and year
+  const getDaysInMonth = (month: number, year: number) => {
+    return new Date(year, month, 0).getDate();
+  };
+  
+  const days = month && year 
+    ? Array.from({ length: getDaysInMonth(parseInt(month), parseInt(year)) }, (_, i) => (i + 1).toString())
+    : Array.from({ length: 31 }, (_, i) => (i + 1).toString());
+
   const handleNameBlur = () => {
     setNameEntered(!!name);
   };
@@ -99,16 +134,57 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
     }
   };
 
-  const handleDobChange = (date: Date | undefined) => {
-    const dateStr = date ? format(date, 'yyyy-MM-dd') : '';
-    const dobError = validateDob(dateStr);
-    setErrors(prev => ({ ...prev, dob: dobError }));
-    
-    if (onChange) {
-      onChange({ ...personalInfo, dob: dateStr });
-    } else if (onChangeDob) {
-      onChangeDob(dateStr);
+  const updateDob = () => {
+    if (day && month && year) {
+      // Format as YYYY-MM-DD
+      const paddedMonth = month.padStart(2, '0');
+      const paddedDay = day.padStart(2, '0');
+      const dateStr = `${year}-${paddedMonth}-${paddedDay}`;
+      
+      const dobError = validateDob(dateStr);
+      setErrors(prev => ({ ...prev, dob: dobError }));
+      
+      if (!dobError) {
+        if (onChange) {
+          onChange({ ...personalInfo, dob: dateStr });
+        } else if (onChangeDob) {
+          onChangeDob(dateStr);
+        }
+      }
     }
+  };
+
+  const handleDayChange = (value: string) => {
+    setDay(value);
+    setTimeout(() => {
+      updateDob();
+    }, 0);
+  };
+
+  const handleMonthChange = (value: string) => {
+    setMonth(value);
+    // If day is greater than the days in the new month, adjust it
+    const daysInNewMonth = getDaysInMonth(parseInt(value), parseInt(year || '2000'));
+    if (parseInt(day) > daysInNewMonth) {
+      setDay(daysInNewMonth.toString());
+    }
+    setTimeout(() => {
+      updateDob();
+    }, 0);
+  };
+
+  const handleYearChange = (value: string) => {
+    setYear(value);
+    // Check if it's February in a leap year
+    if (month === '2') {
+      const daysInNewMonth = getDaysInMonth(2, parseInt(value));
+      if (parseInt(day) > daysInNewMonth) {
+        setDay(daysInNewMonth.toString());
+      }
+    }
+    setTimeout(() => {
+      updateDob();
+    }, 0);
   };
 
   const handleEmailChange = (value: string) => {
@@ -170,43 +246,63 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
           )}
           
           <div className="space-y-2">
-            <Label htmlFor="dob" className="flex items-center gap-2 text-base">
+            <Label className="flex items-center gap-2 text-base">
               <Calendar size={16} className="text-orange" />
               Date of Birth
             </Label>
             
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  id="dob"
-                  variant={"outline"}
-                  className={cn(
-                    "w-full justify-start text-left font-normal border-orange/20 hover:bg-orange/5 hover:text-orange py-6",
-                    !dob && "text-muted-foreground",
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <Label htmlFor="day" className="text-sm text-muted-foreground mb-1 block">Day</Label>
+                <Select value={day} onValueChange={handleDayChange}>
+                  <SelectTrigger id="day" className={cn(
+                    "border-orange/20 hover:bg-orange/5 hover:text-orange",
                     errors.dob && "border-red-500"
-                  )}
-                >
-                  <Calendar className="mr-2 h-4 w-4" />
-                  {dob && isValid(parseISO(dob)) ? format(parseISO(dob), 'PPP') : "Select your birth date"}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <CalendarComponent
-                  mode="single"
-                  selected={dob ? parseISO(dob) : undefined}
-                  onSelect={handleDobChange}
-                  disabled={(date) => {
-                    // Disable future dates and dates more than 80 years in the past
-                    const today = new Date();
-                    const minDate = new Date();
-                    minDate.setFullYear(today.getFullYear() - 80);
-                    return date > today || date < minDate;
-                  }}
-                  initialFocus
-                  className="rounded-md border border-orange/20"
-                />
-              </PopoverContent>
-            </Popover>
+                  )}>
+                    <SelectValue placeholder="Day" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {days.map(d => (
+                      <SelectItem key={d} value={d}>{d}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div>
+                <Label htmlFor="month" className="text-sm text-muted-foreground mb-1 block">Month</Label>
+                <Select value={month} onValueChange={handleMonthChange}>
+                  <SelectTrigger id="month" className={cn(
+                    "border-orange/20 hover:bg-orange/5 hover:text-orange",
+                    errors.dob && "border-red-500"
+                  )}>
+                    <SelectValue placeholder="Month" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {months.map(m => (
+                      <SelectItem key={m.value} value={m.value}>{m.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div>
+                <Label htmlFor="year" className="text-sm text-muted-foreground mb-1 block">Year</Label>
+                <Select value={year} onValueChange={handleYearChange}>
+                  <SelectTrigger id="year" className={cn(
+                    "border-orange/20 hover:bg-orange/5 hover:text-orange",
+                    errors.dob && "border-red-500"
+                  )}>
+                    <SelectValue placeholder="Year" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {years.map(y => (
+                      <SelectItem key={y} value={y.toString()}>{y}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
             
             {errors.dob && (
               <div className="text-red-500 flex items-center gap-1 text-sm mt-1">

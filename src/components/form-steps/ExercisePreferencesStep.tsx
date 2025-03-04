@@ -38,7 +38,7 @@ const ExercisePreferencesStep = ({
     
     setLocalPreferences(updatedPreferences);
     
-    // Only update parent state but don't advance automatically
+    // Update parent state
     onPreferenceChange(updatedPreferences);
     
     // Move to next exercise if not the last one
