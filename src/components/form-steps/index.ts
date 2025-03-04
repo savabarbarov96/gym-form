@@ -1,4 +1,5 @@
 
+export { default as GenderSelectionStep } from './GenderSelectionStep';
 export { default as AgeSelectionStep } from './AgeSelectionStep';
 export { default as BodyTypeStep } from './BodyTypeStep';
 export { default as GoalStep } from './GoalStep';

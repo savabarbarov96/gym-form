@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+
+import React from "react";
 import { motion } from "framer-motion";
 import { LineChart, Line, XAxis, Tooltip, ResponsiveContainer } from "recharts";
-import { Button } from "@/components/ui/button";
 
 interface HormoneGraphStepProps {
   onNext: () => void;
@@ -15,14 +15,6 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext }) => {
     { name: "Week 8", value: 75 },
     { name: "Week 12", value: 95 }
   ];
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      // We'll keep the auto-continue functionality but won't add a button
-    }, 3000);
-    
-    return () => clearTimeout(timer);
-  }, []);
   
   const chartVariants = {
     hidden: { opacity: 0, pathLength: 0 },
@@ -92,15 +84,6 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext }) => {
             </motion.div>
           ))}
         </div>
-      </div>
-      
-      <div className="flex justify-center">
-        <Button
-          onClick={onNext}
-          className="px-8 py-6 bg-orange hover:bg-orange-hover text-white text-lg rounded-lg"
-        >
-          Continue
-        </Button>
       </div>
     </div>
   );

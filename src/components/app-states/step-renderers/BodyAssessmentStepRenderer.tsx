@@ -25,13 +25,15 @@ const BodyAssessmentStepRenderer = ({
   setFormData,
   handleNext
 }: BodyAssessmentStepRendererProps) => {
-  // Ensure this step mapping matches the validation in bodyAssessmentValidation.ts
-  switch (step) {
-    case 6:
+  // Adjust for the new gender step (step + 1)
+  const localStep = step - 6;
+  
+  switch (localStep) {
+    case 1:
       return <HeightInputStepRenderer formData={formData} setFormData={setFormData} />;
-    case 7:
+    case 2:
       return <WeightInputStepRenderer formData={formData} setFormData={setFormData} />;
-    case 8:
+    case 3:
       return (
         <div className="best-shape-container">
           <BestShapeStep
@@ -40,13 +42,13 @@ const BodyAssessmentStepRenderer = ({
           />
         </div>
       );
-    case 9:
+    case 4:
       return <WeightChangeStepRenderer formData={formData} setFormData={setFormData} />;
-    case 10:
+    case 5:
       return <ProgressGraphStepRenderer formData={formData} />;
-    case 11:
+    case 6:
       return <HormoneGraphStepRenderer handleNext={handleNext} />;
-    case 12:
+    case 7:
       return <HealthConcernsStepRenderer formData={formData} setFormData={setFormData} />;
     default:
       return null;

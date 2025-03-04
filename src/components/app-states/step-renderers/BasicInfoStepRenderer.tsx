@@ -2,6 +2,7 @@
 import React from 'react';
 import { FormData } from '@/types/survey';
 import {
+  GenderSelectionStep,
   AgeSelectionStep,
   BodyTypeStep,
   GoalStep,
@@ -22,6 +23,15 @@ const BasicInfoStepRenderer: React.FC<BasicInfoStepRendererProps> = ({
 }) => {
   if (step === 1) {
     return (
+      <GenderSelectionStep 
+        selectedGender={formData.gender}
+        onSelect={(gender) => setFormData({...formData, gender})}
+      />
+    );
+  }
+  
+  if (step === 2) {
+    return (
       <AgeSelectionStep 
         selectedAge={formData.age}
         onSelect={(age) => setFormData({...formData, age})}
@@ -29,7 +39,7 @@ const BasicInfoStepRenderer: React.FC<BasicInfoStepRendererProps> = ({
     );
   }
   
-  if (step === 2) {
+  if (step === 3) {
     return (
       <BodyTypeStep 
         selectedType={formData.bodyType}
@@ -38,7 +48,7 @@ const BasicInfoStepRenderer: React.FC<BasicInfoStepRendererProps> = ({
     );
   }
   
-  if (step === 3) {
+  if (step === 4) {
     return (
       <GoalStep 
         value={formData.goal} 
@@ -49,7 +59,7 @@ const BasicInfoStepRenderer: React.FC<BasicInfoStepRendererProps> = ({
     );
   }
 
-  if (step === 4) {
+  if (step === 5) {
     return (
       <FitnessGoalStep 
         selectedGoal={formData.fitnessGoal}
@@ -58,7 +68,7 @@ const BasicInfoStepRenderer: React.FC<BasicInfoStepRendererProps> = ({
     );
   }
 
-  if (step === 5) {
+  if (step === 6) {
     return (
       <DesiredBodyStep 
         selectedBody={formData.desiredBody}

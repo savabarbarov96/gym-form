@@ -2,6 +2,7 @@
 export type AppState = "form" | "loading" | "results" | "plan" | "success";
 
 export interface FormData {
+  gender: string | null;
   age: string | null;
   bodyType: string | null;
   goal: number;
@@ -16,6 +17,7 @@ export interface FormData {
   healthConcerns: string[];
   customHealthConcern: string | null;
   allergies: string[];
+  customAllergy: string | null;
   workoutLocation: string | null;
   workoutIntensity: string | null;
   workoutFrequency: string | null;

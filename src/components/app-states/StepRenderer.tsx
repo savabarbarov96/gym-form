@@ -42,7 +42,7 @@ const StepRenderer: React.FC<StepRendererProps> = ({
 
   // Determine which step range we're in to choose the appropriate renderer
   const getStepContent = () => {
-    if (step >= 1 && step <= 5) {
+    if (step >= 1 && step <= 6) {
       return <BasicInfoStepRenderer 
         step={step} 
         formData={formData} 
@@ -50,7 +50,7 @@ const StepRenderer: React.FC<StepRendererProps> = ({
       />;
     }
     
-    if (step >= 6 && step <= 12) {
+    if (step >= 7 && step <= 13) {
       return <BodyAssessmentStepRenderer 
         step={step} 
         formData={formData} 
@@ -59,7 +59,7 @@ const StepRenderer: React.FC<StepRendererProps> = ({
       />;
     }
     
-    if (step >= 13 && step <= 20) {
+    if (step >= 14 && step <= 21) {
       return <WorkoutPreferencesStepRenderer 
         step={step} 
         formData={formData} 
@@ -68,7 +68,7 @@ const StepRenderer: React.FC<StepRendererProps> = ({
       />;
     }
     
-    if (step >= 21 && step <= 25) {
+    if (step >= 22 && step <= 26) {
       return <LifestyleStepRenderer 
         step={step} 
         formData={formData} 
@@ -76,7 +76,7 @@ const StepRenderer: React.FC<StepRendererProps> = ({
       />;
     }
     
-    if (step >= 26 && step <= 30) {
+    if (step >= 27 && step <= 31) {
       return <FinalStepsRenderer 
         step={step} 
         formData={formData} 

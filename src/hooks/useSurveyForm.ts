@@ -4,6 +4,7 @@ import { FormData } from "@/types/survey";
 
 export const useSurveyForm = () => {
   const [formData, setFormData] = useState<FormData>({
+    gender: null,
     age: null,
     bodyType: null,
     goal: 20,
@@ -18,6 +19,7 @@ export const useSurveyForm = () => {
     healthConcerns: [],
     customHealthConcern: null,
     allergies: [],
+    customAllergy: null,
     workoutLocation: null,
     workoutIntensity: null,
     workoutFrequency: null,

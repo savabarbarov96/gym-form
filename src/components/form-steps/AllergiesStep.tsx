@@ -1,14 +1,26 @@
 
-import React from "react";
-import { Apple, Egg, Fish, Wheat, X, Milk } from "lucide-react";
+import React, { useState } from "react";
+import { Apple, Egg, Fish, Wheat, X, Milk, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 interface AllergiesStepProps {
   selectedAllergies: string[];
   onSelect: (allergies: string[]) => void;
+  customAllergy?: string | null;
+  onCustomAllergyChange?: (customAllergy: string | null) => void;
 }
 
-const AllergiesStep = ({ selectedAllergies, onSelect }: AllergiesStepProps) => {
+const AllergiesStep = ({ 
+  selectedAllergies, 
+  onSelect,
+  customAllergy = null,
+  onCustomAllergyChange = () => {} 
+}: AllergiesStepProps) => {
+  const [showCustomInput, setShowCustomInput] = useState(false);
+  const [customInput, setCustomInput] = useState(customAllergy || "");
+
   const allergies = [
     { 
       label: "Gluten", 
@@ -41,19 +53,36 @@ const AllergiesStep = ({ selectedAllergies, onSelect }: AllergiesStepProps) => {
       description: "Tree nuts and peanuts" 
     },
     { 
-      label: "Other", 
-      id: "other", 
-      icon: X,
-      description: "Any other food allergies" 
+      label: "Add Custom", 
+      id: "custom", 
+      icon: Plus,
+      description: "Specify your own allergy" 
     },
   ];
 
   const toggleAllergy = (id: string) => {
+    if (id === "custom") {
+      setShowCustomInput(true);
+      return;
+    }
+
     if (selectedAllergies.includes(id)) {
       onSelect(selectedAllergies.filter(item => item !== id));
     } else {
       onSelect([...selectedAllergies, id]);
     }
+  };
+
+  const handleSaveCustomAllergy = () => {
+    if (customInput.trim()) {
+      onCustomAllergyChange(customInput.trim());
+      setShowCustomInput(false);
+    }
+  };
+
+  const handleCancelCustomAllergy = () => {
+    setCustomInput("");
+    setShowCustomInput(false);
   };
 
   return (
@@ -70,7 +99,8 @@ const AllergiesStep = ({ selectedAllergies, onSelect }: AllergiesStepProps) => {
               key={allergy.id}
               className={cn(
                 "option-card card-hover-effect p-8",
-                isSelected ? 'selected' : ''
+                isSelected ? 'selected' : '',
+                allergy.id === "custom" && showCustomInput ? 'hidden' : ''
               )}
               onClick={() => toggleAllergy(allergy.id)}
             >
@@ -99,7 +129,49 @@ const AllergiesStep = ({ selectedAllergies, onSelect }: AllergiesStepProps) => {
         })}
       </div>
       
-      {selectedAllergies.length === 0 && (
+      {showCustomInput && (
+        <div className="mt-6 p-6 border border-border rounded-xl max-w-xl mx-auto">
+          <h3 className="text-lg font-medium mb-3">Add Custom Allergy</h3>
+          <Input
+            type="text"
+            placeholder="Enter your specific allergy"
+            value={customInput}
+            onChange={(e) => setCustomInput(e.target.value)}
+            className="mb-4"
+          />
+          <div className="flex gap-3 justify-end">
+            <Button variant="outline" onClick={handleCancelCustomAllergy}>
+              Cancel
+            </Button>
+            <Button onClick={handleSaveCustomAllergy}>
+              Save
+            </Button>
+          </div>
+        </div>
+      )}
+      
+      {customAllergy && (
+        <div className="mt-6 bg-card border border-border p-4 rounded-xl max-w-md mx-auto">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-3">
+              <div className="bg-orange/20 p-2 rounded-full">
+                <Plus className="text-orange" size={18} />
+              </div>
+              <span className="font-medium">{customAllergy}</span>
+            </div>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => onCustomAllergyChange(null)}
+              className="h-8 w-8"
+            >
+              <X size={16} />
+            </Button>
+          </div>
+        </div>
+      )}
+      
+      {selectedAllergies.length === 0 && !customAllergy && !showCustomInput && (
         <div className="mt-8 text-lg text-muted-foreground">
           No allergies? Great! Just continue to the next step.
         </div>

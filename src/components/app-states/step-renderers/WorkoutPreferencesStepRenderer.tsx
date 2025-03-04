@@ -26,7 +26,8 @@ const WorkoutPreferencesStepRenderer = ({
   setFormData,
   handleNext
 }: WorkoutPreferencesStepRendererProps) => {
-  const localStep = step - 12;
+  // Adjust for the new gender step (step + 1)
+  const localStep = step - 13;
   
   switch (localStep) {
     case 1:

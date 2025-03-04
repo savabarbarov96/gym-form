@@ -18,6 +18,10 @@ const AllergiesStepRenderer = ({
       onSelect={(allergies) => 
         setFormData(prev => ({ ...prev, allergies }))
       }
+      customAllergy={formData.customAllergy}
+      onCustomAllergyChange={(customAllergy) => 
+        setFormData(prev => ({ ...prev, customAllergy }))
+      }
     />
   );
 };

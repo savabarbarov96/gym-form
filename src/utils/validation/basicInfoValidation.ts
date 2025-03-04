@@ -2,6 +2,18 @@
 import { FormData } from "@/types/survey";
 import type { ToastParams } from "@/hooks/use-toast";
 
+export const validateGenderStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
+  if (!formData.gender) {
+    toast({
+      title: "Gender Selection Required",
+      description: "Please select your gender to continue",
+      variant: "destructive",
+    });
+    return false;
+  }
+  return true;
+};
+
 export const validateAgeStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (!formData.age) {
     toast({
@@ -72,14 +84,16 @@ export const validateBasicInfoStep = (
   // Map the global step numbers to the specific validation functions
   switch (step) {
     case 1:
-      return validateAgeStep(formData, toast);
+      return validateGenderStep(formData, toast);
     case 2:
-      return validateBodyTypeStep(formData, toast);
+      return validateAgeStep(formData, toast);
     case 3:
-      return validateGoalStep(formData, toast);
+      return validateBodyTypeStep(formData, toast);
     case 4:
-      return validateFitnessGoalStep(formData, toast);
+      return validateGoalStep(formData, toast);
     case 5:
+      return validateFitnessGoalStep(formData, toast);
+    case 6:
       return validateDesiredBodyStep(formData, toast);
     default:
       console.log(`No specific validation for basic info step ${step}`);
