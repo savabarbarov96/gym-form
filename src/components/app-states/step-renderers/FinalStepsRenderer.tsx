@@ -100,6 +100,7 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
       );
       
     default:
+      console.log(`No component for local step ${localStep} (global step ${step})`);
       return null;
   }
 };
