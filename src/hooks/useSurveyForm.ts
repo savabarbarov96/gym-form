@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { FormData } from "@/types/survey";
 
@@ -20,6 +19,8 @@ export const useSurveyForm = () => {
     customHealthConcern: null,
     allergies: [],
     customAllergy: null,
+    traditionalFoods: [],
+    customTraditionalFood: null,
     workoutLocation: null,
     workoutIntensity: null,
     workoutFrequency: null,

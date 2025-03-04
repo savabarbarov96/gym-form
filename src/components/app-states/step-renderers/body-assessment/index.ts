@@ -6,3 +6,4 @@ export { default as HormoneGraphStepRenderer } from './HormoneGraphStepRenderer'
 export { default as HealthConcernsStepRenderer } from './HealthConcernsStepRenderer';
 export { default as WeightChangeStepRenderer } from './WeightChangeStepRenderer';
 export { default as AllergiesStepRenderer } from './AllergiesStepRenderer';
+export { default as TraditionalFoodsStepRenderer } from './TraditionalFoodsStepRenderer';

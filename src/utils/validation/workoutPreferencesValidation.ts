@@ -7,23 +7,24 @@ export const validateWorkoutPreferencesStep = (
   toast: (props: ToastParams) => void
 ): boolean => {
   // This translates the global step number to a local step within workout preferences
-  // Step 14-21 globally = Step 1-8 locally
-  const localStep = step - 13;
+  // Adjusted for new Traditional Foods step
+  // Step 15-22 globally = Step 0-7 locally
+  const localStep = step - 15;
   
   console.log(`Validating workout preferences step ${localStep} (global step ${step})`);
   
   switch (localStep) {
-    // Step 14: Problem Areas (no validation needed, can be empty)
-    case 1:
+    // Step 15: Problem Areas (no validation needed, can be empty)
+    case 0:
       // Problem areas are optional, validation always passes
       return true;
     
-    // Step 15: Activities (no validation needed)
-    case 2:
+    // Step 16: Activities (no validation needed)
+    case 1:
       return true;
     
-    // Step 16: Workout Location
-    case 3:
+    // Step 17: Workout Location
+    case 2:
       if (!formData.workoutLocation) {
         toast({
           title: "Selection Required",
@@ -34,8 +35,8 @@ export const validateWorkoutPreferencesStep = (
       }
       return true;
     
-    // Step 17: Workout Intensity
-    case 4:
+    // Step 18: Workout Intensity
+    case 3:
       if (!formData.workoutIntensity) {
         toast({
           title: "Selection Required",
@@ -46,8 +47,8 @@ export const validateWorkoutPreferencesStep = (
       }
       return true;
     
-    // Step 18: Workout Frequency
-    case 5:
+    // Step 19: Workout Frequency
+    case 4:
       if (!formData.workoutFrequency) {
         toast({
           title: "Selection Required",
@@ -58,8 +59,8 @@ export const validateWorkoutPreferencesStep = (
       }
       return true;
     
-    // Step 19: Workout Duration
-    case 6:
+    // Step 20: Workout Duration
+    case 5:
       if (!formData.workoutDuration) {
         toast({
           title: "Selection Required",
@@ -70,13 +71,13 @@ export const validateWorkoutPreferencesStep = (
       }
       return true;
     
-    // Step 20: Exercise Preferences
-    case 7:
+    // Step 21: Exercise Preferences
+    case 6:
       // Exercise preferences are optional
       return true;
       
-    // Step 21: Desired Body
-    case 8:
+    // Step 22: Desired Body
+    case 7:
       if (!formData.desiredBody) {
         toast({
           title: "Selection Required",
@@ -88,7 +89,7 @@ export const validateWorkoutPreferencesStep = (
       return true;
     
     default:
-      console.warn(`No validation defined for workout preferences step ${localStep}`);
+      console.warn(`No validation defined for workout preferences step ${localStep} (global step ${step})`);
       return true;
   }
 };

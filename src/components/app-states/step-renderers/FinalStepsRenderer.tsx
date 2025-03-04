@@ -14,8 +14,8 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
   const { toast } = useToast();
   
   // This maps the global step number to the local step within this renderer
-  // Adjusted for the new Allergies step (shifting everything by 1)
-  const localStep = step - 26;
+  // Adjusted for the new Traditional Foods step (shifting everything by 1 more)
+  const localStep = step - 27;
   
   const handleSelfAssessmentChange = (key: keyof FormData['selfAssessments'], value: number | null) => {
     console.log(`Setting ${key} to:`, value);
@@ -46,27 +46,27 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
   // Validation wrapper functions for each self-assessment step
   const validateOutOfBreath = () => {
     console.log('Validating outOfBreath step with value:', formData.selfAssessments.outOfBreath);
-    return validateFinalStepsStep(27, formData, toast);
+    return validateFinalStepsStep(28, formData, toast);
   };
 
   const validateFallingBack = () => {
     console.log('Validating fallingBack step with value:', formData.selfAssessments.fallingBack);
-    return validateFinalStepsStep(28, formData, toast);
+    return validateFinalStepsStep(29, formData, toast);
   };
 
   const validateMotivation = () => {
     console.log('Validating motivationLevel step with value:', formData.selfAssessments.motivationLevel);
-    return validateFinalStepsStep(29, formData, toast);
+    return validateFinalStepsStep(30, formData, toast);
   };
 
   const validateDietConsistency = () => {
     console.log('Validating dietConsistency step with value:', formData.selfAssessments.dietConsistency);
-    return validateFinalStepsStep(30, formData, toast);
+    return validateFinalStepsStep(31, formData, toast);
   };
   
   // Map the local step to the appropriate component
   switch (localStep) {
-    case 1: // Step 27
+    case 1: // Step 28
       return (
         <SelfAssessmentStep 
           question="I get out of breath easily when exercising"
@@ -77,7 +77,7 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
         />
       );
     
-    case 2: // Step 28 
+    case 2: // Step 29 
       return (
         <SelfAssessmentStep
           question="I've tried to get in shape before but keep falling back into old habits"
@@ -88,7 +88,7 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
         />
       );
     
-    case 3: // Step 29
+    case 3: // Step 30
       return (
         <SelfAssessmentStep
           question="I sometimes struggle to find the motivation to exercise"
@@ -99,7 +99,7 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
         />
       );
     
-    case 4: // Step 30
+    case 4: // Step 31
       return (
         <SelfAssessmentStep
           question="I find it difficult to stay consistent with a healthy diet"
@@ -110,7 +110,7 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
         />
       );
     
-    case 5: // Step 31
+    case 5: // Step 32
       return (
         <PersonalInfoStep
           personalInfo={formData.personalInfo}
@@ -118,7 +118,7 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
         />
       );
       
-    case 6: // Step 32
+    case 6: // Step 33
       return (
         <StartCommitmentStep
           selected={formData.startCommitment}

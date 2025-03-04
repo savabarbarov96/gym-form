@@ -1,7 +1,15 @@
-
 import React from 'react';
+import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { ZapOff, BatteryLow, BatteryMedium, Battery, Zap } from 'lucide-react';
+import { 
+  BatteryLow, 
+  BatteryMedium, 
+  Battery, 
+  Zap, 
+  Sun, 
+  Gauge,
+  Sparkles
+} from 'lucide-react';
 
 interface EnergyLevelsStepProps {
   value: number | null;
@@ -10,57 +18,137 @@ interface EnergyLevelsStepProps {
 
 const EnergyLevelsStep: React.FC<EnergyLevelsStepProps> = ({ value, onChange }) => {
   const energyLevels = [
-    { level: 1, icon: ZapOff, label: 'Very Low' },
-    { level: 2, icon: BatteryLow, label: 'Low' },
-    { level: 3, icon: BatteryMedium, label: 'Moderate' },
-    { level: 4, icon: Battery, label: 'Good' },
-    { level: 5, icon: Zap, label: 'Excellent', animationClass: 'animate-pulse' },
+    { 
+      level: 1, 
+      icon: BatteryLow, 
+      label: 'Very Low', 
+      description: 'Tired most of the day',
+      color: 'bg-red-500/20',
+      textColor: 'text-red-500',
+      borderColor: 'border-red-500/70'
+    },
+    { 
+      level: 2, 
+      icon: BatteryMedium, 
+      label: 'Low', 
+      description: 'Energy dips frequently',
+      color: 'bg-amber-500/20',
+      textColor: 'text-amber-500',
+      borderColor: 'border-amber-500/70'
+    },
+    { 
+      level: 3, 
+      icon: Battery, 
+      label: 'Moderate', 
+      description: 'Average energy levels',
+      color: 'bg-blue-500/20',
+      textColor: 'text-blue-500',
+      borderColor: 'border-blue-500/70'
+    },
+    { 
+      level: 4, 
+      icon: Sun, 
+      label: 'Good', 
+      description: 'Energetic most of the day',
+      color: 'bg-green-500/20',
+      textColor: 'text-green-500',
+      borderColor: 'border-green-500/70'
+    },
+    { 
+      level: 5, 
+      icon: Sparkles, 
+      label: 'Excellent', 
+      description: 'High energy throughout the day',
+      color: 'bg-purple-500/20',
+      textColor: 'text-purple-500',
+      borderColor: 'border-purple-500/70',
+      animationClass: 'animate-pulse'
+    },
   ];
 
   return (
-    <div className="max-w-2xl mx-auto w-full">
-      <h2 className="text-2xl font-bold text-center mb-6">What are your average energy levels during the day?</h2>
+    <div className="max-w-3xl mx-auto w-full">
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="text-center mb-10"
+      >
+        <h1 className="text-4xl sm:text-5xl font-bold mb-4">Energy Levels</h1>
+        <p className="text-muted-foreground text-xl">
+          How would you rate your average energy throughout the day?
+        </p>
+      </motion.div>
 
-      <div className="bg-card p-8 rounded-xl">
-        <div className="grid grid-cols-5 gap-2">
-          {energyLevels.map((energy) => {
-            const Icon = energy.icon;
-            return (
-              <div
-                key={energy.level}
-                className={cn(
-                  "flex flex-col items-center gap-3 p-4 rounded-lg cursor-pointer transition-all",
-                  value === energy.level ? 
-                    energy.level === 5 ? "bg-green-500/20 ring-2 ring-green-500" : "bg-orange/20 ring-2 ring-orange" 
-                    : "hover:bg-muted"
-                )}
-                onClick={() => onChange(energy.level)}
-              >
+      <div className="relative mx-auto mb-8 px-4">
+        <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-1 bg-gradient-to-r from-red-400 via-yellow-400 to-green-400"></div>
+        <Gauge className="h-10 w-10 mx-auto mb-2 text-muted-foreground" />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-12">
+        {energyLevels.map((energy, index) => {
+          const Icon = energy.icon;
+          const isSelected = value === energy.level;
+          
+          return (
+            <motion.div
+              key={energy.level}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: index * 0.1 }}
+              className={cn(
+                "flex flex-col items-center p-5 rounded-xl cursor-pointer transition-all transform hover:scale-105 hover:-translate-y-1 border-2",
+                isSelected 
+                  ? `${energy.color} ${energy.borderColor} shadow-lg` 
+                  : "bg-card/50 border-transparent hover:bg-muted/50"
+              )}
+              onClick={() => onChange(energy.level)}
+            >
+              <div className={cn(
+                "rounded-full p-3 mb-3 transition-all",
+                isSelected ? energy.color : "bg-muted/50"
+              )}>
                 <Icon 
                   className={cn(
-                    "w-8 h-8",
-                    value === energy.level ? 
-                      energy.level === 5 ? "text-green-500" : "text-orange" 
-                      : "text-muted-foreground",
-                    energy.level === 5 && energy.animationClass
+                    "w-8 h-8 transition-colors",
+                    isSelected ? energy.textColor : "text-muted-foreground",
+                    energy.level === 5 && isSelected && energy.animationClass
                   )} 
                 />
-                <span className={cn(
-                  "text-sm",
-                  value === energy.level ? "text-foreground font-semibold" : "text-muted-foreground"
-                )}>
-                  {energy.label}
-                </span>
               </div>
-            );
-          })}
-        </div>
-
-        <div className="mt-6 flex justify-between text-sm text-muted-foreground">
-          <span>Low Energy</span>
-          <span>High Energy</span>
-        </div>
+              
+              <span className={cn(
+                "text-lg font-semibold transition-colors",
+                isSelected ? energy.textColor : "text-foreground"
+              )}>
+                {energy.label}
+              </span>
+              
+              <span className="text-sm text-muted-foreground text-center mt-1">
+                {energy.description}
+              </span>
+              
+              {isSelected && (
+                <motion.div 
+                  className="w-3 h-3 rounded-full bg-foreground mt-3"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", stiffness: 500, damping: 15 }}
+                />
+              )}
+            </motion.div>
+          );
+        })}
       </div>
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+        className="text-center text-sm text-muted-foreground"
+      >
+        <p>Your energy level insights help us recommend the optimal workout times and intensity for your personal schedule.</p>
+      </motion.div>
     </div>
   );
 };

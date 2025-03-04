@@ -90,6 +90,15 @@ export const validateAllergiesStep = (formData: FormData): boolean => {
   return true;
 };
 
+export const validateTraditionalFoodsStep = (formData: FormData): boolean => {
+  // Traditional foods selection is optional, so we don't need to validate anything here
+  console.log('Validating traditional foods step:', { 
+    traditionalFoods: formData.traditionalFoods, 
+    customTraditionalFood: formData.customTraditionalFood 
+  });
+  return true;
+};
+
 // Main validation function for this module
 export const validateBodyAssessmentStep = (
   step: number,
@@ -118,6 +127,9 @@ export const validateBodyAssessmentStep = (
     case 13:
       console.log("Validating allergies step");
       return validateAllergiesStep(formData);
+    case 14:
+      console.log("Validating traditional foods step");
+      return validateTraditionalFoodsStep(formData);
     default:
       console.log(`No specific validation for body assessment step ${step}`);
       return true;

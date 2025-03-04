@@ -8,7 +8,8 @@ import {
   HormoneGraphStepRenderer,
   HealthConcernsStepRenderer,
   WeightChangeStepRenderer,
-  AllergiesStepRenderer
+  AllergiesStepRenderer,
+  TraditionalFoodsStepRenderer
 } from './body-assessment';
 import { BestShapeStep } from "@/components/form-steps";
 
@@ -42,6 +43,7 @@ const getBodyAssessmentStep = (
     5: <HormoneGraphStepRenderer handleNext={handleNext} formData={formData} />,
     6: <HealthConcernsStepRenderer formData={formData} setFormData={setFormData} />,
     7: <AllergiesStepRenderer formData={formData} setFormData={setFormData} />,
+    8: <TraditionalFoodsStepRenderer formData={formData} setFormData={setFormData} />,
   };
   
   return stepMap[localStep as keyof typeof stepMap] || null;

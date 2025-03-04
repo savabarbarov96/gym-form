@@ -20,11 +20,13 @@ const LifestyleStepRenderer: React.FC<LifestyleStepRendererProps> = ({
   setFormData
 }) => {
   // This maps the global step number to the local step within this renderer
-  // Adjusted for the new Allergies step
-  const localStep = step - 21;
+  // Adjusted for the Traditional Foods step
+  const localStep = step - 23;
+  
+  console.log(`LifestyleStepRenderer: Global Step ${step}, Local Step ${localStep}`);
   
   switch (localStep) {
-    case 1: // Step 22
+    case 0: // Step 23
       return (
         <SugaryFoodsStep
           selected={formData.sugaryFoods}
@@ -32,7 +34,7 @@ const LifestyleStepRenderer: React.FC<LifestyleStepRendererProps> = ({
         />
       );
     
-    case 2: // Step 23
+    case 1: // Step 24
       return (
         <WaterIntakeStep
           value={formData.waterIntake || 1500}
@@ -40,7 +42,7 @@ const LifestyleStepRenderer: React.FC<LifestyleStepRendererProps> = ({
         />
       );
     
-    case 3: // Step 24
+    case 2: // Step 25
       return (
         <TypicalDayStep
           selected={formData.typicalDay}
@@ -48,7 +50,7 @@ const LifestyleStepRenderer: React.FC<LifestyleStepRendererProps> = ({
         />
       );
     
-    case 4: // Step 25
+    case 3: // Step 26
       return (
         <EnergyLevelsStep
           value={formData.energyLevels}
@@ -56,7 +58,7 @@ const LifestyleStepRenderer: React.FC<LifestyleStepRendererProps> = ({
         />
       );
     
-    case 5: // Step 26
+    case 4: // Step 27
       return (
         <SleepAmountStep
           value={formData.sleepAmount}
@@ -65,6 +67,7 @@ const LifestyleStepRenderer: React.FC<LifestyleStepRendererProps> = ({
       );
       
     default:
+      console.warn(`LifestyleStepRenderer: No component for local step ${localStep}`);
       return null;
   }
 };

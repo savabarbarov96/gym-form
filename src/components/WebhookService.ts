@@ -325,7 +325,9 @@ const createAIOptimizedPayload = (formData: FormData): Record<string, any> => {
         sugaryFoodsConsumption: formData.sugaryFoods,
         sugaryFoodsFrequencyPerWeek: getSugaryFoodsFrequencyValue(formData.sugaryFoods),
         waterIntakeMilliliters: formData.waterIntake,
-        waterIntakeLiters: formData.waterIntake ? (formData.waterIntake / 1000).toFixed(1) : null
+        waterIntakeLiters: formData.waterIntake ? (formData.waterIntake / 1000).toFixed(1) : null,
+        traditionalFoods: formData.traditionalFoods,
+        customTraditionalFood: formData.customTraditionalFood
       },
       sleep: {
         averageHoursPerNight: formData.sleepAmount

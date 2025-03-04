@@ -116,17 +116,17 @@ export const validateFinalStepsStep = (
   
   // Map the global step numbers to the specific validation functions
   switch (step) {
-    case 27:
-      return validateOutOfBreathStep(formData, toast);
     case 28:
-      return validateFallingBackStep(formData, toast);
+      return validateOutOfBreathStep(formData, toast);
     case 29:
-      return validateMotivationLevelStep(formData, toast);
+      return validateFallingBackStep(formData, toast);
     case 30:
-      return validateDietConsistencyStep(formData, toast);
+      return validateMotivationLevelStep(formData, toast);
     case 31:
-      return validatePersonalInfoStep(formData, toast);
+      return validateDietConsistencyStep(formData, toast);
     case 32:
+      return validatePersonalInfoStep(formData, toast);
+    case 33:
       return validateStartCommitmentStep(formData, toast);
     default:
       console.log(`No specific validation for final steps step ${step}`);
