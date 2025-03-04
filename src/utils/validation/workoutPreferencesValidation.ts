@@ -1,90 +1,93 @@
 
 import { FormData } from "@/types/survey";
-import type { ToastParams } from "@/hooks/use-toast";
-
-export const validateWorkoutLocationStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
-  if (!formData.workoutLocation) {
-    toast({
-      title: "Workout Location Required",
-      description: "Please select where you will be working out to continue",
-      variant: "destructive",
-    });
-    return false;
-  }
-  return true;
-};
-
-export const validateWorkoutIntensityStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
-  if (!formData.workoutIntensity) {
-    toast({
-      title: "Workout Intensity Required",
-      description: "Please select your preferred workout intensity to continue",
-      variant: "destructive",
-    });
-    return false;
-  }
-  return true;
-};
-
-export const validateWorkoutFrequencyStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
-  if (!formData.workoutFrequency) {
-    toast({
-      title: "Workout Frequency Required",
-      description: "Please select how often you've worked out to continue",
-      variant: "destructive",
-    });
-    return false;
-  }
-  return true;
-};
-
-export const validateWorkoutDurationStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
-  if (!formData.workoutDuration) {
-    toast({
-      title: "Workout Duration Required",
-      description: "Please select your preferred workout duration to continue",
-      variant: "destructive",
-    });
-    return false;
-  }
-  return true;
-};
-
-// Exercise preferences are optional
-export const validateExercisePreferencesStep = (): boolean => {
-  return true;
-};
+import { ToastParams } from "@/hooks/use-toast";
 
 export const validateWorkoutPreferencesStep = (
   step: number,
   formData: FormData,
   toast: (props: ToastParams) => void
 ): boolean => {
-  console.log(`Validating workout preferences step ${step}`);
+  // This translates the global step number to a local step within workout preferences
+  // Step 13-20 globally = Step 1-8 locally
+  const localStep = step - 12;
   
-  // Map the global step numbers to the specific validation functions
-  switch (step) {
-    case 13:
-      // This is just a display step for fitness goal
+  console.log(`Validating workout preferences step ${localStep} (global step ${step})`);
+  
+  switch (localStep) {
+    // Step 13: Allergies (no validation needed, can be empty)
+    case 1:
       return true;
-    case 14:
-      // Problem areas can be empty
+    
+    // Step 14: Workout Location
+    case 2:
+      if (!formData.workoutLocation) {
+        toast({
+          title: "Selection Required",
+          description: "Please select where you'll be working out",
+          variant: "destructive",
+        });
+        return false;
+      }
       return true;
-    case 15:
-      // Activities can be empty
+    
+    // Step 15: Workout Intensity
+    case 3:
+      if (!formData.workoutIntensity) {
+        toast({
+          title: "Selection Required",
+          description: "Please select your preferred workout intensity",
+          variant: "destructive",
+        });
+        return false;
+      }
       return true;
-    case 16:
-      return validateWorkoutLocationStep(formData, toast);
-    case 17:
-      return validateWorkoutIntensityStep(formData, toast);
-    case 18:
-      return validateWorkoutFrequencyStep(formData, toast);
-    case 19:
-      return validateWorkoutDurationStep(formData, toast);
-    case 20:
-      return validateExercisePreferencesStep();
+    
+    // Step 16: Workout Frequency
+    case 4:
+      if (!formData.workoutFrequency) {
+        toast({
+          title: "Selection Required",
+          description: "Please select how often you can work out",
+          variant: "destructive",
+        });
+        return false;
+      }
+      return true;
+    
+    // Step 17: Workout Duration
+    case 5:
+      if (!formData.workoutDuration) {
+        toast({
+          title: "Selection Required",
+          description: "Please select how long you can work out per session",
+          variant: "destructive",
+        });
+        return false;
+      }
+      return true;
+    
+    // Step 18: Problem Areas (no validation needed, can be empty)
+    case 6:
+      return true;
+    
+    // Step 19: Activities (no validation needed, can be empty)
+    case 7:
+      return true;
+      
+    // Step 20: Desired Body
+    case 8:
+      if (!formData.desiredBody) {
+        toast({
+          title: "Selection Required",
+          description: "Please select your desired body type",
+          variant: "destructive",
+        });
+        return false;
+      }
+      return true;
+    
     default:
-      console.log(`No specific validation for workout preferences step ${step}`);
+      console.warn(`No validation defined for workout preferences step ${localStep}`);
       return true;
   }
 };

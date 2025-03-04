@@ -17,6 +17,7 @@ export const useSurveyForm = () => {
     customActivity: null,
     healthConcerns: [],
     customHealthConcern: null,
+    allergies: [],
     workoutLocation: null,
     workoutIntensity: null,
     workoutFrequency: null,

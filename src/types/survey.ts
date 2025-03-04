@@ -1,3 +1,4 @@
+
 export type AppState = "form" | "loading" | "results" | "plan" | "success";
 
 export interface FormData {
@@ -14,6 +15,7 @@ export interface FormData {
   customActivity: string | null;
   healthConcerns: string[];
   customHealthConcern: string | null;
+  allergies: string[];
   workoutLocation: string | null;
   workoutIntensity: string | null;
   workoutFrequency: string | null;

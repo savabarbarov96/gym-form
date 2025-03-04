@@ -3,13 +3,14 @@ import React from 'react';
 import { FormData } from '@/types/survey';
 import {
   FitnessGoalStepRenderer,
+  DesiredBodyStepRenderer,
   ProblemAreasStepRenderer,
   ActivitiesStepRenderer,
   WorkoutLocationStepRenderer,
   WorkoutIntensityStepRenderer,
   WorkoutFrequencyStepRenderer,
   WorkoutDurationStepRenderer,
-  ExercisePreferencesStepRenderer
+  AllergiesStepRenderer
 } from './workout-preferences';
 
 interface WorkoutPreferencesStepRendererProps {
@@ -25,24 +26,25 @@ const WorkoutPreferencesStepRenderer = ({
   setFormData,
   handleNext
 }: WorkoutPreferencesStepRendererProps) => {
-  // Map the global step numbers to component-specific steps
-  switch (step) {
-    case 13:
-      return <FitnessGoalStepRenderer formData={formData} setFormData={setFormData} />;
-    case 14:
-      return <ProblemAreasStepRenderer formData={formData} setFormData={setFormData} />;
-    case 15:
-      return <ActivitiesStepRenderer formData={formData} setFormData={setFormData} />;
-    case 16:
+  const localStep = step - 12;
+  
+  switch (localStep) {
+    case 1:
+      return <AllergiesStepRenderer formData={formData} setFormData={setFormData} />;
+    case 2:
       return <WorkoutLocationStepRenderer formData={formData} setFormData={setFormData} />;
-    case 17:
+    case 3:
       return <WorkoutIntensityStepRenderer formData={formData} setFormData={setFormData} />;
-    case 18:
+    case 4:
       return <WorkoutFrequencyStepRenderer formData={formData} setFormData={setFormData} />;
-    case 19:
-      return <WorkoutDurationStepRenderer formData={formData} setFormData={setFormData} />;
-    case 20:
-      return <ExercisePreferencesStepRenderer formData={formData} setFormData={setFormData} handleNext={handleNext} />;
+    case 5:
+      return <WorkoutDurationStepRenderer formData={formData} setFormData={setFormData} handleNext={handleNext} />;
+    case 6:
+      return <ProblemAreasStepRenderer formData={formData} setFormData={setFormData} />;
+    case 7:
+      return <ActivitiesStepRenderer formData={formData} setFormData={setFormData} />;
+    case 8:
+      return <DesiredBodyStepRenderer formData={formData} setFormData={setFormData} />;
     default:
       return null;
   }
