@@ -42,17 +42,17 @@ export const validateStep = (
       console.log(`Body assessment validation result: ${isValid}`);
     }
     
-    else if (step >= 13 && step <= 20) {
+    else if (step >= 13 && step <= 21) {
       isValid = validateWorkoutPreferencesStep(step, formData, toast);
       console.log(`Workout preferences validation result: ${isValid}`);
     }
     
-    else if (step >= 21 && step <= 25) {
+    else if (step >= 22 && step <= 26) {
       isValid = validateLifestyleStep(step, formData, toast);
       console.log(`Lifestyle validation result: ${isValid}`);
     }
     
-    else if (step >= 26 && step <= 30) {
+    else if (step >= 27 && step <= 31) {
       isValid = validateFinalStepsStep(step, formData, toast);
       console.log(`Final steps validation result: ${isValid}`);
     }
