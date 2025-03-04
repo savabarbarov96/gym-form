@@ -14,10 +14,15 @@ const HeightInputStepRenderer = ({
 }: HeightInputStepRendererProps) => {
   console.log("Rendering HeightInputStepRenderer with value:", formData.height);
   
+  const handleHeightChange = (height: string) => {
+    console.log("Height changed to:", height);
+    setFormData(prev => ({ ...prev, height }));
+  };
+  
   return (
     <HeightInputStep
       value={formData.height}
-      onChange={(height) => setFormData(prev => ({ ...prev, height }))}
+      onChange={handleHeightChange}
     />
   );
 };
