@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Male, Female } from 'lucide-react';
+import { User, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface GenderSelectionStepProps {
@@ -13,8 +13,8 @@ const GenderSelectionStep: React.FC<GenderSelectionStepProps> = ({
   onSelect 
 }) => {
   const genderOptions = [
-    { id: 'male', label: 'Male', icon: Male },
-    { id: 'female', label: 'Female', icon: Female },
+    { id: 'male', label: 'Male', icon: User },
+    { id: 'female', label: 'Female', icon: Users },
   ];
 
   return (
