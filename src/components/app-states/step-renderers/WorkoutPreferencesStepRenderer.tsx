@@ -38,7 +38,7 @@ const WorkoutPreferencesStepRenderer = ({
     case 4:
       return <WorkoutFrequencyStepRenderer formData={formData} setFormData={setFormData} />;
     case 5:
-      return <WorkoutDurationStepRenderer formData={formData} setFormData={setFormData} handleNext={handleNext} />;
+      return <WorkoutDurationStepRenderer formData={formData} setFormData={setFormData} />;
     case 6:
       return <ProblemAreasStepRenderer formData={formData} setFormData={setFormData} />;
     case 7:

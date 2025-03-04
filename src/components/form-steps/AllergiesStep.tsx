@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Apple, Cheese, Egg, Fish, Wheat, X } from "lucide-react";
+import { Apple, Egg, Fish, Wheat, X, Milk } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface AllergiesStepProps {
@@ -19,7 +19,7 @@ const AllergiesStep = ({ selectedAllergies, onSelect }: AllergiesStepProps) => {
     { 
       label: "Dairy", 
       id: "dairy", 
-      icon: Cheese,
+      icon: Milk,
       description: "Milk, cheese, yogurt" 
     },
     { 
