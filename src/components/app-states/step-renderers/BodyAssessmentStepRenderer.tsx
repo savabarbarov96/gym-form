@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { FormData } from '@/types/survey';
 import {
@@ -8,7 +7,8 @@ import {
   ProgressGraphStepRenderer,
   HormoneGraphStepRenderer,
   HealthConcernsStepRenderer,
-  WeightChangeStepRenderer
+  WeightChangeStepRenderer,
+  AllergiesStepRenderer
 } from './body-assessment';
 import { BestShapeStep } from "@/components/form-steps";
 
@@ -41,6 +41,7 @@ const getBodyAssessmentStep = (
     4: <ProgressGraphStepRenderer formData={formData} />,
     5: <HormoneGraphStepRenderer handleNext={handleNext} formData={formData} />,
     6: <HealthConcernsStepRenderer formData={formData} setFormData={setFormData} />,
+    7: <AllergiesStepRenderer formData={formData} setFormData={setFormData} />,
   };
   
   return stepMap[localStep as keyof typeof stepMap] || null;

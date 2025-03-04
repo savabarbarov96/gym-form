@@ -1,357 +1,402 @@
-
 import { FormData } from "@/types/survey";
 
 // Define the webhook URL as a constant
 const WEBHOOK_URL = "https://sava.automationaid.eu/webhook/8ffb7f1e-6c6f-412c-8022-eef6957d78d4";
 
-// Function to map form data to API parameters with enhanced context
-const mapFormDataToParams = (formData: FormData): Record<string, string> => {
-  const params: Record<string, string> = {};
-  
-  // Basic Information with clear context
-  if (formData.gender) params['gender'] = formData.gender;
-  if (formData.age) params['age'] = formData.age;
-  if (formData.bodyType) params['bodyType'] = formData.bodyType;
-  params['targetBodyFatPercentage'] = formData.goal.toString();
-  params['currentBodyFatPercentage'] = formData.currentBodyFat.toString();
-  if (formData.fitnessGoal) params['primaryFitnessGoal'] = formData.fitnessGoal;
-  if (formData.desiredBody) params['desiredBodyType'] = formData.desiredBody;
-  if (formData.bestShapeTime) params['lastBestShape'] = formData.bestShapeTime;
-  
-  // Body Assessment with measurement units
-  if (formData.problemAreas.length > 0) params['focusAreas'] = formData.problemAreas.join(',');
-  if (formData.weightChange) params['weightFluctuationPattern'] = formData.weightChange;
-  if (formData.activities.length > 0) params['currentPhysicalActivities'] = formData.activities.join(',');
-  if (formData.customActivity) params['customActivity'] = formData.customActivity;
-  if (formData.healthConcerns.length > 0) params['healthLimitations'] = formData.healthConcerns.join(',');
-  if (formData.customHealthConcern) params['customHealthConcern'] = formData.customHealthConcern;
-  
-  // Workout Preferences with detailed descriptions
-  if (formData.workoutLocation) params['preferredWorkoutLocation'] = formData.workoutLocation;
-  if (formData.workoutIntensity) params['preferredIntensityLevel'] = formData.workoutIntensity;
-  if (formData.workoutFrequency) params['weeklyWorkoutFrequency'] = formData.workoutFrequency;
-  if (formData.workoutDuration) params['workoutSessionDuration'] = formData.workoutDuration;
-  
-  // Body Measurements with units
-  if (formData.height) params['heightWithUnit'] = formData.height;
-  if (formData.currentWeight) params['currentWeightValue'] = formData.currentWeight;
-  if (formData.targetWeight) params['targetWeightValue'] = formData.targetWeight;
-  params['weightMeasurementUnit'] = formData.weightUnit;
-  
-  // Exercise Preferences with clear preference scale
-  for (const [exercise, preference] of Object.entries(formData.exercisePreferences)) {
-    if (preference) {
-      params[`exercise_${exercise.replace(/\s+/g, '_').toLowerCase()}`] = preference;
-    }
+// Format date to ISO string with readable format for AI
+const formatDate = (dateString: string | null): string | null => {
+  if (!dateString) return null;
+  try {
+    const date = new Date(dateString);
+    return date.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+  } catch (e) {
+    return dateString;
   }
-  
-  // Add context for preference scale
-  if (Object.keys(formData.exercisePreferences).length > 0) {
-    params['exercisePreferenceScale'] = 'like/neutral/dislike scale';
-  }
-  
-  // Lifestyle Information with measurement units and scales
-  if (formData.sugaryFoods) {
-    params['sugaryFoodsConsumptionFrequency'] = formData.sugaryFoods;
-    params['sugaryFoodsScale'] = 'never/rarely/weekly/daily/multiple_daily scale';
-  }
-  
-  if (formData.waterIntake) {
-    params['dailyWaterIntake_ml'] = formData.waterIntake.toString();
-    params['waterIntakeUnit'] = 'milliliters';
-  }
-  
-  if (formData.typicalDay) {
-    params['dailyActivityLevel'] = formData.typicalDay;
-    params['typicalDayScale'] = 'sitting/standing/walking/active activity levels';
-  }
-  
-  if (formData.energyLevels !== null) {
-    params['energyLevelRating'] = formData.energyLevels.toString();
-    params['energyLevelScale'] = '1-5 scale (1=lowest, 5=highest)';
-  }
-  
-  if (formData.sleepAmount !== null) {
-    params['averageSleepHours'] = formData.sleepAmount.toString();
-    params['sleepMeasurementUnit'] = 'hours per night';
-  }
-  
-  // Self Assessments with scale context
-  if (formData.selfAssessments.outOfBreath !== null) {
-    params['assessment_outOfBreath'] = formData.selfAssessments.outOfBreath.toString();
-    params['outOfBreathScale'] = '1-5 agreement scale (1=strongly disagree, 5=strongly agree)';
-  }
-  
-  if (formData.selfAssessments.fallingBack !== null) {
-    params['assessment_stayingConsistent'] = formData.selfAssessments.fallingBack.toString();
-    params['consistencyScale'] = '1-5 agreement scale (1=strongly disagree, 5=strongly agree)';
-  }
-  
-  if (formData.selfAssessments.motivationLevel !== null) {
-    params['assessment_motivationStruggle'] = formData.selfAssessments.motivationLevel.toString();
-    params['motivationScale'] = '1-5 agreement scale (1=strongly disagree, 5=strongly agree)';
-  }
-  
-  if (formData.selfAssessments.dietConsistency !== null) {
-    params['assessment_dietConsistency'] = formData.selfAssessments.dietConsistency.toString();
-    params['dietConsistencyScale'] = '1-5 agreement scale (1=strongly disagree, 5=strongly agree)';
-  }
-  
-  if (formData.selfAssessments.suitableWorkouts !== null) {
-    params['assessment_suitableWorkouts'] = formData.selfAssessments.suitableWorkouts.toString();
-    params['suitableWorkoutsScale'] = '1-5 agreement scale (1=strongly disagree, 5=strongly agree)';
-  }
-  
-  // Personal Information
-  if (formData.personalInfo.name) params['fullName'] = formData.personalInfo.name;
-  if (formData.personalInfo.dob) params['dateOfBirth'] = formData.personalInfo.dob;
-  if (formData.personalInfo.email) params['emailAddress'] = formData.personalInfo.email;
-  params['marketingConsent'] = formData.personalInfo.emailConsent.toString();
-  
-  // Commitment Information
-  if (formData.startCommitment) params['programStartCommitment'] = formData.startCommitment;
-  
-  return params;
 };
 
-// Function to generate contextual parameters with detailed explanations
-const generateContextualParameters = (formData: FormData): Record<string, string> => {
-  const contextParams: Record<string, string> = {};
+// Convert 1-5 scales to meaningful text descriptions for AI
+const getRatingDescription = (rating: number | null, type: 'agreement' | 'intensity' = 'agreement'): string | null => {
+  if (rating === null) return null;
   
-  // Calculate BMI with classification
-  if (formData.height && formData.currentWeight) {
+  if (type === 'agreement') {
+    switch(rating) {
+      case 1: return "Not at all";
+      case 2: return "Slightly";
+      case 3: return "Moderately";
+      case 4: return "Very much";
+      case 5: return "Extremely";
+      default: return `${rating}/5`;
+    }
+  } else {
+    switch(rating) {
+      case 1: return "Very Low";
+      case 2: return "Low";
+      case 3: return "Medium";
+      case 4: return "High";
+      case 5: return "Very High";
+      default: return `${rating}/5`;
+    }
+  }
+};
+
+// Function to create an AI-optimized JSON payload with rich context
+const createAIOptimizedPayload = (formData: FormData): Record<string, any> => {
+  // Calculate additional metrics for context
+  const calculateBMI = (): number | null => {
+    if (!formData.height || !formData.currentWeight) return null;
+    
     try {
       const heightInM = parseFloat(formData.height) / 100; // assuming height is in cm
       const weightInKg = formData.weightUnit === 'kg' 
         ? parseFloat(formData.currentWeight)
         : parseFloat(formData.currentWeight) * 0.453592; // convert lbs to kg
       
-      if (!isNaN(heightInM) && !isNaN(weightInKg) && heightInM > 0) {
-        const bmi = weightInKg / (heightInM * heightInM);
-        contextParams['calculatedBMI'] = bmi.toFixed(1);
-        
-        // Add BMI classification for context
-        if (bmi < 18.5) contextParams['bmiClassification'] = 'underweight';
-        else if (bmi < 25) contextParams['bmiClassification'] = 'normal weight';
-        else if (bmi < 30) contextParams['bmiClassification'] = 'overweight';
-        else contextParams['bmiClassification'] = 'obese';
-      }
+      if (isNaN(heightInM) || isNaN(weightInKg) || heightInM <= 0) return null;
+      
+      return Number((weightInKg / (heightInM * heightInM)).toFixed(1));
     } catch (e) {
-      // Silently fail if calculation isn't possible
+      return null;
     }
-  }
+  };
   
-  // Weight loss/gain goal with detailed metrics
-  if (formData.currentWeight && formData.targetWeight) {
+  const getBMICategory = (bmi: number | null): string | null => {
+    if (bmi === null) return null;
+    if (bmi < 18.5) return "Underweight";
+    if (bmi < 25) return "Normal weight";
+    if (bmi < 30) return "Overweight";
+    return "Obese";
+  };
+  
+  const calculateWeightChangeGoal = (): { 
+    direction: string | null,
+    amount: number | null,
+    percentChange: number | null,
+    changeCategory: string | null
+  } => {
+    const result = { 
+      direction: null,
+      amount: null,
+      percentChange: null,
+      changeCategory: null
+    };
+    
+    if (!formData.currentWeight || !formData.targetWeight) return result;
+    
     try {
       const current = parseFloat(formData.currentWeight);
       const target = parseFloat(formData.targetWeight);
-      if (!isNaN(current) && !isNaN(target)) {
-        const difference = target - current;
-        contextParams['weightChangeGoal'] = difference.toString();
-        contextParams['weightChangeDirection'] = difference > 0 ? 'gain' : difference < 0 ? 'loss' : 'maintain';
-        contextParams['weightChangeAmount'] = Math.abs(difference).toFixed(1);
-        contextParams['weightChangeUnit'] = formData.weightUnit;
-        
-        // Calculate percentage change for context
-        const percentChange = (Math.abs(difference) / current) * 100;
-        contextParams['percentBodyWeightChange'] = percentChange.toFixed(1) + '%';
-        
-        // Categorize the magnitude of change
-        if (percentChange < 5) contextParams['changeCategory'] = 'modest';
-        else if (percentChange < 10) contextParams['changeCategory'] = 'moderate';
-        else if (percentChange < 20) contextParams['changeCategory'] = 'significant';
-        else contextParams['changeCategory'] = 'substantial';
-      }
+      
+      if (isNaN(current) || isNaN(target)) return result;
+      
+      const difference = target - current;
+      result.direction = difference > 0 ? 'gain' : difference < 0 ? 'loss' : 'maintain';
+      result.amount = Number(Math.abs(difference).toFixed(1));
+      
+      // Calculate percentage change
+      const percentChange = (Math.abs(difference) / current) * 100;
+      result.percentChange = Number(percentChange.toFixed(1));
+      
+      // Categorize the magnitude of change
+      if (percentChange < 5) result.changeCategory = 'modest';
+      else if (percentChange < 10) result.changeCategory = 'moderate';
+      else if (percentChange < 20) result.changeCategory = 'significant';
+      else result.changeCategory = 'substantial';
+      
+      return result;
     } catch (e) {
-      // Silently fail if calculation isn't possible
+      return result;
     }
-  }
+  };
   
-  // Assess overall fitness level with detailed scoring
-  let fitnessScore = 0;
-  let factorsCount = 0;
-  
-  // Consider workout frequency with numerical mapping
-  if (formData.workoutFrequency) {
-    factorsCount++;
-    if (formData.workoutFrequency === 'none') {
-      fitnessScore += 1;
-      contextParams['workoutFrequencyScore'] = '1/4';
-    }
-    else if (formData.workoutFrequency === '1-2-times') {
-      fitnessScore += 2;
-      contextParams['workoutFrequencyScore'] = '2/4';
-    }
-    else if (formData.workoutFrequency === '3-times') {
-      fitnessScore += 3;
-      contextParams['workoutFrequencyScore'] = '3/4';
-    }
-    else if (formData.workoutFrequency === 'more-than-3') {
-      fitnessScore += 4;
-      contextParams['workoutFrequencyScore'] = '4/4';
-    }
-  }
-  
-  // Consider energy levels with scale information
-  if (formData.energyLevels !== null) {
-    factorsCount++;
-    fitnessScore += formData.energyLevels;
-    contextParams['energyLevelScore'] = `${formData.energyLevels}/5`;
-  }
-  
-  // Consider out of breath assessment with scale inversion explanation
-  if (formData.selfAssessments.outOfBreath !== null) {
-    factorsCount++;
-    const invertedScore = 6 - formData.selfAssessments.outOfBreath; // Invert scale (5 becomes 1, 1 becomes 5)
-    fitnessScore += invertedScore;
-    contextParams['breathingCapacityScore'] = `${invertedScore}/5`;
-    contextParams['breathingCapacityNote'] = 'Inverted from original scale where 1=good capacity, 5=poor capacity';
-  }
-  
-  // Calculate average fitness level if we have data
-  if (factorsCount > 0) {
-    const avgFitness = fitnessScore / factorsCount;
-    contextParams['fitnessScoreAverage'] = avgFitness.toFixed(1);
+  // Calculate fitness score based on multiple factors
+  const calculateFitnessLevel = (): {
+    fitnessScore: number | null,
+    fitnessLevel: string | null,
+    factorsConsidered: string[]
+  } => {
+    let fitnessScore = 0;
+    let factorsCount = 0;
+    const factorsConsidered: string[] = [];
     
-    // Determine fitness level category with score ranges
+    // Consider workout frequency
+    if (formData.workoutFrequency) {
+      factorsCount++;
+      factorsConsidered.push("workout frequency");
+      
+      if (formData.workoutFrequency === 'none') {
+        fitnessScore += 1;
+      }
+      else if (formData.workoutFrequency === '1-2-times') {
+        fitnessScore += 2;
+      }
+      else if (formData.workoutFrequency === '3-times') {
+        fitnessScore += 3;
+      }
+      else if (formData.workoutFrequency === 'more-than-3') {
+        fitnessScore += 4;
+      }
+    }
+    
+    // Consider energy levels
+    if (formData.energyLevels !== null) {
+      factorsCount++;
+      factorsConsidered.push("energy levels");
+      fitnessScore += formData.energyLevels;
+    }
+    
+    // Consider out of breath assessment (inverted)
+    if (formData.selfAssessments.outOfBreath !== null) {
+      factorsCount++;
+      factorsConsidered.push("breathing capacity (stairs)");
+      const invertedScore = 6 - formData.selfAssessments.outOfBreath;
+      fitnessScore += invertedScore;
+    }
+    
+    if (factorsCount === 0) {
+      return {
+        fitnessScore: null,
+        fitnessLevel: null,
+        factorsConsidered: []
+      };
+    }
+    
+    const avgFitness = fitnessScore / factorsCount;
+    
+    // Determine fitness level category
     let fitnessLevel = 'average';
     if (avgFitness >= 3.5) {
       fitnessLevel = 'advanced';
-      contextParams['fitnessScoreRange'] = '3.5-5.0';
     }
     else if (avgFitness >= 2.5) {
       fitnessLevel = 'intermediate';
-      contextParams['fitnessScoreRange'] = '2.5-3.4';
     }
     else {
       fitnessLevel = 'beginner';
-      contextParams['fitnessScoreRange'] = '1.0-2.4';
     }
     
-    contextParams['estimatedFitnessLevel'] = fitnessLevel;
-  }
+    return {
+      fitnessScore: Number(avgFitness.toFixed(1)),
+      fitnessLevel,
+      factorsConsidered
+    };
+  };
   
-  // Determine if plan should focus on consistency/habit building with threshold explanation
-  if (formData.selfAssessments.fallingBack !== null) {
-    contextParams['consistencyRating'] = formData.selfAssessments.fallingBack.toString();
-    if (formData.selfAssessments.fallingBack >= 3) {
-      contextParams['focusOnConsistency'] = 'true';
-      contextParams['consistencyThreshold'] = 'Rating ≥3 indicates consistency challenges';
-    } else {
-      contextParams['focusOnConsistency'] = 'false';
-      contextParams['consistencyThreshold'] = 'Rating <3 indicates adequate consistency';
-    }
-  }
-  
-  // Add context for age implications
-  if (formData.age) {
-    if (formData.age === 'under-30') {
-      contextParams['ageImplication'] = 'Typically capable of higher intensity and faster recovery';
-    } else if (formData.age === '30-39') {
-      contextParams['ageImplication'] = 'Balanced capacity for intensity with moderately quick recovery';
-    } else if (formData.age === '40-49') {
-      contextParams['ageImplication'] = 'Moderate intensity with increased recovery needs';
-    } else if (formData.age === '50-59') {
-      contextParams['ageImplication'] = 'Lower intensity with focus on proper form and longer recovery';
-    } else if (formData.age === '60-plus') {
-      contextParams['ageImplication'] = 'Focus on mobility, balance, and gradual progression';
-    }
-  }
-  
-  // Add lifestyle factors summary
-  let lifestyleFactors = [];
-  if (formData.sleepAmount !== null) {
-    if (formData.sleepAmount < 6) lifestyleFactors.push('sleep deficit');
-    else if (formData.sleepAmount >= 8) lifestyleFactors.push('adequate sleep');
-  }
-  
-  if (formData.waterIntake !== null) {
-    if (formData.waterIntake < 1500) lifestyleFactors.push('suboptimal hydration');
-    else if (formData.waterIntake >= 2500) lifestyleFactors.push('good hydration');
-  }
-  
-  if (formData.typicalDay) {
-    if (formData.typicalDay === 'sitting') lifestyleFactors.push('sedentary daily activity');
-    else if (formData.typicalDay === 'active') lifestyleFactors.push('active lifestyle');
-  }
-  
-  if (formData.sugaryFoods) {
-    if (formData.sugaryFoods === 'daily' || formData.sugaryFoods === 'multiple_daily') {
-      lifestyleFactors.push('high sugar consumption');
-    } else if (formData.sugaryFoods === 'rarely' || formData.sugaryFoods === 'never') {
-      lifestyleFactors.push('low sugar consumption');
-    }
-  }
-  
-  if (lifestyleFactors.length > 0) {
-    contextParams['lifestyleFactorsSummary'] = lifestyleFactors.join(', ');
-  }
-  
-  // Add exercise preference summary
-  const exercisePreferences = formData.exercisePreferences;
-  if (Object.keys(exercisePreferences).length > 0) {
-    const likedExercises = Object.entries(exercisePreferences)
-      .filter(([_, pref]) => pref === 'like')
-      .map(([exercise, _]) => exercise);
-      
-    const dislikedExercises = Object.entries(exercisePreferences)
-      .filter(([_, pref]) => pref === 'dislike')
-      .map(([exercise, _]) => exercise);
+  // Map age ranges to approximate numerical values for easier AI processing
+  const getAgeRangeValue = (ageRange: string | null): { min: number, max: number } | null => {
+    if (!ageRange) return null;
     
-    if (likedExercises.length > 0) {
-      contextParams['favoriteExerciseTypes'] = likedExercises.join(', ');
+    switch (ageRange) {
+      case 'under-30': return { min: 18, max: 29 };
+      case '30-45': return { min: 30, max: 45 };
+      case '46-60': return { min: 46, max: 60 };
+      case 'over-60': return { min: 61, max: 85 };
+      default: return null;
     }
-    
-    if (dislikedExercises.length > 0) {
-      contextParams['dislikedExerciseTypes'] = dislikedExercises.join(', ');
-    }
-  }
+  };
   
-  return contextParams;
+  // Get workout frequency in times per week
+  const getWorkoutFrequencyValue = (frequency: string | null): number | null => {
+    if (!frequency) return null;
+    
+    switch (frequency) {
+      case 'none': return 0;
+      case '1-2-times': return 1.5; // average of 1-2
+      case '3-times': return 3;
+      case 'more-than-3': return 4.5; // average estimation
+      default: return null;
+    }
+  };
+  
+  // Get workout duration in minutes
+  const getWorkoutDurationValue = (duration: string | null): number | null => {
+    if (!duration) return null;
+    
+    switch (duration) {
+      case 'short': return 20; // ~20 mins
+      case 'medium': return 40; // ~40 mins
+      case 'long': return 60; // ~60 mins
+      default: return null;
+    }
+  };
+  
+  // Convert sugary foods frequency to times per week for numerical context
+  const getSugaryFoodsFrequencyValue = (frequency: string | null): number | null => {
+    if (!frequency) return null;
+    
+    switch (frequency) {
+      case 'never': return 0;
+      case 'rarely': return 1;
+      case 'weekly': return 3;
+      case 'daily': return 7;
+      case 'multiple-daily': return 14;
+      default: return null;
+    }
+  };
+  
+  // Calculate the BMI and other derived metrics
+  const bmi = calculateBMI();
+  const bmiCategory = getBMICategory(bmi);
+  const weightChangeGoal = calculateWeightChangeGoal();
+  const fitnessAssessment = calculateFitnessLevel();
+  const ageRange = getAgeRangeValue(formData.age);
+  
+  // Create the AI-optimized payload with rich context and nested structure
+  return {
+    metadata: {
+      version: "2.0",
+      timestamp: new Date().toISOString(),
+      formType: "Gym Assessment",
+      purpose: "Generate personalized workout and nutrition plan"
+    },
+    
+    // Demographics section with basic user information
+    demographics: {
+      gender: formData.gender,
+      ageGroup: formData.age,
+      ageRange: ageRange ? `${ageRange.min}-${ageRange.max} years` : null,
+      name: formData.personalInfo.name,
+      dateOfBirth: formatDate(formData.personalInfo.dob),
+      email: formData.personalInfo.email,
+      marketingConsent: formData.personalInfo.emailConsent
+    },
+    
+    // Body metrics and goals section
+    bodyProfile: {
+      currentMetrics: {
+        height: formData.height ? `${formData.height} cm` : null,
+        currentWeight: formData.currentWeight ? `${formData.currentWeight} ${formData.weightUnit}` : null,
+        currentBodyFatPercentage: formData.currentBodyFat,
+        bmi: bmi,
+        bmiCategory: bmiCategory
+      },
+      bodyType: formData.bodyType,
+      goalMetrics: {
+        targetWeight: formData.targetWeight ? `${formData.targetWeight} ${formData.weightUnit}` : null,
+        targetBodyFatPercentage: formData.goal,
+        weightChangeDirection: weightChangeGoal.direction,
+        weightChangeAmount: weightChangeGoal.amount ? `${weightChangeGoal.amount} ${formData.weightUnit}` : null,
+        weightChangePercentage: weightChangeGoal.percentChange ? `${weightChangeGoal.percentChange}%` : null,
+        weightChangeMagnitude: weightChangeGoal.changeCategory
+      },
+      desiredPhysique: formData.desiredBody,
+      primaryFitnessGoal: formData.fitnessGoal,
+      problemAreas: formData.problemAreas,
+      bestShapeTimeframe: formData.bestShapeTime,
+      weightChangeHistory: formData.weightChange
+    },
+    
+    // Health considerations
+    healthStatus: {
+      physicalLimitations: formData.healthConcerns,
+      customHealthConcern: formData.customHealthConcern,
+      allergies: formData.allergies,
+      customAllergy: formData.customAllergy,
+      estimatedFitnessLevel: fitnessAssessment.fitnessLevel,
+      fitnessScore: fitnessAssessment.fitnessScore,
+      fitnessAssessmentFactors: fitnessAssessment.factorsConsidered
+    },
+    
+    // Current activities and workout preferences
+    activityProfile: {
+      currentActivities: {
+        activities: formData.activities,
+        customActivity: formData.customActivity,
+        typicalDailyActivity: formData.typicalDay,
+        energyLevels: formData.energyLevels,
+        energyLevelDescription: getRatingDescription(formData.energyLevels, 'intensity')
+      },
+      workoutPreferences: {
+        preferredLocation: formData.workoutLocation,
+        preferredIntensity: formData.workoutIntensity,
+        weeklyFrequency: formData.workoutFrequency,
+        frequencyValue: getWorkoutFrequencyValue(formData.workoutFrequency),
+        sessionDuration: formData.workoutDuration,
+        durationInMinutes: getWorkoutDurationValue(formData.workoutDuration),
+        exercisePreferences: Object.entries(formData.exercisePreferences).map(([exercise, preference]) => ({
+          exerciseName: exercise,
+          preference: preference
+        })).filter(item => item.preference !== null)
+      }
+    },
+    
+    // Lifestyle and self-assessment
+    lifestyle: {
+      nutrition: {
+        sugaryFoodsConsumption: formData.sugaryFoods,
+        sugaryFoodsFrequencyPerWeek: getSugaryFoodsFrequencyValue(formData.sugaryFoods),
+        waterIntakeMilliliters: formData.waterIntake,
+        waterIntakeLiters: formData.waterIntake ? (formData.waterIntake / 1000).toFixed(1) : null
+      },
+      sleep: {
+        averageHoursPerNight: formData.sleepAmount
+      }
+    },
+    
+    // Self-assessments with detailed descriptions of what each means
+    selfAssessments: {
+      breathingDifficulty: {
+        statement: "I am often out of breath when I climb the stairs",
+        rating: formData.selfAssessments.outOfBreath,
+        description: getRatingDescription(formData.selfAssessments.outOfBreath)
+      },
+      exerciseConsistency: {
+        statement: "I keep falling back into bad exercise habits",
+        rating: formData.selfAssessments.fallingBack,
+        description: getRatingDescription(formData.selfAssessments.fallingBack),
+        needsConsistencyFocus: formData.selfAssessments.fallingBack !== null ? 
+          formData.selfAssessments.fallingBack >= 3 : null
+      },
+      workoutSuitability: {
+        statement: "I struggle to find workouts suitable for my fitness level",
+        rating: formData.selfAssessments.suitableWorkouts,
+        description: getRatingDescription(formData.selfAssessments.suitableWorkouts)
+      },
+      motivation: {
+        statement: "I find it hard to stay motivated with exercise",
+        rating: formData.selfAssessments.motivationLevel,
+        description: getRatingDescription(formData.selfAssessments.motivationLevel)
+      },
+      dietConsistency: {
+        statement: "I have trouble maintaining a consistent diet",
+        rating: formData.selfAssessments.dietConsistency,
+        description: getRatingDescription(formData.selfAssessments.dietConsistency)
+      }
+    },
+    
+    // Program timing information
+    programTiming: {
+      startCommitment: formData.startCommitment,
+      isReadyToStartImmediately: formData.startCommitment === 'immediately'
+    },
+    
+    // Raw form data for reference (in case AI needs to access original values)
+    rawFormData: formData
+  };
 };
 
-// Main function to submit data to the webhook
+// Function to submit the optimized payload to the webhook
 export const submitToWebhook = async (formData: FormData): Promise<boolean> => {
   try {
-    console.log("Preparing to submit survey data to webhook");
+    // Create the AI-optimized payload
+    const aiOptimizedPayload = createAIOptimizedPayload(formData);
     
-    // Get base parameters from form data
-    const baseParams = mapFormDataToParams(formData);
-    
-    // Add contextual parameters
-    const contextParams = generateContextualParameters(formData);
-    
-    // Combine all parameters
-    const allParams = { ...baseParams, ...contextParams };
-    
-    // Convert to URLSearchParams
-    const urlParams = new URLSearchParams();
-    for (const [key, value] of Object.entries(allParams)) {
-      urlParams.append(key, value);
-    }
-    
-    // Build complete URL
-    const webhookUrl = `${WEBHOOK_URL}?${urlParams.toString()}`;
-    
-    console.log("Submitting data to webhook with params:", allParams);
-    
-    const response = await fetch(webhookUrl, {
+    // Post the optimized payload to the webhook
+    const response = await fetch(WEBHOOK_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify(aiOptimizedPayload),
     });
     
     if (!response.ok) {
-      console.error('Webhook submission failed with status:', response.status);
-      throw new Error('Failed to submit data');
+      console.error(`Webhook submission failed with status: ${response.status}`);
+      return false;
     }
     
-    console.log('Webhook submission successful!');
     return true;
   } catch (error) {
-    console.error('Error submitting data:', error);
+    console.error('Error submitting to webhook:', error);
     return false;
   }
 };

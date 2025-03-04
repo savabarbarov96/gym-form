@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { FormData } from '@/types/survey';
 import {
@@ -29,10 +28,11 @@ const WorkoutPreferencesStepRenderer: React.FC<WorkoutPreferencesStepRendererPro
   const { toast } = useToast();
   
   // This maps the global step number to the local step within this renderer
-  const localStep = step - 12;
+  // Adjusted for the new Allergies step (step 13)
+  const localStep = step - 13;
   
   switch (localStep) {
-    case 1: // Step 13
+    case 1: // Step 14
       return (
         <ProblemAreasStep
           selectedAreas={formData.problemAreas}
@@ -40,7 +40,7 @@ const WorkoutPreferencesStepRenderer: React.FC<WorkoutPreferencesStepRendererPro
         />
       );
     
-    case 2: // Step 14
+    case 2: // Step 15
       return (
         <ActivitiesStep
           selectedActivities={formData.activities}
@@ -50,7 +50,7 @@ const WorkoutPreferencesStepRenderer: React.FC<WorkoutPreferencesStepRendererPro
         />
       );
     
-    case 3: // Step 15
+    case 3: // Step 16
       return (
         <WorkoutLocationStep
           selectedLocation={formData.workoutLocation}
@@ -58,7 +58,7 @@ const WorkoutPreferencesStepRenderer: React.FC<WorkoutPreferencesStepRendererPro
         />
       );
     
-    case 4: // Step 16
+    case 4: // Step 17
       return (
         <WorkoutIntensityStep
           selectedIntensity={formData.workoutIntensity}
@@ -66,7 +66,7 @@ const WorkoutPreferencesStepRenderer: React.FC<WorkoutPreferencesStepRendererPro
         />
       );
     
-    case 5: // Step 17
+    case 5: // Step 18
       return (
         <WorkoutFrequencyStep
           selected={formData.workoutFrequency}
@@ -74,7 +74,7 @@ const WorkoutPreferencesStepRenderer: React.FC<WorkoutPreferencesStepRendererPro
         />
       );
     
-    case 6: // Step 18
+    case 6: // Step 19
       return (
         <WorkoutDurationStep
           selected={formData.workoutDuration}
@@ -82,7 +82,7 @@ const WorkoutPreferencesStepRenderer: React.FC<WorkoutPreferencesStepRendererPro
         />
       );
     
-    case 7: // Step 19
+    case 7: // Step 20
       return (
         <ExercisePreferencesStep
           preferences={formData.exercisePreferences}
@@ -93,7 +93,7 @@ const WorkoutPreferencesStepRenderer: React.FC<WorkoutPreferencesStepRendererPro
         />
       );
     
-    case 8: // Step 20
+    case 8: // Step 21
       return (
         <DesiredBodyStep
           selectedBody={formData.desiredBody}

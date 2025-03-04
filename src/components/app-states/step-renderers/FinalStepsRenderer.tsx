@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { FormData } from '@/types/survey';
 import { SelfAssessmentStep, PersonalInfoStep, StartCommitmentStep } from '@/components/form-steps';
@@ -15,9 +14,11 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
   const { toast } = useToast();
   
   // This maps the global step number to the local step within this renderer
-  const localStep = step - 25;
+  // Adjusted for the new Allergies step (shifting everything by 1)
+  const localStep = step - 26;
   
   const handleSelfAssessmentChange = (key: keyof FormData['selfAssessments'], value: number | null) => {
+    console.log(`Setting ${key} to:`, value);
     setFormData(prev => ({
       ...prev,
       selfAssessments: {
@@ -41,50 +42,75 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
       startCommitment: value
     }));
   };
+
+  // Validation wrapper functions for each self-assessment step
+  const validateOutOfBreath = () => {
+    console.log('Validating outOfBreath step with value:', formData.selfAssessments.outOfBreath);
+    return validateFinalStepsStep(27, formData, toast);
+  };
+
+  const validateFallingBack = () => {
+    console.log('Validating fallingBack step with value:', formData.selfAssessments.fallingBack);
+    return validateFinalStepsStep(28, formData, toast);
+  };
+
+  const validateMotivation = () => {
+    console.log('Validating motivationLevel step with value:', formData.selfAssessments.motivationLevel);
+    return validateFinalStepsStep(29, formData, toast);
+  };
+
+  const validateDietConsistency = () => {
+    console.log('Validating dietConsistency step with value:', formData.selfAssessments.dietConsistency);
+    return validateFinalStepsStep(30, formData, toast);
+  };
   
   // Map the local step to the appropriate component
   switch (localStep) {
-    case 1: // Step 26
+    case 1: // Step 27
       return (
         <SelfAssessmentStep 
           question="I get out of breath easily when exercising"
           value={formData.selfAssessments.outOfBreath}
           onChange={(value) => handleSelfAssessmentChange('outOfBreath', value)}
-          onValidate={() => validateFinalStepsStep(step, formData, toast)}
+          onValidate={validateOutOfBreath}
+          autoAdvance={true}
         />
       );
     
-    case 2: // Step 27 
+    case 2: // Step 28 
       return (
         <SelfAssessmentStep
           question="I've tried to get in shape before but keep falling back into old habits"
           value={formData.selfAssessments.fallingBack}
           onChange={(value) => handleSelfAssessmentChange('fallingBack', value)}
-          onValidate={() => validateFinalStepsStep(step, formData, toast)}
+          onValidate={validateFallingBack}
+          autoAdvance={true}
         />
       );
     
-    case 3: // Step 28
+    case 3: // Step 29
       return (
         <SelfAssessmentStep
           question="I sometimes struggle to find the motivation to exercise"
           value={formData.selfAssessments.motivationLevel}
           onChange={(value) => handleSelfAssessmentChange('motivationLevel', value)}
-          onValidate={() => validateFinalStepsStep(step, formData, toast)}
+          onValidate={validateMotivation}
+          autoAdvance={true}
         />
       );
     
-    case 4: // Step 29
+    case 4: // Step 30
       return (
         <SelfAssessmentStep
           question="I find it difficult to stay consistent with a healthy diet"
           value={formData.selfAssessments.dietConsistency}
           onChange={(value) => handleSelfAssessmentChange('dietConsistency', value)}
-          onValidate={() => validateFinalStepsStep(step, formData, toast)}
+          onValidate={validateDietConsistency}
+          autoAdvance={true}
         />
       );
     
-    case 5: // Step 30
+    case 5: // Step 31
       return (
         <PersonalInfoStep
           personalInfo={formData.personalInfo}
@@ -92,7 +118,7 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
         />
       );
       
-    case 6: // Step 31
+    case 6: // Step 32
       return (
         <StartCommitmentStep
           selected={formData.startCommitment}
