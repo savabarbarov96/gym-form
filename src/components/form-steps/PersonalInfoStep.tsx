@@ -1,20 +1,14 @@
 
 import React, { useState } from 'react';
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { format, isValid, parseISO } from 'date-fns';
-import { AlertCircle, User, Calendar, Mail, CheckCircle2 } from 'lucide-react';
-import { useSurvey } from '@/contexts/SurveyContext';
 import { motion } from 'framer-motion';
-import { cn } from "@/lib/utils";
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { useSurvey } from '@/contexts/SurveyContext';
+import {
+  NameInput,
+  DateOfBirthInput,
+  EmailInput,
+  ConsentCheckbox,
+  MotivationalQuote
+} from './personal-info';
 
 interface PersonalInfoStepProps {
   name?: string | null;
@@ -65,35 +59,6 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
   const [day, setDay] = useState<string>(parsedDob ? parsedDob.getDate().toString() : '');
   const [month, setMonth] = useState<string>(parsedDob ? (parsedDob.getMonth() + 1).toString() : '');
   const [year, setYear] = useState<string>(parsedDob ? parsedDob.getFullYear().toString() : '');
-
-  // Generate years for the dropdown (80 years back from current year)
-  const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 65 }, (_, i) => currentYear - 80 + i).reverse();
-  
-  // Generate months
-  const months = [
-    { value: '1', label: 'January' },
-    { value: '2', label: 'February' },
-    { value: '3', label: 'March' },
-    { value: '4', label: 'April' },
-    { value: '5', label: 'May' },
-    { value: '6', label: 'June' },
-    { value: '7', label: 'July' },
-    { value: '8', label: 'August' },
-    { value: '9', label: 'September' },
-    { value: '10', label: 'October' },
-    { value: '11', label: 'November' },
-    { value: '12', label: 'December' }
-  ];
-  
-  // Generate days based on selected month and year
-  const getDaysInMonth = (month: number, year: number) => {
-    return new Date(year, month, 0).getDate();
-  };
-  
-  const days = month && year 
-    ? Array.from({ length: getDaysInMonth(parseInt(month), parseInt(year)) }, (_, i) => (i + 1).toString())
-    : Array.from({ length: 31 }, (_, i) => (i + 1).toString());
 
   const handleNameBlur = () => {
     setNameEntered(!!name);
@@ -187,6 +152,10 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
     }, 0);
   };
 
+  const getDaysInMonth = (month: number, year: number) => {
+    return new Date(year, month, 0).getDate();
+  };
+
   const handleEmailChange = (value: string) => {
     const emailError = validateEmail(value);
     setErrors(prev => ({ ...prev, email: emailError }));
@@ -220,144 +189,36 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
         <p className="text-muted-foreground text-center mb-10">Just a few more details to customize your fitness journey</p>
         
         <div className="bg-card rounded-xl shadow-lg p-8 space-y-8">
-          <div className="space-y-2">
-            <Label htmlFor="name" className="flex items-center gap-2 text-base">
-              <User size={16} className="text-orange" />
-              Your Name
-            </Label>
-            <Input 
-              id="name" 
-              value={name || ''} 
-              onChange={(e) => handleNameChange(e.target.value)}
-              onBlur={handleNameBlur}
-              placeholder="Your name"
-              className="text-lg py-6 border-orange/20 focus:border-orange/50 focus:ring-orange/30"
-            />
-          </div>
+          <NameInput 
+            name={name} 
+            onChange={handleNameChange} 
+            onBlur={handleNameBlur} 
+          />
           
           {nameEntered && name && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="bg-gradient-to-r from-orange/10 to-orange/20 p-6 rounded-lg border border-orange/20"
-            >
-              <p className="text-xl font-semibold text-orange">{motivationalQuote}</p>
-            </motion.div>
+            <MotivationalQuote quote={motivationalQuote} />
           )}
           
-          <div className="space-y-2">
-            <Label className="flex items-center gap-2 text-base">
-              <Calendar size={16} className="text-orange" />
-              Date of Birth
-            </Label>
-            
-            <div className="grid grid-cols-3 gap-4">
-              <div>
-                <Label htmlFor="day" className="text-sm text-muted-foreground mb-1 block">Day</Label>
-                <Select value={day} onValueChange={handleDayChange}>
-                  <SelectTrigger id="day" className={cn(
-                    "border-orange/20 hover:bg-orange/5 hover:text-orange",
-                    errors.dob && "border-red-500"
-                  )}>
-                    <SelectValue placeholder="Day" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {days.map(d => (
-                      <SelectItem key={d} value={d}>{d}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div>
-                <Label htmlFor="month" className="text-sm text-muted-foreground mb-1 block">Month</Label>
-                <Select value={month} onValueChange={handleMonthChange}>
-                  <SelectTrigger id="month" className={cn(
-                    "border-orange/20 hover:bg-orange/5 hover:text-orange",
-                    errors.dob && "border-red-500"
-                  )}>
-                    <SelectValue placeholder="Month" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {months.map(m => (
-                      <SelectItem key={m.value} value={m.value}>{m.label}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div>
-                <Label htmlFor="year" className="text-sm text-muted-foreground mb-1 block">Year</Label>
-                <Select value={year} onValueChange={handleYearChange}>
-                  <SelectTrigger id="year" className={cn(
-                    "border-orange/20 hover:bg-orange/5 hover:text-orange",
-                    errors.dob && "border-red-500"
-                  )}>
-                    <SelectValue placeholder="Year" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {years.map(y => (
-                      <SelectItem key={y} value={y.toString()}>{y}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            
-            {errors.dob && (
-              <div className="text-red-500 flex items-center gap-1 text-sm mt-1">
-                <AlertCircle className="h-4 w-4" />
-                <span>{errors.dob}</span>
-              </div>
-            )}
-            <p className="text-xs text-muted-foreground mt-1">
-              This helps us tailor your workouts to your age group
-            </p>
-          </div>
+          <DateOfBirthInput 
+            day={day}
+            month={month}
+            year={year}
+            error={errors.dob}
+            onDayChange={handleDayChange}
+            onMonthChange={handleMonthChange}
+            onYearChange={handleYearChange}
+          />
           
-          <div className="space-y-2">
-            <Label htmlFor="email" className="flex items-center gap-2 text-base">
-              <Mail size={16} className="text-orange" />
-              Email Address
-            </Label>
-            <Input 
-              id="email" 
-              type="email" 
-              value={email || ''} 
-              onChange={(e) => handleEmailChange(e.target.value)}
-              placeholder="your.email@example.com"
-              className={`border-orange/20 focus:border-orange/50 focus:ring-orange/30 ${errors.email ? "border-red-500" : ""}`}
-            />
-            {errors.email && (
-              <div className="text-red-500 flex items-center gap-1 text-sm mt-1">
-                <AlertCircle className="h-4 w-4" />
-                <span>{errors.email}</span>
-              </div>
-            )}
-          </div>
+          <EmailInput 
+            email={email} 
+            error={errors.email} 
+            onChange={handleEmailChange} 
+          />
           
-          <div className="bg-card p-5 rounded-lg flex items-start gap-3 border border-orange/10">
-            <div className="pt-0.5">
-              <Checkbox 
-                id="emailConsent" 
-                checked={emailConsent} 
-                onCheckedChange={(checked) => handleConsentChange(checked as boolean)}
-                className="text-orange border-orange/30"
-              />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="emailConsent" className="font-medium flex items-center gap-2">
-                <CheckCircle2 size={16} className="text-orange" />
-                Stay Updated
-              </Label>
-              <p className="text-sm text-muted-foreground">
-                May we send product updates to your email — expert tips, promotions, special offers?
-              </p>
-              <p className="text-xs text-muted-foreground">
-                You can change your mind at any time by clicking the unsubscribe link in the footer of any email you receive from us.
-              </p>
-            </div>
-          </div>
+          <ConsentCheckbox 
+            checked={emailConsent} 
+            onChange={handleConsentChange} 
+          />
         </div>
       </motion.div>
     </div>
