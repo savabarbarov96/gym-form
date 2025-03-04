@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useSurvey } from '@/contexts/SurveyContext';
 import {
@@ -60,6 +60,14 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
   const [month, setMonth] = useState<string>(parsedDob ? (parsedDob.getMonth() + 1).toString() : '');
   const [year, setYear] = useState<string>(parsedDob ? parsedDob.getFullYear().toString() : '');
 
+  // Debug state updates
+  useEffect(() => {
+    console.log("PersonalInfoStep state:", { 
+      name, dob, email, emailConsent, 
+      dayMonthYear: { day, month, year } 
+    });
+  }, [name, dob, email, emailConsent, day, month, year]);
+
   const handleNameBlur = () => {
     setNameEntered(!!name);
   };
@@ -69,6 +77,12 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
     
     const today = new Date();
     const birthDate = new Date(dateStr);
+    
+    // Check if the date is valid
+    if (isNaN(birthDate.getTime())) {
+      return "Please enter a valid date of birth";
+    }
+    
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
     
@@ -110,12 +124,15 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
       setErrors(prev => ({ ...prev, dob: dobError }));
       
       if (!dobError) {
+        console.log("Setting DOB:", dateStr);
         if (onChange) {
           onChange({ ...personalInfo, dob: dateStr });
         } else if (onChangeDob) {
           onChangeDob(dateStr);
         }
       }
+    } else {
+      setErrors(prev => ({ ...prev, dob: "Date of birth is required" }));
     }
   };
 

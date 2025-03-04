@@ -87,24 +87,24 @@ const validatePersonalInfoStep = (formData: FormData, toast: (props: ToastParams
     return false;
   }
   
-  // Date of birth validation - simplify to just check if it exists
+  // Date of birth validation - Check if DOB exists and is valid
   if (!formData.personalInfo.dob) {
     toast({
       title: "Date of Birth Required",
-      description: "Please enter your date of birth",
+      description: "Please select your date of birth",
       variant: "destructive",
     });
     return false;
   }
   
   // Log the date for debugging
-  console.log("DoB validation check:", formData.personalInfo.dob);
+  console.log("DoB value being validated:", formData.personalInfo.dob);
   
-  // Simplify validation - just check if it's a valid date string
+  // Make sure the dob is a valid date string
   try {
     const dobDate = new Date(formData.personalInfo.dob);
     
-    // Check if date is valid - just make sure it parses to a valid date
+    // Check if date is valid by ensuring it's not NaN
     if (isNaN(dobDate.getTime())) {
       toast({
         title: "Invalid Date",
@@ -113,7 +113,36 @@ const validatePersonalInfoStep = (formData: FormData, toast: (props: ToastParams
       });
       return false;
     }
+    
+    // Additional age validation
+    const today = new Date();
+    let age = today.getFullYear() - dobDate.getFullYear();
+    const monthDiff = today.getMonth() - dobDate.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dobDate.getDate())) {
+      age--;
+    }
+    
+    if (age < 10) {
+      toast({
+        title: "Age Restriction",
+        description: "You must be at least 10 years old",
+        variant: "destructive",
+      });
+      return false;
+    }
+    
+    if (age > 80) {
+      toast({
+        title: "Age Restriction",
+        description: "Maximum age is 80 years old",
+        variant: "destructive",
+      });
+      return false;
+    }
+    
   } catch (error) {
+    console.error("Error validating date:", error);
     toast({
       title: "Invalid Date Format",
       description: "Please enter a valid date of birth",
@@ -143,6 +172,7 @@ export const validateFinalStepsStep = (
     case 29:
       return validateDietConsistencyStep(formData, toast);
     case 30:
+      console.log("Validating Personal Info Step:", formData.personalInfo);
       return validatePersonalInfoStep(formData, toast);
     default:
       console.log(`No specific validation for final steps step ${step}`);
