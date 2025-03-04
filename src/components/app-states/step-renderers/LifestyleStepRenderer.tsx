@@ -20,8 +20,8 @@ const LifestyleStepRenderer: React.FC<LifestyleStepRendererProps> = ({
   formData,
   setFormData
 }) => {
-  // Map steps correctly to match validation logic
-  if (step === 21) {
+  // Map steps correctly to match the steps from stepMapping.ts
+  if (step === 22) {
     return (
       <SugaryFoodsStep
         selected={formData.sugaryFoods}
@@ -30,7 +30,7 @@ const LifestyleStepRenderer: React.FC<LifestyleStepRendererProps> = ({
     );
   }
   
-  if (step === 22) {
+  if (step === 23) {
     return (
       <WaterIntakeStep
         value={formData.waterIntake}
@@ -39,7 +39,7 @@ const LifestyleStepRenderer: React.FC<LifestyleStepRendererProps> = ({
     );
   }
   
-  if (step === 23) {
+  if (step === 24) {
     return (
       <TypicalDayStep
         selected={formData.typicalDay}
@@ -48,7 +48,7 @@ const LifestyleStepRenderer: React.FC<LifestyleStepRendererProps> = ({
     );
   }
   
-  if (step === 24) {
+  if (step === 25) {
     return (
       <EnergyLevelsStep
         value={formData.energyLevels}
@@ -57,7 +57,7 @@ const LifestyleStepRenderer: React.FC<LifestyleStepRendererProps> = ({
     );
   }
   
-  if (step === 25) {
+  if (step === 26) {
     return (
       <SleepAmountStep
         value={formData.sleepAmount}

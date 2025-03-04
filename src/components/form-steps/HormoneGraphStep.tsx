@@ -282,16 +282,6 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) =
       .duration(500)
       .style("opacity", 1);
     
-    // Add title with better styling
-    svg.append("text")
-      .attr("x", width / 2)
-      .attr("y", -20)
-      .attr("text-anchor", "middle")
-      .style("font-size", "20px")
-      .style("fill", "hsl(var(--foreground))")
-      .style("font-weight", "bold")
-      .text("Your Hormone Balance");
-    
     // Add x-axis label
     svg.append("text")
       .attr("x", width / 2)

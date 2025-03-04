@@ -71,15 +71,15 @@ export const validateLifestyleStep = (
   
   // Map the global step numbers to the specific validation functions
   switch (step) {
-    case 21:
-      return validateSugaryFoodsStep(formData, toast);
     case 22:
-      return validateWaterIntakeStep(formData, toast);
+      return validateSugaryFoodsStep(formData, toast);
     case 23:
-      return validateTypicalDayStep(formData, toast);
+      return validateWaterIntakeStep(formData, toast);
     case 24:
-      return validateEnergyLevelsStep(formData, toast);
+      return validateTypicalDayStep(formData, toast);
     case 25:
+      return validateEnergyLevelsStep(formData, toast);
+    case 26:
       return validateSleepAmountStep(formData, toast);
     default:
       console.log(`No specific validation for lifestyle step ${step}`);
