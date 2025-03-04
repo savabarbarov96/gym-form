@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { ConcernOption, CustomConcern, NoneOption, healthConcernOptions } from './health-concerns';
 
@@ -17,10 +16,8 @@ const HealthConcernsStep = ({
 }: HealthConcernsStepProps) => {
   const [showCustomInput, setShowCustomInput] = useState(!!customOption);
   
-  // Handle auto-continuing after adding custom concern
   useEffect(() => {
     if (customOption && customOption.trim() !== '') {
-      // Close the input after setting it
       setShowCustomInput(false);
     }
   }, [customOption]);
@@ -60,7 +57,6 @@ const HealthConcernsStep = ({
           />
         ))}
         
-        {/* Custom option placeholder - only show if no custom option is already set */}
         {!showCustomInput && !customOption && (
           <CustomConcern
             customOption={null}
@@ -71,7 +67,6 @@ const HealthConcernsStep = ({
         )}
       </div>
       
-      {/* Custom input or display */}
       {(showCustomInput || customOption) && (
         <CustomConcern
           customOption={customOption}
@@ -81,7 +76,6 @@ const HealthConcernsStep = ({
         />
       )}
       
-      {/* None of the above button */}
       <NoneOption
         isSelected={hasNoSelections}
         onClick={clearAllSelections}
