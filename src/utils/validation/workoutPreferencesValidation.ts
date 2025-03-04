@@ -14,12 +14,29 @@ export const validateWorkoutPreferencesStep = (
   console.log(`Validating workout preferences step ${localStep} (global step ${step})`);
   
   switch (localStep) {
-    // Step 13: Allergies (no validation needed, can be empty)
+    // Step 13: Fitness Goal
     case 1:
+      if (!formData.fitnessGoal) {
+        toast({
+          title: "Selection Required",
+          description: "Please select your fitness goal",
+          variant: "destructive",
+        });
+        return false;
+      }
       return true;
     
-    // Step 14: Workout Location
+    // Step 14: Problem Areas (no validation needed, can be empty)
     case 2:
+      // Problem areas are optional, validation always passes
+      return true;
+    
+    // Step 15: Activities (no validation needed)
+    case 3:
+      return true;
+    
+    // Step 16: Workout Location
+    case 4:
       if (!formData.workoutLocation) {
         toast({
           title: "Selection Required",
@@ -30,8 +47,8 @@ export const validateWorkoutPreferencesStep = (
       }
       return true;
     
-    // Step 15: Workout Intensity
-    case 3:
+    // Step 17: Workout Intensity
+    case 5:
       if (!formData.workoutIntensity) {
         toast({
           title: "Selection Required",
@@ -42,8 +59,8 @@ export const validateWorkoutPreferencesStep = (
       }
       return true;
     
-    // Step 16: Workout Frequency
-    case 4:
+    // Step 18: Workout Frequency
+    case 6:
       if (!formData.workoutFrequency) {
         toast({
           title: "Selection Required",
@@ -54,8 +71,8 @@ export const validateWorkoutPreferencesStep = (
       }
       return true;
     
-    // Step 17: Workout Duration
-    case 5:
+    // Step 19: Workout Duration
+    case 7:
       if (!formData.workoutDuration) {
         toast({
           title: "Selection Required",
@@ -66,16 +83,13 @@ export const validateWorkoutPreferencesStep = (
       }
       return true;
     
-    // Step 18: Problem Areas (no validation needed, can be empty)
-    case 6:
-      return true;
-    
-    // Step 19: Activities (no validation needed, can be empty)
-    case 7:
+    // Step 20: Exercise Preferences
+    case 8:
+      // Exercise preferences are optional
       return true;
       
-    // Step 20: Desired Body
-    case 8:
+    // Step 21: Desired Body
+    case 9:
       if (!formData.desiredBody) {
         toast({
           title: "Selection Required",

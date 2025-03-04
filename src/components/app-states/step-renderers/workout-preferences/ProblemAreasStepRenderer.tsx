@@ -23,6 +23,7 @@ const ProblemAreasStepRenderer = ({
         console.log("Selected problem areas:", problemAreas);
         setFormData({...formData, problemAreas});
       }}
+      onStepComplete={handleNext}
     />
   );
 };

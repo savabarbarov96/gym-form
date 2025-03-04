@@ -55,7 +55,7 @@ const WorkoutPreferencesStepRenderer = ({
     case 8: // Global step 21
       return <DesiredBodyStepRenderer formData={formData} setFormData={setFormData} />;
     default:
-      console.error("No matching workout preference step:", localStep);
+      console.log(`No matching workout preference step: ${localStep}`);
       return null;
   }
 };

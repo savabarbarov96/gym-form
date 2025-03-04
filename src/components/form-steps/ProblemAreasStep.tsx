@@ -8,9 +8,10 @@ import { BodySilhouette } from "@/components/BodySilhouette";
 interface ProblemAreasStepProps {
   selectedAreas: string[];
   onSelectArea: (areas: string[]) => void;
+  onStepComplete?: () => void;
 }
 
-const ProblemAreasStep = ({ selectedAreas, onSelectArea }: ProblemAreasStepProps) => {
+const ProblemAreasStep = ({ selectedAreas, onSelectArea, onStepComplete }: ProblemAreasStepProps) => {
   const problemAreas = [
     { label: "Chest", id: "chest", icon: HeartIcon },
     { label: "Arms", id: "arms", icon: Dumbbell },

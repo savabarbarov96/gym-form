@@ -2,6 +2,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { FormData } from '@/types/survey';
+import { getStepCategory } from '@/utils/stepMapping';
 import {
   BasicInfoStepRenderer,
   BodyAssessmentStepRenderer,
@@ -41,55 +42,52 @@ const getStepContent = (
   setFormData: React.Dispatch<React.SetStateAction<FormData>>,
   handleNext: () => void
 ) => {
-  // Basic Info Steps (1-5)
-  if (step >= 1 && step <= 5) {
-    return <BasicInfoStepRenderer 
-      step={step} 
-      formData={formData} 
-      setFormData={setFormData} 
-    />;
-  }
+  // Use our step mapping utility to determine the category
+  const category = getStepCategory(step);
+  console.log(`Step ${step} belongs to category: ${category}`);
   
-  // Body Assessment Steps (6-12)
-  if (step >= 6 && step <= 12) {
-    return <BodyAssessmentStepRenderer 
-      step={step} 
-      formData={formData} 
-      setFormData={setFormData} 
-      handleNext={handleNext}
-    />;
+  switch (category) {
+    case 'basicInfo':
+      return <BasicInfoStepRenderer 
+        step={step} 
+        formData={formData} 
+        setFormData={setFormData} 
+      />;
+    
+    case 'bodyAssessment':
+      return <BodyAssessmentStepRenderer 
+        step={step} 
+        formData={formData} 
+        setFormData={setFormData} 
+        handleNext={handleNext}
+      />;
+    
+    case 'workoutPreferences':
+      return <WorkoutPreferencesStepRenderer 
+        step={step} 
+        formData={formData} 
+        setFormData={setFormData} 
+        handleNext={handleNext}
+      />;
+    
+    case 'lifestyle':
+      return <LifestyleStepRenderer 
+        step={step} 
+        formData={formData} 
+        setFormData={setFormData}
+      />;
+    
+    case 'finalSteps':
+      return <FinalStepsRenderer 
+        step={step} 
+        formData={formData} 
+        setFormData={setFormData}
+      />;
+    
+    default:
+      console.error("No matching step category for step:", step);
+      return null;
   }
-  
-  // Workout Preferences Steps (13-21)
-  if (step >= 13 && step <= 21) {
-    return <WorkoutPreferencesStepRenderer 
-      step={step} 
-      formData={formData} 
-      setFormData={setFormData} 
-      handleNext={handleNext}
-    />;
-  }
-  
-  // Lifestyle Steps (22-26)
-  if (step >= 22 && step <= 26) {
-    return <LifestyleStepRenderer 
-      step={step} 
-      formData={formData} 
-      setFormData={setFormData}
-    />;
-  }
-  
-  // Final Steps (27-31)
-  if (step >= 27 && step <= 31) {
-    return <FinalStepsRenderer 
-      step={step} 
-      formData={formData} 
-      setFormData={setFormData}
-    />;
-  }
-  
-  console.log("No matching step range for step:", step);
-  return null;
 };
 
 const StepRenderer: React.FC<StepRendererProps> = ({
