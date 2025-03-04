@@ -16,10 +16,10 @@ const mapFormDataToParams = (formData: FormData): Record<string, string> => {
   params['currentBodyFatPercentage'] = formData.currentBodyFat.toString();
   if (formData.fitnessGoal) params['primaryFitnessGoal'] = formData.fitnessGoal;
   if (formData.desiredBody) params['desiredBodyType'] = formData.desiredBody;
+  if (formData.bestShapeTime) params['lastBestShape'] = formData.bestShapeTime;
   
   // Body Assessment with measurement units
   if (formData.problemAreas.length > 0) params['focusAreas'] = formData.problemAreas.join(',');
-  if (formData.bestShapeTime) params['lastBestShape'] = formData.bestShapeTime;
   if (formData.weightChange) params['weightFluctuationPattern'] = formData.weightChange;
   if (formData.activities.length > 0) params['currentPhysicalActivities'] = formData.activities.join(',');
   if (formData.customActivity) params['customActivity'] = formData.customActivity;
@@ -41,25 +41,36 @@ const mapFormDataToParams = (formData: FormData): Record<string, string> => {
   // Exercise Preferences with clear preference scale
   for (const [exercise, preference] of Object.entries(formData.exercisePreferences)) {
     if (preference) {
-      params[`exercise_${exercise.replace(/\s+/g, '_')}`] = preference;
-      // Add context for preference scale
-      if (Object.keys(formData.exercisePreferences).length > 0 && !params['exercisePreferenceScale']) {
-        params['exercisePreferenceScale'] = 'like/neutral/dislike scale';
-      }
+      params[`exercise_${exercise.replace(/\s+/g, '_').toLowerCase()}`] = preference;
     }
   }
   
+  // Add context for preference scale
+  if (Object.keys(formData.exercisePreferences).length > 0) {
+    params['exercisePreferenceScale'] = 'like/neutral/dislike scale';
+  }
+  
   // Lifestyle Information with measurement units and scales
-  if (formData.sugaryFoods) params['sugaryFoodsConsumptionFrequency'] = formData.sugaryFoods;
+  if (formData.sugaryFoods) {
+    params['sugaryFoodsConsumptionFrequency'] = formData.sugaryFoods;
+    params['sugaryFoodsScale'] = 'never/rarely/weekly/daily/multiple_daily scale';
+  }
+  
   if (formData.waterIntake) {
     params['dailyWaterIntake_ml'] = formData.waterIntake.toString();
     params['waterIntakeUnit'] = 'milliliters';
   }
-  if (formData.typicalDay) params['dailyActivityLevel'] = formData.typicalDay;
+  
+  if (formData.typicalDay) {
+    params['dailyActivityLevel'] = formData.typicalDay;
+    params['typicalDayScale'] = 'sitting/standing/walking/active activity levels';
+  }
+  
   if (formData.energyLevels !== null) {
     params['energyLevelRating'] = formData.energyLevels.toString();
     params['energyLevelScale'] = '1-5 scale (1=lowest, 5=highest)';
   }
+  
   if (formData.sleepAmount !== null) {
     params['averageSleepHours'] = formData.sleepAmount.toString();
     params['sleepMeasurementUnit'] = 'hours per night';
@@ -70,17 +81,25 @@ const mapFormDataToParams = (formData: FormData): Record<string, string> => {
     params['assessment_outOfBreath'] = formData.selfAssessments.outOfBreath.toString();
     params['outOfBreathScale'] = '1-5 agreement scale (1=strongly disagree, 5=strongly agree)';
   }
+  
   if (formData.selfAssessments.fallingBack !== null) {
     params['assessment_stayingConsistent'] = formData.selfAssessments.fallingBack.toString();
     params['consistencyScale'] = '1-5 agreement scale (1=strongly disagree, 5=strongly agree)';
   }
+  
   if (formData.selfAssessments.motivationLevel !== null) {
     params['assessment_motivationStruggle'] = formData.selfAssessments.motivationLevel.toString();
     params['motivationScale'] = '1-5 agreement scale (1=strongly disagree, 5=strongly agree)';
   }
+  
   if (formData.selfAssessments.dietConsistency !== null) {
     params['assessment_dietConsistency'] = formData.selfAssessments.dietConsistency.toString();
     params['dietConsistencyScale'] = '1-5 agreement scale (1=strongly disagree, 5=strongly agree)';
+  }
+  
+  if (formData.selfAssessments.suitableWorkouts !== null) {
+    params['assessment_suitableWorkouts'] = formData.selfAssessments.suitableWorkouts.toString();
+    params['suitableWorkoutsScale'] = '1-5 agreement scale (1=strongly disagree, 5=strongly agree)';
   }
   
   // Personal Information
@@ -269,12 +288,34 @@ const generateContextualParameters = (formData: FormData): Record<string, string
     contextParams['lifestyleFactorsSummary'] = lifestyleFactors.join(', ');
   }
   
+  // Add exercise preference summary
+  const exercisePreferences = formData.exercisePreferences;
+  if (Object.keys(exercisePreferences).length > 0) {
+    const likedExercises = Object.entries(exercisePreferences)
+      .filter(([_, pref]) => pref === 'like')
+      .map(([exercise, _]) => exercise);
+      
+    const dislikedExercises = Object.entries(exercisePreferences)
+      .filter(([_, pref]) => pref === 'dislike')
+      .map(([exercise, _]) => exercise);
+    
+    if (likedExercises.length > 0) {
+      contextParams['favoriteExerciseTypes'] = likedExercises.join(', ');
+    }
+    
+    if (dislikedExercises.length > 0) {
+      contextParams['dislikedExerciseTypes'] = dislikedExercises.join(', ');
+    }
+  }
+  
   return contextParams;
 };
 
 // Main function to submit data to the webhook
 export const submitToWebhook = async (formData: FormData): Promise<boolean> => {
   try {
+    console.log("Preparing to submit survey data to webhook");
+    
     // Get base parameters from form data
     const baseParams = mapFormDataToParams(formData);
     
@@ -293,7 +334,7 @@ export const submitToWebhook = async (formData: FormData): Promise<boolean> => {
     // Build complete URL
     const webhookUrl = `${WEBHOOK_URL}?${urlParams.toString()}`;
     
-    console.log("Submitting data to webhook:", allParams);
+    console.log("Submitting data to webhook with params:", allParams);
     
     const response = await fetch(webhookUrl, {
       method: 'POST',
@@ -303,9 +344,11 @@ export const submitToWebhook = async (formData: FormData): Promise<boolean> => {
     });
     
     if (!response.ok) {
+      console.error('Webhook submission failed with status:', response.status);
       throw new Error('Failed to submit data');
     }
     
+    console.log('Webhook submission successful!');
     return true;
   } catch (error) {
     console.error('Error submitting data:', error);
