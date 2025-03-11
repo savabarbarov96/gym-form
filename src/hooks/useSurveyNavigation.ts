@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { validateStep, clearValidationErrorForStep } from "@/utils/validation";
@@ -7,10 +6,11 @@ import { FormData } from "@/types/survey";
 export const useSurveyNavigation = (
   formData: FormData,
   totalSteps: number,
-  onComplete: () => void
+  onComplete: () => void,
+  initialStep?: number
 ) => {
   const { toast, dismiss } = useToast();
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(initialStep && initialStep > 0 && initialStep <= totalSteps ? initialStep : 1);
   const [animationDirection, setAnimationDirection] = useState("next");
   
   // Clear validation errors when changing steps

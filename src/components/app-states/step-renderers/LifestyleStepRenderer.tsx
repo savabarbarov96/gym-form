@@ -31,6 +31,7 @@ const LifestyleStepRenderer: React.FC<LifestyleStepRendererProps> = ({
         <SugaryFoodsStep
           selected={formData.sugaryFoods}
           onSelect={(sugaryFoods) => setFormData(prev => ({ ...prev, sugaryFoods }))}
+          autoAdvance={true}
         />
       );
     
@@ -47,14 +48,16 @@ const LifestyleStepRenderer: React.FC<LifestyleStepRendererProps> = ({
         <TypicalDayStep
           selected={formData.typicalDay}
           onSelect={(typicalDay) => setFormData(prev => ({ ...prev, typicalDay }))}
+          autoAdvance={true}
         />
       );
     
     case 3: // Step 26
       return (
         <EnergyLevelsStep
-          value={formData.energyLevels}
-          onChange={(energyLevels) => setFormData(prev => ({ ...prev, energyLevels }))}
+          selected={formData.energyLevels}
+          onSelect={(energyLevels) => setFormData(prev => ({ ...prev, energyLevels }))}
+          autoAdvance={true}
         />
       );
     

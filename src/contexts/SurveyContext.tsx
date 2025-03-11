@@ -18,7 +18,12 @@ export const useSurvey = () => {
   return context;
 };
 
-export const SurveyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+interface SurveyProviderProps {
+  children: React.ReactNode;
+  initialStep?: number;
+}
+
+export const SurveyProvider: React.FC<SurveyProviderProps> = ({ children, initialStep }) => {
   // Updated to 32 steps with correct flow (including AllergiesStep)
   const totalSteps = 32;
   
@@ -43,7 +48,7 @@ export const SurveyProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setAnimationDirection, 
     handleNext, 
     handleBack 
-  } = useSurveyNavigation(formData, totalSteps, handleSurveyComplete);
+  } = useSurveyNavigation(formData, totalSteps, handleSurveyComplete, initialStep);
 
   // Combine all our hook values into the context value
   const value: SurveyContextType = {
