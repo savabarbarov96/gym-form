@@ -6,23 +6,28 @@ const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+// Enable debug mode for development
+const DEBUG = true;
+
+// Helper function for logging
+const logDebug = (message: string, data?: any) => {
+  if (DEBUG) {
+    console.log(`[Supabase] ${message}`, data || '');
+  }
+};
+
 // Function to check Supabase connection
 export async function checkSupabaseConnection(): Promise<boolean> {
   try {
-    const { data, error } = await supabase.from('_dummy_query').select('*').limit(1);
-    
-    // If we get an error about the table not existing, that's fine - it means we're connected
-    if (error && error.code === '42P01') {
-      console.log('Supabase connection successful');
-      return true;
-    }
+    logDebug('Checking Supabase connection...');
+    const { data, error } = await supabase.from('form_submissions').select('id').limit(1);
     
     if (error) {
       console.error('Error connecting to Supabase:', error);
       return false;
     }
     
-    console.log('Supabase connection successful');
+    logDebug('Supabase connection successful', data);
     return true;
   } catch (error) {
     console.error('Exception when connecting to Supabase:', error);
@@ -30,88 +35,107 @@ export async function checkSupabaseConnection(): Promise<boolean> {
   }
 }
 
-// Function to create the users table if it doesn't exist
-export async function createUsersTable(): Promise<{ success: boolean; message: string }> {
+// Function to check if RLS policies are set up correctly
+export async function checkRlsPolicies(): Promise<{ success: boolean; message: string }> {
   try {
-    // Check if the table exists
-    const { data: tableExists, error: tableCheckError } = await supabase
+    logDebug('Testing RLS policies with an insert...');
+    
+    // Try to insert a test record
+    const testData = {
+      name: 'Test User',
+      email: 'test@example.com',
+      submission_date: new Date().toISOString(),
+      form_data: { test: true }
+    };
+    
+    const { data, error } = await supabase
       .from('form_submissions')
-      .select('*')
-      .limit(1);
+      .insert([testData])
+      .select();
     
-    // If we get a specific error about the table not existing, create it
-    if (tableCheckError && tableCheckError.code === '42P01') {
-      // Table doesn't exist, so we need to create it
-      // Note: In Supabase, we typically create tables through the dashboard
-      // This is a workaround to check if we can access the table
-      
-      console.log('Table does not exist. Please create it in the Supabase dashboard with the following SQL:');
-      console.log(`
-        CREATE TABLE form_submissions (
-          id SERIAL PRIMARY KEY,
-          name TEXT NOT NULL,
-          email TEXT NOT NULL,
-          submission_date TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-          form_data JSONB
-        );
-      `);
-      
-      return { 
-        success: false, 
-        message: 'Table does not exist. Please create it in the Supabase dashboard.' 
+    if (error) {
+      console.error('RLS policy test failed:', error);
+      return {
+        success: false,
+        message: `RLS policy test failed: ${error.message}. Code: ${error.code}`
       };
     }
     
-    if (tableCheckError) {
-      console.error('Error checking if table exists:', tableCheckError);
-      return { 
-        success: false, 
-        message: `Error checking if table exists: ${tableCheckError.message}` 
-      };
+    // If successful, delete the test record
+    if (data && data.length > 0) {
+      const id = data[0].id;
+      logDebug('Test record created successfully, cleaning up...', id);
+      
+      const { error: deleteError } = await supabase
+        .from('form_submissions')
+        .delete()
+        .eq('id', id);
+      
+      if (deleteError) {
+        console.warn('Could not delete test record:', deleteError);
+      }
     }
     
-    return { 
-      success: true, 
-      message: 'Table exists and is accessible' 
+    return {
+      success: true,
+      message: 'RLS policies are configured correctly'
     };
   } catch (error) {
-    console.error('Exception when creating table:', error);
-    return { 
-      success: false, 
-      message: `Exception when creating table: ${error instanceof Error ? error.message : String(error)}` 
+    console.error('Exception when testing RLS policies:', error);
+    return {
+      success: false,
+      message: `Exception when testing RLS policies: ${error instanceof Error ? error.message : String(error)}`
     };
   }
 }
 
-// Function to save user data
+// Function to save user data to form_submissions table
 export async function saveUserData(
   name: string,
   email: string,
-  formData?: any
-): Promise<{ success: boolean; message: string }> {
+  formData: any
+): Promise<{ success: boolean; message: string; data?: any }> {
   try {
+    // Validate inputs
+    if (!name || !email) {
+      return {
+        success: false,
+        message: 'Name and email are required'
+      };
+    }
+
+    logDebug('Saving user data to Supabase...', { name, email });
+    
+    // Prepare the data to insert
+    const dataToInsert = { 
+      name, 
+      email, 
+      submission_date: new Date().toISOString(),
+      form_data: formData
+    };
+    
+    logDebug('Data to insert:', dataToInsert);
+
+    // Insert data into form_submissions table
     const { data, error } = await supabase
       .from('form_submissions')
-      .insert([
-        { 
-          name, 
-          email, 
-          submission_date: new Date().toISOString(),
-          form_data: formData || {}
-        }
-      ]);
+      .insert([dataToInsert])
+      .select();
     
     if (error) {
       console.error('Error saving user data:', error);
       return { 
         success: false, 
-        message: `Error saving user data: ${error.message}` 
+        message: `Error saving user data: ${error.message}. Code: ${error.code}` 
       };
     }
     
+    logDebug('User data saved successfully', data);
+    
     return { 
       success: true, 
-      message: 'User data saved successfully' 
+      message: 'User data saved successfully',
+      data
     };
   } catch (error) {
     console.error('Exception when saving user data:', error);
@@ -129,6 +153,8 @@ export async function uploadToSupabase(
   path: string
 ): Promise<{ data: any; error: any }> {
   try {
+    logDebug(`Uploading file to ${bucket}/${path}...`);
+    
     const { data, error } = await supabase.storage
       .from(bucket)
       .upload(path, file, {
@@ -141,6 +167,7 @@ export async function uploadToSupabase(
       return { data: null, error };
     }
 
+    logDebug('File uploaded successfully', data);
     return { data, error: null };
   } catch (error) {
     console.error('Exception when uploading:', error);
@@ -150,6 +177,8 @@ export async function uploadToSupabase(
 
 // Function to get a public URL for a file in a Supabase bucket
 export function getPublicUrl(bucket: string, path: string): string {
+  logDebug(`Getting public URL for ${bucket}/${path}...`);
   const { data } = supabase.storage.from(bucket).getPublicUrl(path);
+  logDebug('Public URL:', data.publicUrl);
   return data.publicUrl;
 } 

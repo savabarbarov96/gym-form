@@ -32,16 +32,23 @@ export const useSurveySubmit = (
     // Save user data to Supabase
     if (formData.personalInfo?.name && formData.personalInfo?.email) {
       try {
-        await saveUserData(
+        const result = await saveUserData(
           formData.personalInfo.name,
           formData.personalInfo.email,
           formData
         );
-        console.log("User data saved to Supabase");
+        
+        if (result.success) {
+          console.log("User data saved to Supabase successfully");
+        } else {
+          console.error("Failed to save user data to Supabase:", result.message);
+        }
       } catch (error) {
         console.error("Error saving user data to Supabase:", error);
         // Continue with webhook submission even if Supabase save fails
       }
+    } else {
+      console.warn("Missing name or email, skipping Supabase save");
     }
     
     // Send to webhook while showing loading animation

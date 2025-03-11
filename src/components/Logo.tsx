@@ -1,9 +1,17 @@
+import React from "react";
 
 const Logo = () => {
+  // Use the local logo file from public directory
+  const logoUrl = "/rm-gym-logo.png";
+  
   return (
-    <div className="flex items-center">
-      <div className="bg-orange text-white font-bold p-1.5 text-sm">MIO</div>
-      <div className="text-sm font-bold ml-1">MUSCLES</div>
+    <div className="bg-white p-2 rounded-xl shadow-sm">
+      <img 
+        src={logoUrl} 
+        alt="RM Gym Logo" 
+        className="h-10 rounded-lg" 
+        style={{ objectFit: 'contain' }}
+      />
     </div>
   );
 };

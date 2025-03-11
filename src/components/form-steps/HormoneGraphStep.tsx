@@ -10,45 +10,39 @@ interface HormoneGraphStepProps {
 const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) => {
   const chartRef = useRef<HTMLDivElement>(null);
   
-  // Skip this step for female users
   useEffect(() => {
-    if (gender === "female") {
-      // Auto-advance to next step
-      setTimeout(() => {
-        onNext();
-      }, 100);
-    }
-  }, [gender, onNext]);
-  
-  useEffect(() => {
-    if (!chartRef.current || gender === "female") return;
+    if (!chartRef.current) return;
     
     // Clear any existing SVG
     d3.select(chartRef.current).selectAll("*").remove();
     
-    // Updated data with lower percentages for testosterone (starting at 20%, ending at 40%)
+    // Data for the chart - now showing happiness and stress levels
     const data = [
-      { name: "Сега", testosterone: 20, cortisol: 80 },
-      { name: "Седмица 2", testosterone: 25, cortisol: 65 },
-      { name: "Седмица 4", testosterone: 30, cortisol: 50 },
-      { name: "Седмица 8", testosterone: 35, cortisol: 35 },
-      { name: "Седмица 12", testosterone: 40, cortisol: 20 }
+      { week: 'Седмица 1', happiness: 50, stress: 70 },
+      { week: 'Седмица 2', happiness: 55, stress: 65 },
+      { week: 'Седмица 3', happiness: 60, stress: 60 },
+      { week: 'Седмица 4', happiness: 65, stress: 55 },
+      { week: 'Седмица 5', happiness: 70, stress: 50 },
+      { week: 'Седмица 6', happiness: 75, stress: 45 },
+      { week: 'Седмица 7', happiness: 80, stress: 40 },
+      { week: 'Седмица 8', happiness: 85, stress: 35 },
     ];
     
-    // Round values for cleaner display
-    const roundedData = data.map(item => ({
-      name: item.name,
-      testosterone: Math.round(item.testosterone * 10) / 10,
-      cortisol: Math.round(item.cortisol * 10) / 10
-    }));
-
-    // Set up dimensions - adjusted to fit container without scrolling
+    // Set up dimensions
     const parentWidth = chartRef.current.clientWidth;
-    const margin = { top: 50, right: Math.min(130, parentWidth * 0.1), bottom: 70, left: Math.min(70, parentWidth * 0.1) };
-    const width = parentWidth - margin.left - margin.right;
-    const height = 400 - margin.top - margin.bottom;
+    const isMobile = parentWidth < 500;
     
-    // Create SVG element with dark background matching the website theme
+    const margin = { 
+      top: 60, 
+      right: isMobile ? 20 : 80, 
+      bottom: isMobile ? 100 : 70, 
+      left: isMobile ? 50 : 70 
+    };
+    
+    const width = parentWidth - margin.left - margin.right;
+    const height = isMobile ? 350 : 400 - margin.top - margin.bottom;
+    
+    // Create SVG element with dark background
     const svg = d3.select(chartRef.current)
       .append("svg")
       .attr("width", width + margin.left + margin.right)
@@ -56,35 +50,43 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) =
       .append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
     
-    // Add dark background for graph matching the website theme
+    // Add dark background for graph
     svg.append("rect")
       .attr("width", width)
       .attr("height", height)
-      .attr("fill", "hsl(var(--card))");
+      .attr("fill", "#1a1a1a");
     
-    // X axis - improved styling
+    // X axis
     const x = d3.scaleBand()
-      .domain(roundedData.map(d => d.name))
+      .domain(data.map(d => d.week))
       .range([0, width])
       .padding(0.2);
     
-    svg.append("g")
+    const xAxis = svg.append("g")
       .attr("transform", `translate(0,${height})`)
       .call(d3.axisBottom(x)
-        .tickSize(0))
-      .selectAll("text")
-      .style("text-anchor", "middle")
-      .attr("dy", "1em")
-      .style("fill", "hsl(var(--muted-foreground))")
-      .style("font-size", "12px");
+        .tickSize(0));
     
-    // Remove x-axis line but keep ticks
-    svg.selectAll(".domain").style("stroke", "hsl(var(--border))");
+    // Adjust x-axis labels for mobile
+    if (isMobile) {
+      xAxis.selectAll("text")
+        .style("text-anchor", "end")
+        .attr("dx", "-.8em")
+        .attr("dy", ".15em")
+        .attr("transform", "rotate(-45)")
+        .style("fill", "#888")
+        .style("font-size", "10px");
+    } else {
+      xAxis.selectAll("text")
+        .style("text-anchor", "middle")
+        .attr("dy", "1em")
+        .style("fill", "#888")
+        .style("font-size", "12px");
+    }
     
-    // Y axis - improved styling
-    const yMax = 100; // Fixed max at 100%
+    // Y axis
     const y = d3.scaleLinear()
-      .domain([0, yMax])
+      .domain([0, 100])
       .range([height, 0]);
     
     svg.append("g")
@@ -92,248 +94,186 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) =
         .tickSize(-width)
         .tickFormat(d => d + "%"))
       .selectAll("text")
-      .style("fill", "hsl(var(--muted-foreground))")
-      .style("font-size", "12px");
+      .style("fill", "#888")
+      .style("font-size", isMobile ? "10px" : "12px");
     
     // Style the y-axis grid lines
     svg.selectAll(".tick line")
-      .style("stroke", "hsl(var(--border))")
+      .style("stroke", "#333")
       .style("stroke-opacity", 0.5);
     
-    // Line generator for testosterone
-    const testosteroneLine = d3.line<{name: string, testosterone: number}>()
-      .x(d => (x(d.name) || 0) + x.bandwidth() / 2)
-      .y(d => y(d.testosterone))
+    // Line generator for happiness
+    const happinessLine = d3.line<{week: string, happiness: number}>()
+      .x(d => (x(d.week) || 0) + x.bandwidth() / 2)
+      .y(d => y(d.happiness))
       .curve(d3.curveCatmullRom.alpha(0.5));
     
-    // Line generator for cortisol
-    const cortisolLine = d3.line<{name: string, cortisol: number}>()
-      .x(d => (x(d.name) || 0) + x.bandwidth() / 2)
-      .y(d => y(d.cortisol))
+    // Line generator for stress
+    const stressLine = d3.line<{week: string, stress: number}>()
+      .x(d => (x(d.week) || 0) + x.bandwidth() / 2)
+      .y(d => y(d.stress))
       .curve(d3.curveCatmullRom.alpha(0.5));
     
-    // Add gradient definitions with updated colors
+    // Add gradient definitions
     const defs = svg.append("defs");
     
-    // Updated testosterone gradient to match theme orange
-    const testosteroneGradient = defs.append("linearGradient")
-      .attr("id", "testosteroneGradient")
+    const happinessGradient = defs.append("linearGradient")
+      .attr("id", "happinessGradient")
       .attr("x1", "0%")
       .attr("x2", "0%")
       .attr("y1", "0%")
       .attr("y2", "100%");
     
-    testosteroneGradient.append("stop")
+    happinessGradient.append("stop")
       .attr("offset", "0%")
-      .attr("stop-color", "hsl(var(--primary))")
+      .attr("stop-color", "#54D62C")
       .attr("stop-opacity", 0.8);
     
-    testosteroneGradient.append("stop")
+    happinessGradient.append("stop")
       .attr("offset", "100%")
-      .attr("stop-color", "hsl(var(--primary))")
+      .attr("stop-color", "#54D62C")
       .attr("stop-opacity", 0.1);
     
-    // Updated cortisol gradient to better match the theme
-    const cortisolGradient = defs.append("linearGradient")
-      .attr("id", "cortisolGradient")
+    const stressGradient = defs.append("linearGradient")
+      .attr("id", "stressGradient")
       .attr("x1", "0%")
       .attr("x2", "0%")
       .attr("y1", "0%")
       .attr("y2", "100%");
     
-    cortisolGradient.append("stop")
+    stressGradient.append("stop")
       .attr("offset", "0%")
-      .attr("stop-color", "hsl(var(--muted-foreground))")
+      .attr("stop-color", "#FF6B35")
       .attr("stop-opacity", 0.8);
     
-    cortisolGradient.append("stop")
+    stressGradient.append("stop")
       .attr("offset", "100%")
-      .attr("stop-color", "hsl(var(--muted-foreground))")
+      .attr("stop-color", "#FF6B35")
       .attr("stop-opacity", 0.1);
     
-    // Add area under testosterone line
-    const testosteroneArea = d3.area<{name: string, testosterone: number}>()
-      .x(d => (x(d.name) || 0) + x.bandwidth() / 2)
+    // Add area under happiness line
+    const happinessArea = d3.area<{week: string, happiness: number}>()
+      .x(d => (x(d.week) || 0) + x.bandwidth() / 2)
       .y0(height)
-      .y1(d => y(d.testosterone))
+      .y1(d => y(d.happiness))
       .curve(d3.curveCatmullRom.alpha(0.5));
     
     svg.append("path")
-      .datum(roundedData)
-      .attr("fill", "url(#testosteroneGradient)")
+      .datum(data)
+      .attr("fill", "url(#happinessGradient)")
       .attr("fill-opacity", 0)
-      .attr("d", testosteroneArea)
+      .attr("d", happinessArea)
       .transition()
       .duration(2000)
       .attr("fill-opacity", 0.3);
     
-    // Add area under cortisol line
-    const cortisolArea = d3.area<{name: string, cortisol: number}>()
-      .x(d => (x(d.name) || 0) + x.bandwidth() / 2)
+    // Add area under stress line
+    const stressArea = d3.area<{week: string, stress: number}>()
+      .x(d => (x(d.week) || 0) + x.bandwidth() / 2)
       .y0(height)
-      .y1(d => y(d.cortisol))
+      .y1(d => y(d.stress))
       .curve(d3.curveCatmullRom.alpha(0.5));
     
     svg.append("path")
-      .datum(roundedData)
-      .attr("fill", "url(#cortisolGradient)")
+      .datum(data)
+      .attr("fill", "url(#stressGradient)")
       .attr("fill-opacity", 0)
-      .attr("d", cortisolArea)
+      .attr("d", stressArea)
       .transition()
       .duration(2000)
       .attr("fill-opacity", 0.3);
     
-    // Add testosterone path with animation - updated color to match theme
-    const testosteronePath = svg.append("path")
-      .datum(roundedData)
+    // Add happiness path with animation
+    const happinessPath = svg.append("path")
+      .datum(data)
       .attr("fill", "none")
-      .attr("stroke", "hsl(var(--primary))")
+      .attr("stroke", "#54D62C")
       .attr("stroke-width", 3)
-      .attr("d", testosteroneLine);
+      .attr("d", happinessLine);
     
-    const testosteroneLength = testosteronePath.node()?.getTotalLength() || 0;
+    const happinessLength = happinessPath.node()?.getTotalLength() || 0;
     
-    testosteronePath
-      .attr("stroke-dasharray", testosteroneLength)
-      .attr("stroke-dashoffset", testosteroneLength)
+    happinessPath
+      .attr("stroke-dasharray", happinessLength)
+      .attr("stroke-dashoffset", happinessLength)
       .transition()
       .duration(2000)
       .attr("stroke-dashoffset", 0);
     
-    // Add cortisol path with animation - updated color to match theme
-    const cortisolPath = svg.append("path")
-      .datum(roundedData)
+    // Add stress path with animation
+    const stressPath = svg.append("path")
+      .datum(data)
       .attr("fill", "none")
-      .attr("stroke", "hsl(var(--muted-foreground))")
+      .attr("stroke", "#FF6B35")
       .attr("stroke-width", 3)
-      .attr("d", cortisolLine);
+      .attr("d", stressLine);
     
-    const cortisolLength = cortisolPath.node()?.getTotalLength() || 0;
+    const stressLength = stressPath.node()?.getTotalLength() || 0;
     
-    cortisolPath
-      .attr("stroke-dasharray", cortisolLength)
-      .attr("stroke-dashoffset", cortisolLength)
+    stressPath
+      .attr("stroke-dasharray", stressLength)
+      .attr("stroke-dashoffset", stressLength)
       .transition()
       .duration(2000)
       .attr("stroke-dashoffset", 0);
     
-    // Add animated data points with updated colors
-    svg.selectAll(".testosteronePoint")
-      .data(roundedData)
+    // Add animated data points
+    svg.selectAll(".happinessPoint")
+      .data(data)
       .enter()
       .append("circle")
-      .attr("class", "testosteronePoint")
-      .attr("cx", d => (x(d.name) || 0) + x.bandwidth() / 2)
-      .attr("cy", d => y(d.testosterone))
+      .attr("class", "happinessPoint")
+      .attr("cx", d => (x(d.week) || 0) + x.bandwidth() / 2)
+      .attr("cy", d => y(d.happiness))
       .attr("r", 0)
-      .attr("fill", "hsl(var(--primary))")
+      .attr("fill", "#54D62C")
       .transition()
       .delay((d, i) => i * 300)
       .duration(500)
-      .attr("r", 6);
+      .attr("r", isMobile ? 4 : 6);
     
-    svg.selectAll(".cortisolPoint")
-      .data(roundedData)
+    svg.selectAll(".stressPoint")
+      .data(data)
       .enter()
       .append("circle")
-      .attr("class", "cortisolPoint")
-      .attr("cx", d => (x(d.name) || 0) + x.bandwidth() / 2)
-      .attr("cy", d => y(d.cortisol))
+      .attr("class", "stressPoint")
+      .attr("cx", d => (x(d.week) || 0) + x.bandwidth() / 2)
+      .attr("cy", d => y(d.stress))
       .attr("r", 0)
-      .attr("fill", "hsl(var(--muted-foreground))")
+      .attr("fill", "#FF6B35")
       .transition()
       .delay((d, i) => i * 300)
       .duration(500)
-      .attr("r", 6);
+      .attr("r", isMobile ? 4 : 6);
     
-    // Add animated data labels with responsive font size and updated colors
-    const fontSize = Math.max(10, Math.min(12, parentWidth / 50));
-    
-    svg.selectAll(".testosteroneLabel")
-      .data(roundedData)
-      .enter()
-      .append("text")
-      .attr("class", "testosteroneLabel")
-      .attr("x", d => (x(d.name) || 0) + x.bandwidth() / 2)
-      .attr("y", d => y(d.testosterone) - 15)
+    // Add title
+    svg.append("text")
+      .attr("x", width / 2)
+      .attr("y", -20)
       .attr("text-anchor", "middle")
-      .style("font-size", `${fontSize}px`)
-      .style("fill", "hsl(var(--primary))")
-      .style("opacity", 0)
-      .text(d => d.testosterone + "%")
-      .transition()
-      .delay((d, i) => i * 300 + 200)
-      .duration(500)
-      .style("opacity", 1);
-    
-    svg.selectAll(".cortisolLabel")
-      .data(roundedData)
-      .enter()
-      .append("text")
-      .attr("class", "cortisolLabel")
-      .attr("x", d => (x(d.name) || 0) + x.bandwidth() / 2)
-      .attr("y", d => y(d.cortisol) - 15)
-      .attr("text-anchor", "middle")
-      .style("font-size", `${fontSize}px`)
-      .style("fill", "hsl(var(--muted-foreground))")
-      .style("opacity", 0)
-      .text(d => d.cortisol + "%")
-      .transition()
-      .delay((d, i) => i * 300 + 200)
-      .duration(500)
-      .style("opacity", 1);
+      .style("font-size", isMobile ? "16px" : "20px")
+      .style("fill", "#fff")
+      .style("font-weight", "bold")
+      .text("Очаквани промени в благосъстоянието");
     
     // Add x-axis label
     svg.append("text")
       .attr("x", width / 2)
-      .attr("y", height + 50)
+      .attr("y", height + (isMobile ? 70 : 50))
       .attr("text-anchor", "middle")
-      .style("font-size", "14px")
-      .style("fill", "hsl(var(--muted-foreground))")
+      .style("font-size", isMobile ? "12px" : "14px")
+      .style("fill", "#888")
       .text("Времева линия");
     
     // Add y-axis label
     svg.append("text")
       .attr("transform", "rotate(-90)")
       .attr("x", -height / 2)
-      .attr("y", -40)
+      .attr("y", isMobile ? -35 : -40)
       .attr("text-anchor", "middle")
-      .style("font-size", "14px")
-      .style("fill", "hsl(var(--muted-foreground))")
-      .text("Процент (%)");
-    
-    // Improved legend positioning to ensure line indicators are fully visible
-    // Instead of positioning it to the right, we'll position it at the top for better visibility
-    const legend = svg.append("g")
-      .attr("transform", `translate(10, -40)`);
-    
-    legend.append("rect")
-      .attr("x", 0)
-      .attr("y", 0)
-      .attr("width", 15)
-      .attr("height", 15)
-      .attr("fill", "hsl(var(--primary))");
-    
-    legend.append("text")
-      .attr("x", 25)
-      .attr("y", 12.5)
-      .text("Тестостерон")
-      .style("font-size", "14px")
-      .style("fill", "hsl(var(--foreground))");
-    
-    legend.append("rect")
-      .attr("x", 150)
-      .attr("y", 0)
-      .attr("width", 15)
-      .attr("height", 15)
-      .attr("fill", "hsl(var(--muted-foreground))");
-    
-    legend.append("text")
-      .attr("x", 175)
-      .attr("y", 12.5)
-      .text("Кортизол (Стрес)")
-      .style("font-size", "14px")
-      .style("fill", "hsl(var(--foreground))");
+      .style("font-size", isMobile ? "12px" : "14px")
+      .style("fill", "#888")
+      .text("Ниво (%)");
     
     // Handle resize
     const handleResize = () => {
@@ -345,34 +285,35 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) =
     
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [gender, onNext]);
-
-  if (gender === "female") {
-    return null;
-  }
+  }, []);
 
   return (
     <div className="text-center max-w-3xl mx-auto">
-      <h1 className="text-4xl sm:text-5xl font-bold mb-6">Вашите хормони ще се подобрят</h1>
+      <h1 className="text-4xl sm:text-5xl font-bold mb-6">Вашето благосъстояние ще се подобри</h1>
       <p className="text-xl text-muted-foreground mb-10 max-w-xl mx-auto">
-        Докато следвате нашата програма, Вашият тестостерон ще се увеличи, а кортизолът (хормон на стреса) ще намалее
+        Докато следвате нашата програма, нивото на щастие ще се увеличи, а нивото на стрес ще намалее
       </p>
       
       <div className="bg-card border border-border p-6 rounded-xl mb-10">
+        {/* Legend positioned at the top for better visibility */}
+        <div className="flex justify-center items-center gap-6 mb-4">
+          <div className="flex items-center">
+            <div className="w-4 h-4 bg-[#54D62C] rounded-sm mr-2"></div>
+            <span className="text-sm">Ниво на щастие</span>
+          </div>
+          <div className="flex items-center">
+            <div className="w-4 h-4 bg-[#FF6B35] rounded-sm mr-2"></div>
+            <span className="text-sm">Ниво на стрес</span>
+          </div>
+        </div>
+        
         <div 
           ref={chartRef} 
           className="w-full h-[400px]"
         ></div>
       </div>
       
-      <motion.button
-        className="btn-primary mt-6"
-        onClick={onNext}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        Продължи
-      </motion.button>
+      {/* Removed the duplicate continue button */}
     </div>
   );
 };

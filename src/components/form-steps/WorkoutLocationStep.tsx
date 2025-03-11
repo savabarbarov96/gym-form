@@ -1,14 +1,23 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Home, Building2, Repeat } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useSurvey } from '@/contexts/SurveyContext';
 
 interface WorkoutLocationStepProps {
   selectedLocation: string | null;
   onSelect: (location: string) => void;
+  autoAdvance?: boolean;
 }
 
-const WorkoutLocationStep = ({ selectedLocation, onSelect }: WorkoutLocationStepProps) => {
+const WorkoutLocationStep = ({ 
+  selectedLocation, 
+  onSelect, 
+  autoAdvance = true 
+}: WorkoutLocationStepProps) => {
+  const { handleNext } = useSurvey();
+  const initialValueRef = useRef<string | null>(selectedLocation);
+  
   const locations = [
     {
       id: "home",
@@ -29,6 +38,25 @@ const WorkoutLocationStep = ({ selectedLocation, onSelect }: WorkoutLocationStep
       icon: Repeat
     }
   ];
+  
+  // Auto-advance effect
+  useEffect(() => {
+    if (autoAdvance && 
+        selectedLocation !== null && 
+        initialValueRef.current === null) {
+      
+      // Short delay to allow the user to see their selection
+      const timer = setTimeout(() => {
+        handleNext();
+      }, 800);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [selectedLocation, autoAdvance, handleNext]);
+  
+  const handleSelectLocation = (location: string) => {
+    onSelect(location);
+  };
 
   return (
     <div className="text-center">
@@ -36,7 +64,11 @@ const WorkoutLocationStep = ({ selectedLocation, onSelect }: WorkoutLocationStep
       <p className="text-xl mb-8 text-muted-foreground">Ще персонализираме Вашия план според наличното оборудване</p>
       
       <div className="max-w-3xl mx-auto">
-        <RadioGroup value={selectedLocation || ""} onValueChange={onSelect} className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <RadioGroup 
+          value={selectedLocation || ""} 
+          onValueChange={handleSelectLocation} 
+          className="grid grid-cols-1 md:grid-cols-3 gap-6"
+        >
           {locations.map((location) => {
             const Icon = location.icon;
             return (
@@ -46,7 +78,7 @@ const WorkoutLocationStep = ({ selectedLocation, onSelect }: WorkoutLocationStep
                   "option-card card-hover-effect",
                   selectedLocation === location.id ? 'selected' : ''
                 )}
-                onClick={() => onSelect(location.id)}
+                onClick={() => handleSelectLocation(location.id)}
               >
                 <div className="p-6 flex flex-col h-full">
                   <div className="mb-6 flex justify-center">
@@ -74,6 +106,12 @@ const WorkoutLocationStep = ({ selectedLocation, onSelect }: WorkoutLocationStep
             );
           })}
         </RadioGroup>
+        
+        {autoAdvance && selectedLocation !== null && initialValueRef.current === null && (
+          <p className="text-sm text-muted-foreground mt-6 animate-pulse">
+            Преминаване към следващия въпрос...
+          </p>
+        )}
       </div>
     </div>
   );

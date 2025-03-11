@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, TrendingDown, Dumbbell, BarChart, Calendar, Timer, Heart, Award } from "lucide-react";
@@ -42,11 +41,11 @@ const ResultsState: React.FC<ResultsStateProps> = ({ handleGetPlan }) => {
     >
       <div className="text-center mb-8">
         <h1 className="text-5xl font-bold mb-8">
-          Personal summary based on your answers
+          Персонално обобщение въз основа на Вашите отговори
         </h1>
         
         <p className="text-muted-foreground text-xl mb-16 max-w-2xl mx-auto">
-          Here's what you can expect to achieve with your personalized plan
+          Ето какво можете да очаквате да постигнете с Вашия персонализиран план
         </p>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
@@ -54,7 +53,7 @@ const ResultsState: React.FC<ResultsStateProps> = ({ handleGetPlan }) => {
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange/30 to-orange/70"></div>
             <h2 className="text-2xl font-bold mb-4 flex items-center gap-3">
               <Calendar className="text-orange" />
-              <span>Current State</span>
+              <span>Текущо състояние</span>
             </h2>
             
             <div className="flex justify-center mb-8 h-48">
@@ -65,7 +64,7 @@ const ResultsState: React.FC<ResultsStateProps> = ({ handleGetPlan }) => {
               <div>
                 <div className="text-muted-foreground flex items-center gap-2">
                   <TrendingDown className="w-4 h-4" />
-                  Body fat
+                  Телесни мазнини
                 </div>
                 <div className="text-orange text-xl font-semibold">20-24%</div>
               </div>
@@ -73,7 +72,7 @@ const ResultsState: React.FC<ResultsStateProps> = ({ handleGetPlan }) => {
               <div>
                 <div className="text-muted-foreground flex items-center gap-2">
                   <Timer className="w-4 h-4" />
-                  Fitness age
+                  Фитнес възраст
                 </div>
                 <div className="text-orange text-xl font-semibold">36</div>
               </div>
@@ -81,7 +80,7 @@ const ResultsState: React.FC<ResultsStateProps> = ({ handleGetPlan }) => {
               <div>
                 <div className="text-muted-foreground flex items-center gap-2">
                   <Dumbbell className="w-4 h-4" />
-                  Body muscles
+                  Мускулна маса
                 </div>
                 <div className="flex gap-1 mt-2">
                   {[1, 2, 3, 4, 5].map((i) => (
@@ -99,7 +98,7 @@ const ResultsState: React.FC<ResultsStateProps> = ({ handleGetPlan }) => {
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange/50 to-orange"></div>
             <h2 className="text-2xl font-bold mb-4 flex items-center gap-3">
               <BarChart className="text-orange" />
-              <span>After 6 months</span>
+              <span>След 6 месеца</span>
             </h2>
             
             <div className="flex justify-center mb-8 h-48">
@@ -110,7 +109,7 @@ const ResultsState: React.FC<ResultsStateProps> = ({ handleGetPlan }) => {
               <div>
                 <div className="text-muted-foreground flex items-center gap-2">
                   <TrendingDown className="w-4 h-4" />
-                  Body fat
+                  Телесни мазнини
                 </div>
                 <div className="text-orange text-xl font-semibold">15-17%</div>
               </div>
@@ -118,7 +117,7 @@ const ResultsState: React.FC<ResultsStateProps> = ({ handleGetPlan }) => {
               <div>
                 <div className="text-muted-foreground flex items-center gap-2">
                   <Timer className="w-4 h-4" />
-                  Fitness age
+                  Фитнес възраст
                 </div>
                 <div className="text-orange text-xl font-semibold">32</div>
               </div>
@@ -126,7 +125,7 @@ const ResultsState: React.FC<ResultsStateProps> = ({ handleGetPlan }) => {
               <div>
                 <div className="text-muted-foreground flex items-center gap-2">
                   <Dumbbell className="w-4 h-4" />
-                  Body muscles
+                  Мускулна маса
                 </div>
                 <div className="flex gap-1 mt-2">
                   {[1, 2, 3, 4, 5].map((i) => (
@@ -142,22 +141,18 @@ const ResultsState: React.FC<ResultsStateProps> = ({ handleGetPlan }) => {
         </div>
         
         <div className="text-xs text-muted-foreground mb-16">
-          *Results vary by individual and are not guaranteed. Your personalized plan is based on your specific information.
+          *Резултатите варират индивидуално и не са гарантирани. Вашият персонализиран план е базиран на Вашата специфична информация.
         </div>
         
-        <motion.a 
-          href="#" 
-          onClick={(e) => {
-            e.preventDefault();
-            handleGetPlan();
-          }}
+        <motion.button 
+          onClick={handleGetPlan}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           className="inline-flex items-center gap-3 text-white bg-orange hover:bg-orange-hover px-12 py-4 rounded-lg text-xl font-bold transition-colors"
         >
-          Get my personalized plan
+          Получете моя персонализиран план
           <ArrowRight size={20} />
-        </motion.a>
+        </motion.button>
       </div>
     </motion.div>
   );

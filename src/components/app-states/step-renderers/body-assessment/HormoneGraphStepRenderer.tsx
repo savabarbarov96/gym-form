@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { HormoneGraphStep } from '@/components/form-steps';
 import { FormData } from '@/types/survey';
@@ -12,19 +11,7 @@ const HormoneGraphStepRenderer = ({
   handleNext,
   formData
 }: HormoneGraphStepRendererProps) => {
-  // If the user is female, we should skip this step
-  React.useEffect(() => {
-    if (formData.gender === 'female') {
-      // Skip to the next step for female users
-      handleNext();
-    }
-  }, [formData.gender, handleNext]);
-
-  // Only render for male users
-  if (formData.gender === 'female') {
-    return null;
-  }
-
+  // Now we show this step for all genders
   return (
     <HormoneGraphStep
       onNext={handleNext}

@@ -1,12 +1,21 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useSurvey } from '@/contexts/SurveyContext';
 
 interface WorkoutIntensityStepProps {
   selectedIntensity: string | null;
   onSelect: (intensity: string) => void;
+  autoAdvance?: boolean;
 }
 
-const WorkoutIntensityStep = ({ selectedIntensity, onSelect }: WorkoutIntensityStepProps) => {
+const WorkoutIntensityStep = ({ 
+  selectedIntensity, 
+  onSelect, 
+  autoAdvance = true 
+}: WorkoutIntensityStepProps) => {
+  const { handleNext } = useSurvey();
+  const initialValueRef = useRef<string | null>(selectedIntensity);
+  
   const intensities = [
     {
       id: "light",
@@ -29,6 +38,25 @@ const WorkoutIntensityStep = ({ selectedIntensity, onSelect }: WorkoutIntensityS
       description: "Ще оптимизираме според Вашите цели и ниво на физическа подготовка"
     }
   ];
+  
+  // Auto-advance effect
+  useEffect(() => {
+    if (autoAdvance && 
+        selectedIntensity !== null && 
+        initialValueRef.current === null) {
+      
+      // Short delay to allow the user to see their selection
+      const timer = setTimeout(() => {
+        handleNext();
+      }, 800);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [selectedIntensity, autoAdvance, handleNext]);
+  
+  const handleSelectIntensity = (intensity: string) => {
+    onSelect(intensity);
+  };
 
   return (
     <div className="text-center">
@@ -36,12 +64,16 @@ const WorkoutIntensityStep = ({ selectedIntensity, onSelect }: WorkoutIntensityS
       <p className="text-xl mb-8">Ще коригираме интензивността на упражненията съответно</p>
       
       <div className="max-w-3xl mx-auto">
-        <RadioGroup value={selectedIntensity || ""} onValueChange={onSelect} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <RadioGroup 
+          value={selectedIntensity || ""} 
+          onValueChange={handleSelectIntensity} 
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+        >
           {intensities.map((intensity) => (
             <div
               key={intensity.id}
               className={`option-card ${selectedIntensity === intensity.id ? 'selected' : ''}`}
-              onClick={() => onSelect(intensity.id)}
+              onClick={() => handleSelectIntensity(intensity.id)}
             >
               <div className="p-6">
                 <div className="flex items-start gap-3">
@@ -57,6 +89,12 @@ const WorkoutIntensityStep = ({ selectedIntensity, onSelect }: WorkoutIntensityS
             </div>
           ))}
         </RadioGroup>
+        
+        {autoAdvance && selectedIntensity !== null && initialValueRef.current === null && (
+          <p className="text-sm text-muted-foreground mt-6 animate-pulse">
+            Преминаване към следващия въпрос...
+          </p>
+        )}
       </div>
     </div>
   );

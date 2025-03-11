@@ -1,19 +1,28 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { UserCircle2, User, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useSurvey } from '@/contexts/SurveyContext';
 
 interface BodyTypeStepProps {
   selectedType: string | null;
   onSelect: (type: string) => void;
+  autoAdvance?: boolean;
 }
 
-const BodyTypeStep = ({ selectedType, onSelect }: BodyTypeStepProps) => {
+const BodyTypeStep = ({ 
+  selectedType, 
+  onSelect, 
+  autoAdvance = true 
+}: BodyTypeStepProps) => {
+  const { handleNext } = useSurvey();
+  const initialValueRef = useRef<string | null>(selectedType);
+  
   const bodyTypes = [
     { 
       label: "Слабо", 
       id: "slim", 
       icon: UserCircle2,
-      description: "Малка структура с lean телосложение"
+      description: "Малка структура с слабо телосложение"
     },
     { 
       label: "Средно", 
@@ -28,6 +37,25 @@ const BodyTypeStep = ({ selectedType, onSelect }: BodyTypeStepProps) => {
       description: "По-голяма структура с повече маса"
     },
   ];
+  
+  // Auto-advance effect
+  useEffect(() => {
+    if (autoAdvance && 
+        selectedType !== null && 
+        initialValueRef.current === null) {
+      
+      // Short delay to allow the user to see their selection
+      const timer = setTimeout(() => {
+        handleNext();
+      }, 800);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [selectedType, autoAdvance, handleNext]);
+
+  const handleSelectType = (type: string) => {
+    onSelect(type);
+  };
 
   return (
     <div className="text-center">
@@ -44,7 +72,7 @@ const BodyTypeStep = ({ selectedType, onSelect }: BodyTypeStepProps) => {
                 "option-card aspect-[3/4] card-hover-effect",
                 selectedType === type.id ? 'selected' : ''
               )}
-              onClick={() => onSelect(type.id)}
+              onClick={() => handleSelectType(type.id)}
             >
               <div className="p-6 flex-1 flex flex-col">
                 <div className="flex-1 flex items-center justify-center">
@@ -69,6 +97,12 @@ const BodyTypeStep = ({ selectedType, onSelect }: BodyTypeStepProps) => {
           )
         })}
       </div>
+      
+      {autoAdvance && selectedType !== null && initialValueRef.current === null && (
+        <p className="text-sm text-muted-foreground mt-6 animate-pulse">
+          Преминаване към следващия въпрос...
+        </p>
+      )}
     </div>
   );
 };

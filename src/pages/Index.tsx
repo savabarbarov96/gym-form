@@ -1,4 +1,3 @@
-
 import React from "react";
 import Logo from "@/components/Logo";
 import { FormState, LoadingState, ResultsState, SuccessState } from "@/components/app-states";
@@ -7,13 +6,12 @@ import { SurveyProvider, useSurvey } from "@/contexts/SurveyContext";
 const SurveyHeader = () => (
   <header className="p-4 flex justify-between items-center border-b border-border">
     <Logo />
-    <div className="text-sm">BUILD YOUR PERFECT BODY</div>
   </header>
 );
 
 const SurveyFooter = () => (
   <footer className="p-4 text-center text-sm text-muted-foreground border-t border-border">
-    <p>We recommend that you consult with your physician before beginning any exercise program</p>
+    <p>Препоръчваме Ви да се консултирате с Вашия лекар преди да започнете каквато и да е тренировъчна програма</p>
   </footer>
 );
 

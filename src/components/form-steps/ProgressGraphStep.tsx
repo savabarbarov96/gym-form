@@ -21,28 +21,39 @@ const ProgressGraphStep = ({ goalValue, currentBodyFat = 25 }: ProgressGraphStep
     const startingMuscleMass = 30;
     const targetMuscleMass = 40; // Reduced from previous value to more realistic value
     
-    // Data for the chart - adjusted values
+    // Data for the chart - adjusted to 2 months with weekly data points
     const data = [
-      { month: 'Month 1', bodyFat: startingBodyFat, muscleMass: startingMuscleMass },
-      { month: 'Month 2', bodyFat: startingBodyFat - (startingBodyFat - targetBodyFat) * 0.2, muscleMass: startingMuscleMass + (targetMuscleMass - startingMuscleMass) * 0.25 },
-      { month: 'Month 3', bodyFat: startingBodyFat - (startingBodyFat - targetBodyFat) * 0.4, muscleMass: startingMuscleMass + (targetMuscleMass - startingMuscleMass) * 0.5 },
-      { month: 'Month 4', bodyFat: startingBodyFat - (startingBodyFat - targetBodyFat) * 0.65, muscleMass: startingMuscleMass + (targetMuscleMass - startingMuscleMass) * 0.7 },
-      { month: 'Month 5', bodyFat: startingBodyFat - (startingBodyFat - targetBodyFat) * 0.85, muscleMass: startingMuscleMass + (targetMuscleMass - startingMuscleMass) * 0.9 },
-      { month: 'Month 6', bodyFat: targetBodyFat, muscleMass: targetMuscleMass },
+      { week: 'Седмица 1', bodyFat: startingBodyFat, muscleMass: startingMuscleMass },
+      { week: 'Седмица 2', bodyFat: startingBodyFat - (startingBodyFat - targetBodyFat) * 0.15, muscleMass: startingMuscleMass + (targetMuscleMass - startingMuscleMass) * 0.15 },
+      { week: 'Седмица 3', bodyFat: startingBodyFat - (startingBodyFat - targetBodyFat) * 0.25, muscleMass: startingMuscleMass + (targetMuscleMass - startingMuscleMass) * 0.25 },
+      { week: 'Седмица 4', bodyFat: startingBodyFat - (startingBodyFat - targetBodyFat) * 0.35, muscleMass: startingMuscleMass + (targetMuscleMass - startingMuscleMass) * 0.35 },
+      { week: 'Седмица 5', bodyFat: startingBodyFat - (startingBodyFat - targetBodyFat) * 0.45, muscleMass: startingMuscleMass + (targetMuscleMass - startingMuscleMass) * 0.45 },
+      { week: 'Седмица 6', bodyFat: startingBodyFat - (startingBodyFat - targetBodyFat) * 0.55, muscleMass: startingMuscleMass + (targetMuscleMass - startingMuscleMass) * 0.55 },
+      { week: 'Седмица 7', bodyFat: startingBodyFat - (startingBodyFat - targetBodyFat) * 0.65, muscleMass: startingMuscleMass + (targetMuscleMass - startingMuscleMass) * 0.65 },
+      { week: 'Седмица 8', bodyFat: startingBodyFat - (startingBodyFat - targetBodyFat) * 0.75, muscleMass: startingMuscleMass + (targetMuscleMass - startingMuscleMass) * 0.75 },
     ];
     
     // Round values for cleaner display
     const roundedData = data.map(item => ({
-      month: item.month,
+      week: item.week,
       bodyFat: Math.round(item.bodyFat * 10) / 10,
       muscleMass: Math.round(item.muscleMass * 10) / 10
     }));
 
     // Set up dimensions - adjusted to fit container without scrolling
     const parentWidth = chartRef.current.clientWidth;
-    const margin = { top: 50, right: Math.min(130, parentWidth * 0.1), bottom: 70, left: Math.min(70, parentWidth * 0.1) };
+    const isMobile = parentWidth < 500;
+    
+    // Adjust margins for better mobile display
+    const margin = { 
+      top: 60, 
+      right: isMobile ? 20 : Math.min(100, parentWidth * 0.1), 
+      bottom: isMobile ? 100 : 70, 
+      left: isMobile ? 50 : Math.min(70, parentWidth * 0.1) 
+    };
+    
     const width = parentWidth - margin.left - margin.right;
-    const height = 400 - margin.top - margin.bottom;
+    const height = isMobile ? 350 : 400 - margin.top - margin.bottom;
     
     // Create SVG element with dark background
     const svg = d3.select(chartRef.current)
@@ -60,19 +71,31 @@ const ProgressGraphStep = ({ goalValue, currentBodyFat = 25 }: ProgressGraphStep
     
     // X axis - improved styling
     const x = d3.scaleBand()
-      .domain(roundedData.map(d => d.month))
+      .domain(roundedData.map(d => d.week))
       .range([0, width])
       .padding(0.2);
     
-    svg.append("g")
+    const xAxis = svg.append("g")
       .attr("transform", `translate(0,${height})`)
       .call(d3.axisBottom(x)
-        .tickSize(0))
-      .selectAll("text")
-      .style("text-anchor", "middle")
-      .attr("dy", "1em")
-      .style("fill", "#888")
-      .style("font-size", "12px");
+        .tickSize(0));
+    
+    // Adjust x-axis labels for mobile
+    if (isMobile) {
+      xAxis.selectAll("text")
+        .style("text-anchor", "end")
+        .attr("dx", "-.8em")
+        .attr("dy", ".15em")
+        .attr("transform", "rotate(-45)")
+        .style("fill", "#888")
+        .style("font-size", "10px");
+    } else {
+      xAxis.selectAll("text")
+        .style("text-anchor", "middle")
+        .attr("dy", "1em")
+        .style("fill", "#888")
+        .style("font-size", "12px");
+    }
     
     // Remove x-axis line but keep ticks
     svg.selectAll(".domain").style("stroke", "#333");
@@ -93,7 +116,7 @@ const ProgressGraphStep = ({ goalValue, currentBodyFat = 25 }: ProgressGraphStep
         .tickFormat(d => d + "%"))
       .selectAll("text")
       .style("fill", "#888")
-      .style("font-size", "12px");
+      .style("font-size", isMobile ? "10px" : "12px");
     
     // Style the y-axis grid lines
     svg.selectAll(".tick line")
@@ -101,14 +124,14 @@ const ProgressGraphStep = ({ goalValue, currentBodyFat = 25 }: ProgressGraphStep
       .style("stroke-opacity", 0.5);
     
     // Line generator for body fat
-    const bodyFatLine = d3.line<{month: string, bodyFat: number}>()
-      .x(d => (x(d.month) || 0) + x.bandwidth() / 2)
+    const bodyFatLine = d3.line<{week: string, bodyFat: number}>()
+      .x(d => (x(d.week) || 0) + x.bandwidth() / 2)
       .y(d => y(d.bodyFat))
       .curve(d3.curveCatmullRom.alpha(0.5));
     
     // Line generator for muscle mass
-    const muscleMassLine = d3.line<{month: string, muscleMass: number}>()
-      .x(d => (x(d.month) || 0) + x.bandwidth() / 2)
+    const muscleMassLine = d3.line<{week: string, muscleMass: number}>()
+      .x(d => (x(d.week) || 0) + x.bandwidth() / 2)
       .y(d => y(d.muscleMass))
       .curve(d3.curveCatmullRom.alpha(0.5));
     
@@ -150,8 +173,8 @@ const ProgressGraphStep = ({ goalValue, currentBodyFat = 25 }: ProgressGraphStep
       .attr("stop-opacity", 0.1);
     
     // Add area under body fat line
-    const bodyFatArea = d3.area<{month: string, bodyFat: number}>()
-      .x(d => (x(d.month) || 0) + x.bandwidth() / 2)
+    const bodyFatArea = d3.area<{week: string, bodyFat: number}>()
+      .x(d => (x(d.week) || 0) + x.bandwidth() / 2)
       .y0(height)
       .y1(d => y(d.bodyFat))
       .curve(d3.curveCatmullRom.alpha(0.5));
@@ -166,8 +189,8 @@ const ProgressGraphStep = ({ goalValue, currentBodyFat = 25 }: ProgressGraphStep
       .attr("fill-opacity", 0.3);
     
     // Add area under muscle mass line
-    const muscleMassArea = d3.area<{month: string, muscleMass: number}>()
-      .x(d => (x(d.month) || 0) + x.bandwidth() / 2)
+    const muscleMassArea = d3.area<{week: string, muscleMass: number}>()
+      .x(d => (x(d.week) || 0) + x.bandwidth() / 2)
       .y0(height)
       .y1(d => y(d.muscleMass))
       .curve(d3.curveCatmullRom.alpha(0.5));
@@ -221,39 +244,45 @@ const ProgressGraphStep = ({ goalValue, currentBodyFat = 25 }: ProgressGraphStep
       .enter()
       .append("circle")
       .attr("class", "bodyFatPoint")
-      .attr("cx", d => (x(d.month) || 0) + x.bandwidth() / 2)
+      .attr("cx", d => (x(d.week) || 0) + x.bandwidth() / 2)
       .attr("cy", d => y(d.bodyFat))
       .attr("r", 0)
       .attr("fill", "#FF6B35")
       .transition()
       .delay((d, i) => i * 300)
       .duration(500)
-      .attr("r", 6);
+      .attr("r", isMobile ? 4 : 6);
     
     svg.selectAll(".muscleMassPoint")
       .data(roundedData)
       .enter()
       .append("circle")
       .attr("class", "muscleMassPoint")
-      .attr("cx", d => (x(d.month) || 0) + x.bandwidth() / 2)
+      .attr("cx", d => (x(d.week) || 0) + x.bandwidth() / 2)
       .attr("cy", d => y(d.muscleMass))
       .attr("r", 0)
       .attr("fill", "#54D62C")
       .transition()
       .delay((d, i) => i * 300)
       .duration(500)
-      .attr("r", 6);
+      .attr("r", isMobile ? 4 : 6);
     
-    // Add animated data labels with responsive font size
-    const fontSize = Math.max(10, Math.min(12, parentWidth / 50));
+    // Add animated data labels with responsive font size and positioning
+    const fontSize = isMobile ? 9 : Math.max(10, Math.min(12, parentWidth / 50));
+    
+    // Only show labels for every other point on mobile to prevent overlap
+    const labelIndices = isMobile ? [0, 2, 4, 6] : roundedData.map((_, i) => i);
+    
+    // Filter data for labels to prevent overcrowding on mobile
+    const labelData = roundedData.filter((_, i) => labelIndices.includes(i));
     
     svg.selectAll(".bodyFatLabel")
-      .data(roundedData)
+      .data(labelData)
       .enter()
       .append("text")
       .attr("class", "bodyFatLabel")
-      .attr("x", d => (x(d.month) || 0) + x.bandwidth() / 2)
-      .attr("y", d => y(d.bodyFat) - 15)
+      .attr("x", d => (x(d.week) || 0) + x.bandwidth() / 2)
+      .attr("y", d => y(d.bodyFat) - 10)
       .attr("text-anchor", "middle")
       .style("font-size", `${fontSize}px`)
       .style("fill", "#FF6B35")
@@ -265,12 +294,12 @@ const ProgressGraphStep = ({ goalValue, currentBodyFat = 25 }: ProgressGraphStep
       .style("opacity", 1);
     
     svg.selectAll(".muscleMassLabel")
-      .data(roundedData)
+      .data(labelData)
       .enter()
       .append("text")
       .attr("class", "muscleMassLabel")
-      .attr("x", d => (x(d.month) || 0) + x.bandwidth() / 2)
-      .attr("y", d => y(d.muscleMass) - 15)
+      .attr("x", d => (x(d.week) || 0) + x.bandwidth() / 2)
+      .attr("y", d => y(d.muscleMass) - 10)
       .attr("text-anchor", "middle")
       .style("font-size", `${fontSize}px`)
       .style("fill", "#54D62C")
@@ -286,96 +315,29 @@ const ProgressGraphStep = ({ goalValue, currentBodyFat = 25 }: ProgressGraphStep
       .attr("x", width / 2)
       .attr("y", -20)
       .attr("text-anchor", "middle")
-      .style("font-size", "20px")
+      .style("font-size", isMobile ? "16px" : "20px")
       .style("fill", "#fff")
       .style("font-weight", "bold")
-      .text("Your Expected Progress");
+      .text("Очакван Прогрес");
     
     // Add x-axis label
     svg.append("text")
       .attr("x", width / 2)
-      .attr("y", height + 50)
+      .attr("y", height + (isMobile ? 70 : 50))
       .attr("text-anchor", "middle")
-      .style("font-size", "14px")
+      .style("font-size", isMobile ? "12px" : "14px")
       .style("fill", "#888")
-      .text("Timeline");
+      .text("Времева линия");
     
     // Add y-axis label
     svg.append("text")
       .attr("transform", "rotate(-90)")
       .attr("x", -height / 2)
-      .attr("y", -40)
+      .attr("y", isMobile ? -35 : -40)
       .attr("text-anchor", "middle")
-      .style("font-size", "14px")
+      .style("font-size", isMobile ? "12px" : "14px")
       .style("fill", "#888")
-      .text("Percentage (%)");
-    
-    // Add legend with responsive position
-    const legendX = width > 400 ? width + 20 : width - 100;
-    const legendY = width > 400 ? 0 : -40;
-    
-    const legend = svg.append("g")
-      .attr("transform", `translate(${legendX}, ${legendY})`);
-    
-    if (width <= 400) {
-      // For smaller screens, create a horizontal legend
-      legend.append("rect")
-        .attr("x", 0)
-        .attr("y", 0)
-        .attr("width", 12)
-        .attr("height", 12)
-        .attr("fill", "#FF6B35");
-      
-      legend.append("text")
-        .attr("x", 18)
-        .attr("y", 10)
-        .text("Body Fat %")
-        .style("font-size", "12px")
-        .style("fill", "#ccc");
-      
-      legend.append("rect")
-        .attr("x", 100)
-        .attr("y", 0)
-        .attr("width", 12)
-        .attr("height", 12)
-        .attr("fill", "#54D62C");
-      
-      legend.append("text")
-        .attr("x", 118)
-        .attr("y", 10)
-        .text("Muscle Mass %")
-        .style("font-size", "12px")
-        .style("fill", "#ccc");
-    } else {
-      // For larger screens, create a vertical legend
-      legend.append("rect")
-        .attr("x", 0)
-        .attr("y", 0)
-        .attr("width", 15)
-        .attr("height", 15)
-        .attr("fill", "#FF6B35");
-      
-      legend.append("text")
-        .attr("x", 25)
-        .attr("y", 12.5)
-        .text("Телесни мазнини %")
-        .style("font-size", "14px")
-        .style("fill", "#ccc");
-      
-      legend.append("rect")
-        .attr("x", 0)
-        .attr("y", 30)
-        .attr("width", 15)
-        .attr("height", 15)
-        .attr("fill", "#54D62C");
-      
-      legend.append("text")
-        .attr("x", 25)
-        .attr("y", 42.5)
-        .text("Мускулна маса %")
-        .style("font-size", "14px")
-        .style("fill", "#ccc");
-    }
+      .text("Процент (%)");
     
     // Handle resize
     const handleResize = () => {
@@ -394,13 +356,27 @@ const ProgressGraphStep = ({ goalValue, currentBodyFat = 25 }: ProgressGraphStep
       <h1 className="text-4xl sm:text-5xl font-bold mb-12">Вашето фитнес пътуване</h1>
       
       <div className="max-w-4xl mx-auto">
-        <div 
-          ref={chartRef} 
-          className="w-full h-[400px] bg-card rounded-lg p-4 shadow-md mb-8"
-        ></div>
+        <div className="flex flex-col">
+          {/* Legend positioned at the top for better visibility */}
+          <div className="flex justify-center items-center gap-6 mb-4">
+            <div className="flex items-center">
+              <div className="w-4 h-4 bg-[#FF6B35] rounded-sm mr-2"></div>
+              <span className="text-sm">Телесни мазнини %</span>
+            </div>
+            <div className="flex items-center">
+              <div className="w-4 h-4 bg-[#54D62C] rounded-sm mr-2"></div>
+              <span className="text-sm">Мускулна маса %</span>
+            </div>
+          </div>
+          
+          <div 
+            ref={chartRef} 
+            className="w-full h-[450px] bg-card rounded-lg p-4 shadow-md mb-8 overflow-hidden"
+          ></div>
+        </div>
         
         <div className="text-center mt-4 text-orange font-medium text-xl">
-          Можете да постигнете целта си за приблизително 6 месеца!
+          Можете да постигнете значителен прогрес само за 2 месеца!
         </div>
       </div>
     </div>
