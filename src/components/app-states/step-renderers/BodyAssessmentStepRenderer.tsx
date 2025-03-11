@@ -35,6 +35,7 @@ const getBodyAssessmentStep = (
         <BestShapeStep
           selected={formData.bestShapeTime}
           onSelect={(bestShapeTime) => setFormData({...formData, bestShapeTime})}
+          autoAdvance={true}
         />
       </div>
     ),

@@ -55,8 +55,8 @@ const LifestyleStepRenderer: React.FC<LifestyleStepRendererProps> = ({
     case 3: // Step 26
       return (
         <EnergyLevelsStep
-          selected={formData.energyLevels}
-          onSelect={(energyLevels) => setFormData(prev => ({ ...prev, energyLevels }))}
+          value={formData.energyLevels}
+          onChange={(energyLevels) => setFormData(prev => ({ ...prev, energyLevels }))}
           autoAdvance={true}
         />
       );
