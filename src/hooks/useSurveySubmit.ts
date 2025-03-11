@@ -1,8 +1,8 @@
-
 import { useToast } from "@/hooks/use-toast";
 import { FormData } from "@/types/survey";
 import { submitToWebhook } from "@/components/WebhookService";
 import { updateLoadingAfterWebhook } from "@/utils/loadingSimulation";
+import { saveUserData } from "@/lib/supabase";
 
 export const useSurveySubmit = (
   setAppState: (state: any) => void, 
@@ -28,6 +28,21 @@ export const useSurveySubmit = (
     // Start loading state
     setAppState("loading");
     setLoadingProgress(0);
+    
+    // Save user data to Supabase
+    if (formData.personalInfo?.name && formData.personalInfo?.email) {
+      try {
+        await saveUserData(
+          formData.personalInfo.name,
+          formData.personalInfo.email,
+          formData
+        );
+        console.log("User data saved to Supabase");
+      } catch (error) {
+        console.error("Error saving user data to Supabase:", error);
+        // Continue with webhook submission even if Supabase save fails
+      }
+    }
     
     // Send to webhook while showing loading animation
     const success = await submitToWebhook(formData);
