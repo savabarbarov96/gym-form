@@ -1,18 +1,17 @@
-
 export const useSurveyQuotes = () => {
   // Generate motivational quote based on name
   const generateQuote = (name: string): string => {
     if (!name) return "";
     
     const quotes = [
-      `${name} is gonna carry the boats!`,
-      `${name}, today is your day to become the best version of yourself!`,
-      `${name}, you're stronger than your excuses!`,
-      `Every champion was once a contender who refused to give up. You've got this, ${name}!`,
-      `${name}, you're not just building a body, you're building character!`,
-      `${name}, dream it. Believe it. Achieve it.`,
-      `${name}, strength doesn't come from what you can do. It comes from overcoming what you once couldn't.`,
-      `The only bad workout is the one that didn't happen. Let's crush it, ${name}!`
+      `${name}, ти ще успееш!`,
+      `${name}, днес е твоят ден да станеш най-добрата версия на себе си!`,
+      `${name}, ти си по-силен/на от твоите оправдания!`,
+      `Всеки шампион някога е бил претендент, който е отказал да се предаде. Ти ще успееш, ${name}!`,
+      `${name}, не просто изграждаш тяло, а изграждаш характер!`,
+      `${name}, мечтай за това. Повярвай в него. Постигни го.`,
+      `${name}, силата не идва от това, което можеш да направиш. Тя идва от преодоляването на това, което някога не си могъл.`,
+      `Единствената лоша тренировка е тази, която не се е случила. Да го направим, ${name}!`
     ];
     
     // Get a stable quote based on the first letter of the name

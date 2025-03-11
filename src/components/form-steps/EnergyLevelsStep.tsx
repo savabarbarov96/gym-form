@@ -31,7 +31,7 @@ const EnergyLevelsStep: React.FC<EnergyLevelsStepProps> = ({
       level: 1, 
       icon: BatteryLow, 
       label: 'Много ниско', 
-      description: 'Чувствам се изморен/а през повечето време',
+      description: 'Постоянно се чувствам уморен/а',
       color: 'bg-red-500/20',
       textColor: 'text-red-500',
       borderColor: 'border-red-500/70'

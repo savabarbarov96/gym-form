@@ -69,7 +69,7 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
     case 1: // Step 28
       return (
         <SelfAssessmentStep 
-          question="I get out of breath easily when exercising"
+          question="Лесно оставам без дъх, когато правя упражнения"
           value={formData.selfAssessments.outOfBreath}
           onChange={(value) => handleSelfAssessmentChange('outOfBreath', value)}
           onValidate={validateOutOfBreath}
@@ -80,7 +80,7 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
     case 2: // Step 29 
       return (
         <SelfAssessmentStep
-          question="I've tried to get in shape before but keep falling back into old habits"
+          question="Опитвал/а съм да вляза във форма и преди, но непрекъснато се връщам към стари навици"
           value={formData.selfAssessments.fallingBack}
           onChange={(value) => handleSelfAssessmentChange('fallingBack', value)}
           onValidate={validateFallingBack}
@@ -91,7 +91,7 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
     case 3: // Step 30
       return (
         <SelfAssessmentStep
-          question="I sometimes struggle to find the motivation to exercise"
+          question="Понякога ми е трудно да намеря мотивация за тренировки"
           value={formData.selfAssessments.motivationLevel}
           onChange={(value) => handleSelfAssessmentChange('motivationLevel', value)}
           onValidate={validateMotivation}
@@ -102,7 +102,7 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
     case 4: // Step 31
       return (
         <SelfAssessmentStep
-          question="I find it difficult to stay consistent with a healthy diet"
+          question="Трудно ми е да поддържам постоянство в здравословното хранене"
           value={formData.selfAssessments.dietConsistency}
           onChange={(value) => handleSelfAssessmentChange('dietConsistency', value)}
           onValidate={validateDietConsistency}
