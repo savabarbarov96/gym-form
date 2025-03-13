@@ -52,34 +52,22 @@ const BestShapeStep = ({
         selected !== null && 
         initialValueRef.current === null) {
       
-      // Debug log
-      console.log('BestShapeStep: Selection made, preparing to auto-advance', selected);
-      
       // Short delay to allow the user to see their selection
       const timer = setTimeout(() => {
-        console.log('BestShapeStep: Auto-advancing to next step');
         handleNext();
-      }, 1000); // Slightly longer delay for better UX
+      }, 800);
       
-      return () => {
-        console.log('BestShapeStep: Cleaning up timer');
-        clearTimeout(timer);
-      };
+      return () => clearTimeout(timer);
     }
   }, [selected, autoAdvance, handleNext]);
   
   const handleSelectOption = (value: string) => {
-    console.log('BestShapeStep: Option selected:', value);
     onSelect(value);
     
-    // Play selection sound if available
-    try {
-      const audio = new Audio('/sounds/select.mp3');
-      audio.volume = 0.3;
-      audio.play().catch(e => console.log('Audio play failed:', e));
-    } catch (error) {
-      console.log('Audio play error:', error);
-    }
+    // Play selection sound
+    const audio = new Audio('/sounds/select.mp3');
+    audio.volume = 0.3;
+    audio.play().catch(e => console.log('Audio play failed:', e));
   };
 
   return (

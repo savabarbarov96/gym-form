@@ -30,17 +30,6 @@ const FormNavigation: React.FC<FormNavigationProps> = ({
       if (!isInputActive) {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          // Play sound
-          try {
-            const audio = new Audio('/assets/sounds/click.mp3');
-            audio.volume = 0.3;
-            audio.play().catch(error => {
-              console.log('Error playing button sound:', error);
-            });
-          } catch (error) {
-            console.log('Error creating audio instance:', error);
-          }
-          // Navigate to next step
           handleNext();
         }
       }
@@ -50,26 +39,11 @@ const FormNavigation: React.FC<FormNavigationProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleNext]);
 
-  const playClickSound = () => {
-    try {
-      const audio = new Audio('/assets/sounds/click.mp3');
-      audio.volume = 0.3;
-      audio.play().catch(error => {
-        console.log('Error playing button sound:', error);
-      });
-    } catch (error) {
-      console.log('Error creating audio instance:', error);
-    }
-  };
-
   return (
     <div className="mt-8 flex gap-4 w-full max-w-4xl mx-auto">
       {step > 1 && (
         <Button 
-          onClick={() => {
-            playClickSound();
-            handleBack();
-          }}
+          onClick={handleBack}
           variant="outline"
           className="px-6 py-3 border border-border rounded-lg hover:bg-secondary transition-colors"
         >
@@ -77,10 +51,7 @@ const FormNavigation: React.FC<FormNavigationProps> = ({
         </Button>
       )}
       <Button 
-        onClick={() => {
-          playClickSound();
-          handleNext();
-        }}
+        onClick={handleNext}
         className="px-6 py-3 bg-orange hover:bg-orange-hover text-white rounded-lg ml-auto flex items-center gap-2 transition-colors"
         tabIndex={0} // Ensure it's focusable
         aria-label={step === totalSteps ? "Завърши" : "Продължи"}

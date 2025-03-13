@@ -312,7 +312,7 @@ const createAIOptimizedPayload = (formData: FormData): Record<string, any> => {
         frequencyValue: getWorkoutFrequencyValue(formData.workoutFrequency),
         sessionDuration: formData.workoutDuration,
         durationInMinutes: getWorkoutDurationValue(formData.workoutDuration),
-        exercisePreferences: Object.entries(formData.exercisePreferences || {}).map(([exercise, preference]) => ({
+        exercisePreferences: Object.entries(formData.exercisePreferences).map(([exercise, preference]) => ({
           exerciseName: exercise,
           preference: preference
         })).filter(item => item.preference !== null)
@@ -401,4 +401,4 @@ export const submitToWebhook = async (formData: FormData): Promise<boolean> => {
     console.error('Error submitting to webhook:', error);
     return false;
   }
-}; 
+};
