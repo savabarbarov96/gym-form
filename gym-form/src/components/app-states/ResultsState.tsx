@@ -158,4 +158,4 @@ const ResultsState: React.FC<ResultsStateProps> = ({ handleGetPlan }) => {
   );
 };
 
-export default ResultsState; 
+export default ResultsState;

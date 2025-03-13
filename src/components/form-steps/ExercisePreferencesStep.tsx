@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
-import { ExerciseCard, ProgressIndicator } from "./exercise-preferences";
+import { ProgressIndicator } from "./exercise-preferences";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 
@@ -17,10 +17,11 @@ const ExercisePreferencesStep = ({
   onPreferenceChange,
   onStepComplete
 }: ExercisePreferencesStepProps) => {
-  // List of exercises - limiting to exactly 6
-  const exercises = ["Кардио", "Разтягане", "Вдигане на тежести", "Набирания", "Туризъм", "Физически труд"];
+  // List of exercises - adding Pilates and Yoga
+  const exercises = ["Кардио", "Разтягане", "Вдигане на тежести", "Набирания", "Туризъм", "Физически труд", "Пилатес", "Йога"];
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [localPreferences, setLocalPreferences] = useState<{[key: string]: Preference}>(preferences || {});
+  const [isTransitioning, setIsTransitioning] = useState(false);
   
   const currentExercise = exercises[currentExerciseIndex];
   const isLastExercise = currentExerciseIndex === exercises.length - 1;
@@ -30,6 +31,8 @@ const ExercisePreferencesStep = ({
   );
 
   const handlePreference = (exercise: string, preference: Preference) => {
+    if (isTransitioning) return;
+    
     const updatedPreferences = {
       ...localPreferences,
       [exercise]: preference
@@ -42,9 +45,11 @@ const ExercisePreferencesStep = ({
     
     // Move to next exercise if not the last one
     if (currentExerciseIndex < exercises.length - 1) {
+      setIsTransitioning(true);
       setTimeout(() => {
         setCurrentExerciseIndex(prev => prev + 1);
-      }, 300);
+        setIsTransitioning(false);
+      }, 400);
     }
   };
   
@@ -60,12 +65,7 @@ const ExercisePreferencesStep = ({
       
       <div className="max-w-md mx-auto">
         <AnimatePresence mode="wait">
-          <ExerciseCard
-            key={currentExercise}
-            exercise={currentExercise}
-            preference={localPreferences[currentExercise] || null}
-            onPreferenceSelect={(preference) => handlePreference(currentExercise, preference)}
-          />
+          
         </AnimatePresence>
         
         <ProgressIndicator
@@ -87,4 +87,4 @@ const ExercisePreferencesStep = ({
   );
 };
 
-export default ExercisePreferencesStep;
+export default ExercisePreferencesStep; 
