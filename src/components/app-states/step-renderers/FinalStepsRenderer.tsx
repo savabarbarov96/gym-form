@@ -45,23 +45,23 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
 
   // Validation wrapper functions for each self-assessment step
   const validateOutOfBreath = () => {
-    console.log('Validating outOfBreath step with value:', formData.selfAssessments.outOfBreath);
-    return validateFinalStepsStep(28, formData, toast);
+    console.log(`Validating outOfBreath step with value: ${formData.selfAssessments.outOfBreath} (global step: ${step})`);
+    return validateFinalStepsStep(step, formData, toast);
   };
 
   const validateFallingBack = () => {
-    console.log('Validating fallingBack step with value:', formData.selfAssessments.fallingBack);
-    return validateFinalStepsStep(29, formData, toast);
+    console.log(`Validating fallingBack step with value: ${formData.selfAssessments.fallingBack} (global step: ${step})`);
+    return validateFinalStepsStep(step, formData, toast);
   };
 
   const validateMotivation = () => {
-    console.log('Validating motivationLevel step with value:', formData.selfAssessments.motivationLevel);
-    return validateFinalStepsStep(30, formData, toast);
+    console.log(`Validating motivationLevel step with value: ${formData.selfAssessments.motivationLevel} (global step: ${step})`);
+    return validateFinalStepsStep(step, formData, toast);
   };
 
   const validateDietConsistency = () => {
-    console.log('Validating dietConsistency step with value:', formData.selfAssessments.dietConsistency);
-    return validateFinalStepsStep(31, formData, toast);
+    console.log(`Validating dietConsistency step with value: ${formData.selfAssessments.dietConsistency} (global step: ${step})`);
+    return validateFinalStepsStep(step, formData, toast);
   };
   
   // Map the local step to the appropriate component
@@ -123,6 +123,7 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
         <StartCommitmentStep
           selected={formData.startCommitment}
           onSelect={handleStartCommitmentChange}
+          autoAdvance={true}
         />
       );
       

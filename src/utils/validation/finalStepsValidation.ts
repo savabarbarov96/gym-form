@@ -68,26 +68,37 @@ export const validateSelfAssessmentDietConsistencyStep = (formData: FormData, to
 
 // Validate the personal info step
 export const validatePersonalInfoStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
-  const { name, email } = formData.personalInfo;
+  const { name, email } = formData.personalInfo || { name: null, email: null };
   
-  if (!name || !email) {
+  // If both fields are empty, consider it valid in non-strict mode
+  // This allows users to proceed without filling in personal info
+  if (!name && !email) {
+    console.log("Personal info is empty, but allowing in non-strict mode");
+    return true;
+  }
+  
+  // If one field is filled but not the other, show validation error
+  if ((name && !email) || (!name && email)) {
     toast({
-      title: "Необходима е информация",
-      description: "Моля, въведете вашето име и имейл",
+      title: "Непълна информация",
+      description: "Моля, попълнете и двете полета или оставете и двете празни",
       variant: "default",
     });
     return false;
   }
   
-  // Basic email validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    toast({
-      title: "Невалиден имейл",
-      description: "Моля, въведете валиден имейл адрес",
-      variant: "default",
-    });
-    return false;
+  // If both fields are filled, validate email format
+  if (name && email) {
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast({
+        title: "Невалиден имейл",
+        description: "Моля, въведете валиден имейл адрес",
+        variant: "default",
+      });
+      return false;
+    }
   }
   
   return true;
@@ -114,19 +125,26 @@ export const validateFinalStepsStep = (
 ): boolean => {
   console.log(`Validating final steps step ${step}`);
   
-  // Map the global step numbers to the specific validation functions
+  // Map the global step numbers (27-33) to the specific validation functions
+  // The FinalStepsRenderer maps steps as follows:
+  // 28 (localStep 1) -> Out of Breath
+  // 29 (localStep 2) -> Falling Back
+  // 30 (localStep 3) -> Motivation Level
+  // 31 (localStep 4) -> Diet Consistency
+  // 32 (localStep 5) -> Personal Info
+  // 33 (localStep 6) -> Start Commitment
   switch (step) {
-    case 27:
-      return validateSelfAssessmentOutOfBreathStep(formData, toast);
     case 28:
-      return validateSelfAssessmentFallingBackStep(formData, toast);
+      return validateSelfAssessmentOutOfBreathStep(formData, toast);
     case 29:
-      return validateSelfAssessmentSuitableWorkoutsStep(formData, toast);
+      return validateSelfAssessmentFallingBackStep(formData, toast);
     case 30:
       return validateSelfAssessmentMotivationStep(formData, toast);
     case 31:
-      return validatePersonalInfoStep(formData, toast);
+      return validateSelfAssessmentDietConsistencyStep(formData, toast);
     case 32:
+      return validatePersonalInfoStep(formData, toast);
+    case 33:
       return validateStartCommitmentStep(formData, toast);
     default:
       console.log(`No specific validation for final steps step ${step}`);

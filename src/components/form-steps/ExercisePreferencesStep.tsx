@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { AnimatePresence } from "framer-motion";
-import { ProgressIndicator } from "./exercise-preferences";
+import { AnimatePresence, motion } from "framer-motion";
+import { ProgressIndicator, ExerciseCard } from "./exercise-preferences";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 
@@ -18,7 +18,7 @@ const ExercisePreferencesStep = ({
   onStepComplete
 }: ExercisePreferencesStepProps) => {
   // List of exercises - adding Pilates and Yoga
-  const exercises = ["Кардио", "Разтягане", "Вдигане на тежести", "Набирания", "Туризъм", "Физически труд", "Пилатес", "Йога"];
+  const exercises = ["Кардио", "Разтягане", "Вдигане на тежести", "Набирания", "Туризъм", "Катерене", "Пилатес", "Йога"];
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [localPreferences, setLocalPreferences] = useState<{[key: string]: Preference}>(preferences || {});
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -65,7 +65,12 @@ const ExercisePreferencesStep = ({
       
       <div className="max-w-md mx-auto">
         <AnimatePresence mode="wait">
-          
+          <ExerciseCard
+            key={currentExercise}
+            exercise={currentExercise}
+            preference={localPreferences[currentExercise] || null}
+            onPreferenceChange={(preference) => handlePreference(currentExercise, preference)}
+          />
         </AnimatePresence>
         
         <ProgressIndicator
@@ -75,12 +80,18 @@ const ExercisePreferencesStep = ({
         />
         
         {isLastExercise && allExercisesRated && (
-          <Button 
-            onClick={handleComplete}
-            className="mt-6 bg-orange hover:bg-orange/90 text-white"
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-8"
           >
-            Продължи <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
+            <Button 
+              onClick={handleComplete}
+              className="mt-6 bg-orange hover:bg-orange/90 text-white px-8 py-6 text-lg rounded-xl shadow-lg"
+            >
+              Продължи <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </motion.div>
         )}
       </div>
     </div>
