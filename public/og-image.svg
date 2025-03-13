@@ -1,0 +1,37 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#030711"/>
+  
+  <!-- Gradient Overlay -->
+  <rect width="1200" height="630" fill="url(#gradient)" opacity="0.8"/>
+  
+  <!-- Content Container -->
+  <g transform="translate(100, 100)">
+    <!-- Dumbbell Icon -->
+    <g transform="translate(450, 150) scale(4)" fill="none" stroke="#FF6B00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 4v16"/>
+      <path d="M18 4v16"/>
+      <path d="M4 8h4"/>
+      <path d="M16 8h4"/>
+      <path d="M4 16h4"/>
+      <path d="M16 16h4"/>
+      <rect x="8" y="6" width="8" height="12" rx="2"/>
+    </g>
+    
+    <!-- Text -->
+    <text x="500" y="350" text-anchor="middle" fill="white" font-family="system-ui" font-size="72" font-weight="bold">
+      Workout Form
+    </text>
+    <text x="500" y="420" text-anchor="middle" fill="#9CA3AF" font-family="system-ui" font-size="32">
+      Персонализирана фитнес програма
+    </text>
+  </g>
+  
+  <!-- Gradient Definition -->
+  <defs>
+    <linearGradient id="gradient" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FF6B00" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#030711" stop-opacity="0.1"/>
+    </linearGradient>
+  </defs>
+</svg> 
