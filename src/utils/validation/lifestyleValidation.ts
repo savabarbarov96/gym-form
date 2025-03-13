@@ -4,9 +4,9 @@ import type { ToastParams } from "@/hooks/use-toast";
 export const validateSugaryFoodsStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (!formData.sugaryFoods) {
     toast({
-      title: "Sugary Foods Selection Required",
-      description: "Please select how often you consume sugary foods or beverages",
-      variant: "destructive",
+      title: "Необходим е избор",
+      description: "Моля, изберете колко често консумирате сладки храни или напитки",
+      variant: "default",
     });
     return false;
   }
@@ -16,9 +16,9 @@ export const validateSugaryFoodsStep = (formData: FormData, toast: (props: Toast
 export const validateWaterIntakeStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (formData.waterIntake === null) {
     toast({
-      title: "Water Intake Required",
-      description: "Please select your daily water intake",
-      variant: "destructive",
+      title: "Необходим е избор",
+      description: "Моля, изберете вашия дневен прием на вода",
+      variant: "default",
     });
     return false;
   }
@@ -28,9 +28,9 @@ export const validateWaterIntakeStep = (formData: FormData, toast: (props: Toast
 export const validateTypicalDayStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (!formData.typicalDay) {
     toast({
-      title: "Daily Activity Selection Required",
-      description: "Please select how you would describe your typical day",
-      variant: "destructive",
+      title: "Необходим е избор",
+      description: "Моля, изберете как бихте описали типичния си ден",
+      variant: "default",
     });
     return false;
   }
@@ -40,9 +40,9 @@ export const validateTypicalDayStep = (formData: FormData, toast: (props: ToastP
 export const validateEnergyLevelsStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (formData.energyLevels === null) {
     toast({
-      title: "Energy Level Rating Required",
-      description: "Please rate your average energy levels during the day",
-      variant: "destructive",
+      title: "Необходима е оценка",
+      description: "Моля, оценете средните си нива на енергия през деня",
+      variant: "default",
     });
     return false;
   }
@@ -52,9 +52,9 @@ export const validateEnergyLevelsStep = (formData: FormData, toast: (props: Toas
 export const validateSleepAmountStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (formData.sleepAmount === null) {
     toast({
-      title: "Sleep Amount Required",
-      description: "Please indicate how much sleep you usually get",
-      variant: "destructive",
+      title: "Необходим е избор",
+      description: "Моля, посочете колко сън обикновено получавате",
+      variant: "default",
     });
     return false;
   }
@@ -69,20 +69,19 @@ export const validateLifestyleStep = (
   console.log(`Validating lifestyle step ${step}`);
   
   // Map the global step numbers to the specific validation functions
-  // Adjusted for new Traditional Foods step
   switch (step) {
-    case 23:
+    case 22:
       return validateSugaryFoodsStep(formData, toast);
-    case 24:
+    case 23:
       return validateWaterIntakeStep(formData, toast);
-    case 25:
+    case 24:
       return validateTypicalDayStep(formData, toast);
-    case 26:
+    case 25:
       return validateEnergyLevelsStep(formData, toast);
-    case 27:
+    case 26:
       return validateSleepAmountStep(formData, toast);
     default:
-      console.warn(`No specific validation for lifestyle step ${step}`);
+      console.log(`No specific validation for lifestyle step ${step}`);
       return true;
   }
-};
+}; 

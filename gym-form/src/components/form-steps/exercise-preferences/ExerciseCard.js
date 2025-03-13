@@ -1,17 +1,20 @@
-
 import React from 'react';
 import { motion } from "framer-motion";
 import PreferenceButton from './PreferenceButton';
 
-type Preference = "like" | "neutral" | "dislike" | null;
+/**
+ * @typedef {"like" | "neutral" | "dislike" | null} Preference
+ */
 
-interface ExerciseCardProps {
-  exercise: string;
-  preference: Preference;
-  onPreferenceSelect: (preference: Preference) => void;
-}
-
-const ExerciseCard = ({ exercise, preference, onPreferenceSelect }: ExerciseCardProps) => {
+/**
+ * Exercise card component for user preference selection
+ * 
+ * @param {Object} props - Component props
+ * @param {string} props.exercise - Name of the exercise
+ * @param {Preference} props.preference - Current preference selection
+ * @param {function} props.onPreferenceSelect - Callback when preference is selected
+ */
+const ExerciseCard = ({ exercise, preference, onPreferenceSelect }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -47,4 +50,4 @@ const ExerciseCard = ({ exercise, preference, onPreferenceSelect }: ExerciseCard
   );
 };
 
-export default ExerciseCard;
+export default ExerciseCard; 
