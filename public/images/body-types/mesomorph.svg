@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 450" width="300" height="450">
+  <rect width="300" height="450" fill="#f2f2f2" rx="15" />
+  <g transform="translate(75, 40)">
+    <!-- Head -->
+    <circle cx="75" cy="40" r="35" fill="#e6e6e6" stroke="#333" stroke-width="1.5" />
+    
+    <!-- Shoulders and Torso - Broader for mesomorph -->
+    <path d="M25,100 C25,90 125,90 125,100 L130,220 C130,230 20,230 20,220 Z" fill="#e6e6e6" stroke="#333" stroke-width="1.5" />
+    
+    <!-- Chest Definition for mesomorph -->
+    <path d="M45,120 C55,130 95,130 105,120" fill="none" stroke="#333" stroke-width="1" />
+    
+    <!-- Arms - Muscular for mesomorph -->
+    <path d="M25,100 C25,100 15,140 12,190 C11,210 19,210 20,190 C21,170 28,130 28,110" fill="#e6e6e6" stroke="#333" stroke-width="1.5" />
+    <ellipse cx="22" cy="145" rx="8" ry="12" fill="#e6e6e6" stroke="#333" stroke-width="1" />
+    
+    <path d="M125,100 C125,100 135,140 138,190 C139,210 131,210 130,190 C129,170 122,130 122,110" fill="#e6e6e6" stroke="#333" stroke-width="1.5" />
+    <ellipse cx="128" cy="145" rx="8" ry="12" fill="#e6e6e6" stroke="#333" stroke-width="1" />
+    
+    <!-- Ab Definition for mesomorph -->
+    <path d="M60,150 L90,150" fill="none" stroke="#333" stroke-width="1" />
+    <path d="M60,170 L90,170" fill="none" stroke="#333" stroke-width="1" />
+    <path d="M60,190 L90,190" fill="none" stroke="#333" stroke-width="1" />
+    
+    <!-- Legs - Athletic for mesomorph -->
+    <path d="M55,220 C55,220 50,300 45,360 C44,370 56,370 55,360 C54,320 58,260 58,230" fill="#e6e6e6" stroke="#333" stroke-width="1.5" />
+    <ellipse cx="52" cy="280" rx="10" ry="15" fill="#e6e6e6" stroke="#333" stroke-width="1" />
+    
+    <path d="M95,220 C95,220 100,300 105,360 C106,370 94,370 95,360 C96,320 92,260 92,230" fill="#e6e6e6" stroke="#333" stroke-width="1.5" />
+    <ellipse cx="98" cy="280" rx="10" ry="15" fill="#e6e6e6" stroke="#333" stroke-width="1" />
+  </g>
+  
+  <!-- Body Type Label -->
+  <text x="150" y="425" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#333">Мезоморф</text>
+</svg> 
