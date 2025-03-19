@@ -2,6 +2,8 @@ import { FormData } from "@/types/survey";
 
 // Define the webhook URL as a constant
 const WEBHOOK_URL = "https://sava.automationaid.eu/webhook/9de1dab9-8128-4b4a-9445-b2272727343b";
+const MEAL_PLAN_WEBHOOK_URL = "https://sava.automationaid.eu/webhook/meal-plan-bg";
+const WORKOUT_PLAN_WEBHOOK_URL = "https://sava.automationaid.eu/webhook/workout-plan-bg";
 
 // Format date to ISO string with readable format for AI
 const formatDate = (dateString: string | null): string | null => {
@@ -382,8 +384,44 @@ export const submitToWebhook = async (formData: FormData): Promise<boolean> => {
     // Create the AI-optimized payload
     const aiOptimizedPayload = createAIOptimizedPayload(formData);
     
-    // Post the optimized payload to the webhook
-    const response = await fetch(WEBHOOK_URL, {
+    // Post the optimized payload to both webhooks
+    const [mealPlanResponse, workoutPlanResponse] = await Promise.all([
+      fetch(MEAL_PLAN_WEBHOOK_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(aiOptimizedPayload),
+      }),
+      fetch(WORKOUT_PLAN_WEBHOOK_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(aiOptimizedPayload),
+      })
+    ]);
+    
+    if (!mealPlanResponse.ok || !workoutPlanResponse.ok) {
+      console.error(`Webhook submission failed. Meal plan status: ${mealPlanResponse.status}, Workout plan status: ${workoutPlanResponse.status}`);
+      return false;
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Error submitting to webhooks:', error);
+    return false;
+  }
+};
+
+// Function to submit only to the meal plan webhook
+export const submitToMealPlanWebhook = async (formData: FormData): Promise<boolean> => {
+  try {
+    // Create the AI-optimized payload
+    const aiOptimizedPayload = createAIOptimizedPayload(formData);
+    
+    // Post the optimized payload to the meal plan webhook
+    const response = await fetch(MEAL_PLAN_WEBHOOK_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -392,13 +430,40 @@ export const submitToWebhook = async (formData: FormData): Promise<boolean> => {
     });
     
     if (!response.ok) {
-      console.error(`Webhook submission failed with status: ${response.status}`);
+      console.error(`Meal plan webhook submission failed with status: ${response.status}`);
       return false;
     }
     
     return true;
   } catch (error) {
-    console.error('Error submitting to webhook:', error);
+    console.error('Error submitting to meal plan webhook:', error);
+    return false;
+  }
+};
+
+// Function to submit only to the workout plan webhook
+export const submitToWorkoutPlanWebhook = async (formData: FormData): Promise<boolean> => {
+  try {
+    // Create the AI-optimized payload
+    const aiOptimizedPayload = createAIOptimizedPayload(formData);
+    
+    // Post the optimized payload to the workout plan webhook
+    const response = await fetch(WORKOUT_PLAN_WEBHOOK_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(aiOptimizedPayload),
+    });
+    
+    if (!response.ok) {
+      console.error(`Workout plan webhook submission failed with status: ${response.status}`);
+      return false;
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Error submitting to workout plan webhook:', error);
     return false;
   }
 }; 

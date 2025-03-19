@@ -65,6 +65,8 @@ export interface SurveyContextType {
   handleNext: () => void;
   handleBack: () => void;
   handleGetPlan: () => void;
+  handleGetMealPlan: () => void;
+  handleGetWorkoutPlan: () => void;
   simulateLoading: () => void;
   totalSteps: number;
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
