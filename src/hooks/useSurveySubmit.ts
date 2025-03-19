@@ -1,6 +1,6 @@
 import { useToast } from "@/hooks/use-toast";
 import { FormData } from "@/types/survey";
-import { submitToWebhook } from "@/components/WebhookService";
+import { submitToWebhook, submitToMealPlanWebhook, submitToWorkoutPlanWebhook } from "@/components/WebhookService";
 import { updateLoadingAfterWebhook } from "@/utils/loadingSimulation";
 import { saveUserData } from "@/lib/supabase";
 
@@ -10,10 +10,11 @@ export const useSurveySubmit = (
 ) => {
   const { toast } = useToast();
 
-  const handleGetPlan = async (formData: FormData) => {
+  // Common function to handle data saving and loading UI
+  const handleCommonSubmit = async (formData: FormData, description: string) => {
     toast({
       title: "Creating your plan",
-      description: "We're generating your personalized workout plan",
+      description: description,
     });
     
     // Add animation for transitioning out the results container
@@ -50,6 +51,11 @@ export const useSurveySubmit = (
     } else {
       console.warn("Missing name or email, skipping Supabase save");
     }
+  };
+
+  // Function for combined plan (both meal and workout)
+  const handleGetPlan = async (formData: FormData) => {
+    await handleCommonSubmit(formData, "We're generating your personalized workout and meal plans");
     
     // Send to webhook while showing loading animation
     const success = await submitToWebhook(formData);
@@ -58,7 +64,31 @@ export const useSurveySubmit = (
     await updateLoadingAfterWebhook(success, setAppState, setLoadingProgress);
   };
 
+  // Function for meal plan only
+  const handleGetMealPlan = async (formData: FormData) => {
+    await handleCommonSubmit(formData, "We're generating your personalized meal plan");
+    
+    // Send to meal plan webhook while showing loading animation
+    const success = await submitToMealPlanWebhook(formData);
+    
+    // Update loading animation based on webhook response
+    await updateLoadingAfterWebhook(success, setAppState, setLoadingProgress);
+  };
+
+  // Function for workout plan only
+  const handleGetWorkoutPlan = async (formData: FormData) => {
+    await handleCommonSubmit(formData, "We're generating your personalized workout plan");
+    
+    // Send to workout plan webhook while showing loading animation
+    const success = await submitToWorkoutPlanWebhook(formData);
+    
+    // Update loading animation based on webhook response
+    await updateLoadingAfterWebhook(success, setAppState, setLoadingProgress);
+  };
+
   return {
-    handleGetPlan
+    handleGetPlan,
+    handleGetMealPlan,
+    handleGetWorkoutPlan
   };
 };

@@ -31,7 +31,7 @@ export const SurveyProvider: React.FC<SurveyProviderProps> = ({ children, initia
   const { formData, setFormData, updateFormData } = useSurveyForm();
   const { appState, setAppState, loadingProgress, setLoadingProgress, simulateLoading } = useSurveyAppState();
   const { generateQuote } = useSurveyQuotes();
-  const { handleGetPlan } = useSurveySubmit(setAppState, setLoadingProgress);
+  const { handleGetPlan, handleGetMealPlan, handleGetWorkoutPlan } = useSurveySubmit(setAppState, setLoadingProgress);
   
   // Initialize navigation with form completion handler
   const handleSurveyComplete = () => {
@@ -65,6 +65,8 @@ export const SurveyProvider: React.FC<SurveyProviderProps> = ({ children, initia
     handleNext,
     handleBack,
     handleGetPlan: () => handleGetPlan(formData),
+    handleGetMealPlan: () => handleGetMealPlan(formData),
+    handleGetWorkoutPlan: () => handleGetWorkoutPlan(formData),
     simulateLoading,
     totalSteps,
     setFormData,

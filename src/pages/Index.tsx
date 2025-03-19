@@ -45,7 +45,9 @@ const SurveyContent = () => {
     setFormData,
     handleNext,
     handleBack,
-    handleGetPlan
+    handleGetPlan,
+    handleGetMealPlan,
+    handleGetWorkoutPlan
   } = useSurvey();
 
   return (
@@ -67,7 +69,11 @@ const SurveyContent = () => {
       )}
 
       {appState === "results" && (
-        <ResultsState handleGetPlan={handleGetPlan} />
+        <ResultsState 
+          handleGetPlan={handleGetPlan} 
+          handleGetMealPlan={handleGetMealPlan} 
+          handleGetWorkoutPlan={handleGetWorkoutPlan} 
+        />
       )}
       
       {appState === "success" && (
