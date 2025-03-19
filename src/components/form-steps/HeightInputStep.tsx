@@ -217,38 +217,6 @@ const HeightInputStep: React.FC<HeightInputStepProps> = ({ value, onChange }) =>
             className="mt-2"
           />
         </div>
-        
-        <div className="mt-8 p-4 bg-orange-200 rounded-lg">
-          <h3 className="font-semibold text-orange-800 mb-2">Вашият Очакван Прогрес</h3>
-          <div className="flex justify-between items-center">
-            <div className="text-center">
-              <div className="text-sm text-orange-700">BMI</div>
-              <div className="font-bold text-orange-800">
-                {(unit === "cm" 
-                  ? (70 / ((heightValue / 100) * (heightValue / 100))).toFixed(1) 
-                  : (154 / (heightValue * heightValue)).toFixed(1))}
-              </div>
-            </div>
-            <div className="h-10 w-px bg-orange-300"></div>
-            <div className="text-center">
-              <div className="text-sm text-orange-700">Идеално тегло</div>
-              <div className="font-bold text-orange-800">
-                {unit === "cm" 
-                  ? `${Math.round((heightValue - 100) * 0.9)} кг` 
-                  : `${Math.round((heightValue * 30.48 - 100) * 0.9 / 2.2)} lbs`}
-              </div>
-            </div>
-            <div className="h-10 w-px bg-orange-300"></div>
-            <div className="text-center">
-              <div className="text-sm text-orange-700">Калории</div>
-              <div className="font-bold text-orange-800">
-                {unit === "cm" 
-                  ? `${Math.round(655 + (9.6 * 70) + (1.8 * heightValue) - (4.7 * 30))}` 
-                  : `${Math.round(655 + (9.6 * 154) + (1.8 * heightValue * 30.48) - (4.7 * 30))}`}
-              </div>
-            </div>
-          </div>
-        </div>
       </motion.div>
     </div>
   );

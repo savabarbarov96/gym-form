@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { BadgeCheck, Clock, CalendarClock, XCircle } from "lucide-react";
+import { BadgeCheck, Clock, CalendarClock, XCircle, Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSurvey } from "@/contexts/SurveyContext";
 import { motion } from "framer-motion";
@@ -21,28 +21,28 @@ const BestShapeStep = ({
 
   const options = [
     { 
-      label: "Преди по-малко от година", 
+      label: "По-малко от година", 
       id: "less-than-year", 
       icon: BadgeCheck,
-      description: "Поддържали сте добра форма наскоро"
+      description: "Спортували сте активно през последната година"
     },
     { 
-      label: "Преди 1-3 години", 
+      label: "Между 1 и 3 години", 
       id: "1-3-years", 
       icon: Clock,
-      description: "Имали сте успехи във фитнеса в близкото минало"
+      description: "Имали сте активни периоди в последните няколко години"
     },
     { 
-      label: "Преди повече от 3 години", 
+      label: "Повече от 3 години", 
       id: "more-than-3-years", 
       icon: CalendarClock,
-      description: "Минало е доста време откакто сте били в най-добра форма"
+      description: "Отдавна не сте се занимавали активно със спорт"
     },
     { 
-      label: "Никога", 
+      label: "Никога не съм спортувал/а активно", 
       id: "never", 
       icon: XCircle,
-      description: "Все още не сте достигнали идеалното ниво на физическа форма"
+      description: "Започвате вашето фитнес пътуване от начало"
     },
   ];
 
@@ -59,7 +59,7 @@ const BestShapeStep = ({
       const timer = setTimeout(() => {
         console.log('BestShapeStep: Auto-advancing to next step');
         handleNext();
-      }, 1000); // Slightly longer delay for better UX
+      }, 1200); // Slightly longer delay for better UX
       
       return () => {
         console.log('BestShapeStep: Cleaning up timer');
@@ -83,27 +83,45 @@ const BestShapeStep = ({
   };
 
   return (
-    <div className="text-center">
-      <motion.h1 
-        className="text-4xl sm:text-5xl font-bold mb-6"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        Откога бяхте в най-добрата форма на живота си?
-      </motion.h1>
-      <motion.p 
-        className="text-muted-foreground text-xl mb-8"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-      >
-        Това ни помага да разберем Вашата фитнес история
-      </motion.p>
-      
-      <div className="max-w-2xl mx-auto">
+    <div className="text-center max-w-3xl mx-auto">
+      <div className="mb-20 relative pt-10">
         <motion.div 
-          className="grid grid-cols-1 gap-4"
+          className="absolute -top-5 left-1/2 transform -translate-x-1/2 w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center shadow-lg ring-4 ring-orange-500/10"
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+        >
+          <Activity className="w-8 h-8 text-white" />
+        </motion.div>
+        
+        <motion.h1 
+          className="text-4xl sm:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-orange-600 to-orange-500"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          От колко време не си се занимавал/а активно с фитнес/ спортувал?
+        </motion.h1>
+        <motion.p 
+          className="text-muted-foreground text-xl mb-8 max-w-2xl mx-auto"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          Вашата фитнес история ни помага да създадем персонализиран план, съобразен с вашето ниво на опит
+        </motion.p>
+      </div>
+      
+      <div className="max-w-2xl mx-auto relative">
+        <motion.div 
+          className="absolute inset-0 bg-gradient-to-b from-slate-900/70 to-slate-950/70 dark:from-slate-900/70 dark:to-slate-950/70 -z-10 rounded-2xl opacity-80"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        />
+        
+        <motion.div 
+          className="grid grid-cols-1 gap-4 relative p-6"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
@@ -111,33 +129,85 @@ const BestShapeStep = ({
           <RadioGroup value={selected || ""} onValueChange={handleSelectOption}>
             {options.map((option, index) => {
               const Icon = option.icon;
+              const isSelected = selected === option.id;
+              
               return (
                 <motion.div 
                   key={option.id} 
                   className={cn(
-                    "flex items-center space-x-4 bg-card p-4 rounded-lg cursor-pointer transition-all duration-300 border border-transparent",
-                    selected === option.id ? "border-orange bg-orange/5" : "hover:border-muted-foreground/30"
+                    "flex items-center space-x-4 p-5 rounded-xl cursor-pointer transition-all duration-300 border relative overflow-hidden",
+                    isSelected 
+                      ? "border-orange-500 shadow-lg bg-gradient-to-r from-slate-800/90 to-slate-900/90 dark:from-slate-800/90 dark:to-slate-900/90" 
+                      : "border-transparent bg-slate-900/80 dark:bg-slate-900/80 hover:bg-slate-800/80 dark:hover:bg-slate-800/80 hover:shadow-md"
                   )}
                   onClick={() => handleSelectOption(option.id)}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: 0.1 + index * 0.1 }}
-                  whileHover={{ scale: 1.01 }}
+                  whileHover={{ scale: 1.01, y: -2 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  <RadioGroupItem value={option.id} id={option.id} className="text-orange" />
-                  <div className={cn(
-                    "icon-container",
-                    selected === option.id ? "bg-orange/20" : "bg-secondary"
-                  )}>
-                    <Icon className={cn(
-                      "icon-sm",
-                      selected === option.id ? "text-orange" : "text-muted-foreground"
-                    )} />
-                  </div>
-                  <div className="flex-1">
-                    <label htmlFor={option.id} className="text-xl cursor-pointer font-medium">{option.label}</label>
-                    <p className="text-sm text-muted-foreground">{option.description}</p>
+                  {isSelected && (
+                    <>
+                      <motion.div 
+                        className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-orange-600/10 z-0 pointer-events-none"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.4 }}
+                      />
+                      <motion.div 
+                        className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-orange-500 to-orange-600"
+                        initial={{ scaleY: 0 }}
+                        animate={{ scaleY: 1 }}
+                        transition={{ duration: 0.3 }}
+                      />
+                    </>
+                  )}
+                  
+                  <div className="relative z-10 flex items-center space-x-4 w-full">
+                    <RadioGroupItem 
+                      value={option.id} 
+                      id={option.id} 
+                      className={cn(
+                        "text-orange-500 border-2 transition-colors duration-300",
+                        isSelected ? "border-orange-500" : "border-muted-foreground/30"
+                      )}
+                    />
+                    
+                    <div className={cn(
+                      "w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 shadow-sm",
+                      isSelected 
+                        ? "bg-gradient-to-br from-orange-500 to-orange-600 text-white ring-4 ring-orange-500/20" 
+                        : "bg-orange-900/50 dark:bg-orange-900/50 text-orange-400 dark:text-orange-400"
+                    )}>
+                      <Icon className="w-6 h-6" />
+                    </div>
+                    
+                    <div className="flex-1">
+                      <label htmlFor={option.id} className={cn(
+                        "text-xl cursor-pointer font-medium transition-colors duration-300",
+                        isSelected ? "text-orange-300 dark:text-orange-300" : "text-white dark:text-white"
+                      )}>
+                        {option.label}
+                      </label>
+                      <p className={cn(
+                        "text-sm transition-colors duration-300",
+                        isSelected ? "text-orange-200/90 dark:text-orange-200/90" : "text-gray-300 dark:text-gray-300"
+                      )}>
+                        {option.description}
+                      </p>
+                    </div>
+                    
+                    {isSelected && (
+                      <motion.div
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                        className="w-8 h-8 bg-orange-500/10 rounded-full flex items-center justify-center mr-2 shadow-sm"
+                      >
+                        <BadgeCheck className="w-5 h-5 text-orange-500" />
+                      </motion.div>
+                    )}
                   </div>
                 </motion.div>
               );
@@ -150,10 +220,10 @@ const BestShapeStep = ({
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="mt-6 flex justify-center"
+          className="mt-8 flex justify-center"
         >
-          <div className="px-4 py-2 bg-orange/10 rounded-full text-orange text-sm font-medium inline-flex items-center">
-            <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-orange" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <div className="px-6 py-2.5 bg-gradient-to-r from-orange-950/40 to-orange-900/40 dark:from-orange-950/40 dark:to-orange-900/40 text-orange-400 dark:text-orange-400 text-sm font-medium inline-flex items-center shadow-sm rounded-full border border-orange-800/20">
+            <svg className="animate-spin -ml-1 mr-3 h-4 w-4 text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
