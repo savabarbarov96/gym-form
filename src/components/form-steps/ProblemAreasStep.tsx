@@ -1,8 +1,8 @@
 import React from "react";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Check, Dumbbell, BoneIcon, HeartIcon, ThermometerSunIcon, Footprints, UsersRound } from "lucide-react";
+import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { BodySilhouette } from "@/components/BodySilhouette";
+import { motion } from "framer-motion";
 
 interface ProblemAreasStepProps {
   selectedAreas: string[];
@@ -12,14 +12,14 @@ interface ProblemAreasStepProps {
 
 const ProblemAreasStep = ({ selectedAreas, onSelectArea, onStepComplete }: ProblemAreasStepProps) => {
   const problemAreas = [
-    { label: "Гърди", id: "chest", icon: HeartIcon },
-    { label: "Ръце", id: "arms", icon: Dumbbell },
-    { label: "Гръб", id: "back", icon: UsersRound },
-    { label: "Корем", id: "belly", icon: ThermometerSunIcon },
-    { label: "Седалище", id: "glutes", icon: UsersRound },
-    { label: "Крака", id: "legs", icon: Footprints },
-    { label: "Прасци", id: "calves", icon: Footprints },
-    { label: "Предмишници", id: "forearms", icon: BoneIcon },
+    { label: "Гърди", id: "chest" },
+    { label: "Ръце", id: "arms" },
+    { label: "Гръб", id: "back" },
+    { label: "Корем", id: "belly" },
+    { label: "Седалище", id: "glutes" },
+    { label: "Крака", id: "legs" },
+    { label: "Прасци", id: "calves" },
+    { label: "Предмишници", id: "forearms" },
   ];
 
   const toggleArea = (id: string) => {
@@ -52,54 +52,86 @@ const ProblemAreasStep = ({ selectedAreas, onSelectArea, onStepComplete }: Probl
         
         <div className="flex flex-col gap-4">
           <div className="grid grid-cols-1 gap-3">
-            {problemAreas.map((area) => {
-              const Icon = area.icon;
+            {problemAreas.map((area, index) => {
               const isSelected = selectedAreas.includes(area.id);
               return (
-                <div
+                <motion.div
                   key={area.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
                   className={cn(
-                    "flex items-center gap-4 bg-card p-4 rounded-lg cursor-pointer border border-transparent transition-all", 
-                    isSelected ? "border-orange bg-orange/5" : "hover:border-muted-foreground/30"
+                    "flex items-center gap-3 p-4 rounded-xl cursor-pointer transition-all duration-300 relative overflow-hidden",
+                    isSelected 
+                      ? "bg-gradient-to-r from-orange/10 to-orange/20 border border-orange/50 shadow-md"
+                      : "bg-card border border-transparent hover:border-muted-foreground/30 hover:shadow-sm"
                   )}
                   onClick={() => toggleArea(area.id)}
                 >
-                  <Checkbox 
-                    id={area.id}
-                    checked={isSelected}
-                    onCheckedChange={() => toggleArea(area.id)}
-                    className="data-[state=checked]:bg-orange data-[state=checked]:text-white"
-                  />
+                  {isSelected && (
+                    <motion.div 
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="absolute left-0 top-0 w-1 h-full bg-orange"
+                    />
+                  )}
+                  
                   <div className={cn(
-                    "icon-container",
-                    isSelected ? "bg-orange/20" : "bg-secondary"
+                    "w-6 h-6 rounded-full flex items-center justify-center border-2 transition-all duration-300",
+                    isSelected 
+                      ? "border-orange bg-orange" 
+                      : "border-muted-foreground/40 bg-transparent"
                   )}>
-                    <Icon className={cn(
-                      "icon-sm",
-                      isSelected ? "text-orange" : "text-muted-foreground"
-                    )} />
+                    {isSelected && <Check className="w-4 h-4 text-white" />}
                   </div>
-                  <label htmlFor={area.id} className="text-xl cursor-pointer flex-1">{area.label}</label>
-                </div>
+                  
+                  <span className={cn(
+                    "text-xl transition-colors duration-300",
+                    isSelected ? "font-medium text-foreground" : "text-muted-foreground"
+                  )}>
+                    {area.label}
+                  </span>
+                </motion.div>
               )
             })}
           </div>
           
-          <div
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: problemAreas.length * 0.05 }}
             className={cn(
-              "flex items-center gap-4 bg-card p-4 rounded-lg cursor-pointer border border-transparent transition-all mt-4",
-              selectedAreas.includes("none") ? "border-orange bg-orange/5" : "hover:border-muted-foreground/30"
+              "flex items-center gap-3 p-4 rounded-xl cursor-pointer transition-all duration-300 relative overflow-hidden mt-4",
+              selectedAreas.includes("none") 
+                ? "bg-gradient-to-r from-orange/10 to-orange/20 border border-orange/50 shadow-md"
+                : "bg-card border border-transparent hover:border-muted-foreground/30 hover:shadow-sm"
             )}
             onClick={() => onSelectArea(["none"])}
           >
+            {selectedAreas.includes("none") && (
+              <motion.div 
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                className="absolute left-0 top-0 w-1 h-full bg-orange"
+              />
+            )}
+            
             <div className={cn(
-              "w-5 h-5 rounded-full border flex items-center justify-center",
-              selectedAreas.includes("none") ? "border-orange bg-orange" : "border-muted-foreground"
+              "w-6 h-6 rounded-full flex items-center justify-center border-2 transition-all duration-300",
+              selectedAreas.includes("none") 
+                ? "border-orange bg-orange" 
+                : "border-muted-foreground/40 bg-transparent"
             )}>
               {selectedAreas.includes("none") && <Check className="w-4 h-4 text-white" />}
             </div>
-            <label className="text-xl cursor-pointer">Нито едно от изброените</label>
-          </div>
+            
+            <span className={cn(
+              "text-xl transition-colors duration-300",
+              selectedAreas.includes("none") ? "font-medium text-foreground" : "text-muted-foreground"
+            )}>
+              Нито едно от изброените
+            </span>
+          </motion.div>
         </div>
       </div>
     </div>

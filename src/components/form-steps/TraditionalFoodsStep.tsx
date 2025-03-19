@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { 
   ShoppingBasket, 
   Search, 
@@ -7,12 +7,14 @@ import {
   X, 
   Plus,
   ChevronRight,
-  Tag
+  Tag,
+  AlertCircle
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
 
 interface TraditionalFoodsStepProps {
   selectedFoods: string[];
@@ -28,9 +30,11 @@ const TraditionalFoodsStep = ({
   onCustomFoodChange = () => {} 
 }: TraditionalFoodsStepProps) => {
   const [showCustomInput, setShowCustomInput] = useState(false);
-  const [customInput, setCustomInput] = useState(customFood || "");
+  const [customInput, setCustomInput] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState<string | null>(null);
+  const [customFoods, setCustomFoods] = useState<string[]>(customFood ? [customFood] : []);
+  const [notification, setNotification] = useState<{message: string, visible: boolean}>({message: "", visible: false});
 
   // Log props for debugging
   useEffect(() => {
@@ -40,6 +44,11 @@ const TraditionalFoodsStep = ({
       selectedFoodsType: typeof selectedFoods,
       selectedFoodsIsArray: Array.isArray(selectedFoods)
     });
+    
+    // Initialize custom foods from props if available
+    if (customFood && !customFoods.includes(customFood)) {
+      setCustomFoods([...customFoods, customFood]);
+    }
   }, [selectedFoods, customFood]);
 
   // Common Bulgarian market items with categories
@@ -225,17 +234,73 @@ const TraditionalFoodsStep = ({
     }
   };
 
+  const showNotification = (message: string) => {
+    setNotification({
+      message,
+      visible: true
+    });
+    
+    // Also use the toast if available
+    try {
+      toast.success(message, {
+        duration: 3000,
+      });
+    } catch (error) {
+      console.log("Toast not available:", error);
+    }
+    
+    // Auto-hide notification after 3 seconds
+    setTimeout(() => {
+      setNotification(prev => ({...prev, visible: false}));
+    }, 3000);
+  };
+
   const handleSaveCustomFood = () => {
     if (customInput.trim()) {
-      console.log("Saving custom food:", customInput.trim());
-      onCustomFoodChange(customInput.trim());
-      setShowCustomInput(false);
+      const newFood = customInput.trim();
+      console.log("Saving custom food:", newFood);
+      
+      // Check if this food is already added
+      if (customFoods.includes(newFood)) {
+        toast.error("Тази храна вече е добавена!");
+        return;
+      }
+      
+      // Add to custom foods array
+      setCustomFoods(prev => [...prev, newFood]);
+      
+      // Also update parent component if needed
+      if (onCustomFoodChange) {
+        onCustomFoodChange(newFood); // Just pass the new food, don't concatenate
+      }
+      
+      // Show notification
+      showNotification(`Добавена храна: ${newFood}`);
+      
+      // Clear input but keep custom input box open
+      setCustomInput("");
     }
   };
 
   const handleCancelCustomFood = () => {
     setCustomInput("");
     setShowCustomInput(false);
+  };
+
+  const handleRemoveCustomFood = (food: string) => {
+    setCustomFoods(prev => prev.filter(item => item !== food));
+    
+    // Also update parent component
+    if (onCustomFoodChange) {
+      // Remove just this food from the parent
+      onCustomFoodChange(null);
+      
+      // If there are other foods, add them back one by one
+      const remaining = customFoods.filter(item => item !== food);
+      remaining.forEach(item => {
+        onCustomFoodChange(item);
+      });
+    }
   };
 
   const getSelectedCount = (categoryName: string) => {
@@ -262,6 +327,21 @@ const TraditionalFoodsStep = ({
         </p>
       </motion.div>
       
+      {/* Notification */}
+      <AnimatePresence>
+        {notification.visible && (
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="fixed top-4 right-4 z-50 bg-green-100 text-green-800 px-4 py-2 rounded-lg shadow-md flex items-center gap-2"
+          >
+            <Check className="h-4 w-4" />
+            {notification.message}
+          </motion.div>
+        )}
+      </AnimatePresence>
+      
       {/* Selected items summary */}
       <motion.div 
         className="mb-8"
@@ -270,7 +350,7 @@ const TraditionalFoodsStep = ({
         transition={{ duration: 0.4, delay: 0.2 }}
       >
         <div className="flex flex-wrap gap-2 mb-4 min-h-14 p-4 bg-muted/30 rounded-lg">
-          {selectedFoods.length === 0 && (
+          {selectedFoods.length === 0 && customFoods.length === 0 && (
             <p className="text-muted-foreground italic w-full text-center">Изберете продукти, които обикновено купувате от магазина</p>
           )}
           
@@ -293,21 +373,24 @@ const TraditionalFoodsStep = ({
               </Badge>
             ) : null;
           })}
-          {customFood && (
+          
+          {/* Custom foods badges */}
+          {customFoods.map((food, index) => (
             <Badge 
+              key={`custom-${index}-${food}`}
               variant="secondary"
               className="px-3 py-1.5 text-sm gap-2 group bg-primary/10 hover:bg-primary/20 text-foreground"
             >
-              {customFood}
+              {food}
               <X 
                 className="h-3.5 w-3.5 cursor-pointer opacity-70 group-hover:opacity-100" 
                 onClick={(e) => {
                   e.stopPropagation();
-                  onCustomFoodChange(null);
+                  handleRemoveCustomFood(food);
                 }}
               />
             </Badge>
-          )}
+          ))}
         </div>
       </motion.div>
       
@@ -426,6 +509,11 @@ const TraditionalFoodsStep = ({
               onChange={(e) => setCustomInput(e.target.value)}
               className="flex-1"
               autoFocus
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && customInput.trim()) {
+                  handleSaveCustomFood();
+                }
+              }}
             />
             <Button 
               type="button" 
@@ -443,6 +531,10 @@ const TraditionalFoodsStep = ({
             >
               Отказ
             </Button>
+          </div>
+          <div className="mt-2 text-xs text-muted-foreground flex items-center gap-1">
+            <AlertCircle className="h-3 w-3" />
+            Можете да добавите няколко храни една след друга
           </div>
         </motion.div>
       )}

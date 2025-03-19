@@ -1,5 +1,5 @@
 import React from "react";
-import { Weight, Dumbbell, Target, Heart } from "lucide-react";
+import { Weight, Dumbbell, Target, Heart, Clock, Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface FitnessGoalStepProps {
@@ -32,6 +32,18 @@ const FitnessGoalStep = ({ selectedGoal, onSelect }: FitnessGoalStepProps) => {
       id: "boost-wellbeing", 
       icon: Heart,
       description: "Подобряване на цялостното здраве и нивата на енергия" 
+    },
+    { 
+      label: "Дълголетие и здраве", 
+      id: "longevity-health", 
+      icon: Clock,
+      description: "Фокус върху превенция на болести, анти-ейджинг и дългосрочна жизненост" 
+    },
+    { 
+      label: "Подобряване на издръжливостта", 
+      id: "improve-endurance", 
+      icon: Activity,
+      description: "Увеличаване на аеробния капацитет, издръжливостта и цялостната кондиция" 
     },
   ];
 
