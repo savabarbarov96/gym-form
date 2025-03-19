@@ -28,11 +28,13 @@ const WorkoutPreferencesStepRenderer: React.FC<WorkoutPreferencesStepRendererPro
   const { toast } = useToast();
   
   // This maps the global step number to the local step within this renderer
-  // Adjusted for the new Allergies step (step 13)
-  const localStep = step - 13;
+  // Adjusted for the Traditional Foods step (step 14)
+  const localStep = step - 15;
+  
+  console.log(`WorkoutPreferencesStepRenderer: Global Step ${step}, Local Step ${localStep}`);
   
   switch (localStep) {
-    case 1: // Step 14
+    case 0: // Step 15
       return (
         <ProblemAreasStep
           selectedAreas={formData.problemAreas}
@@ -40,7 +42,7 @@ const WorkoutPreferencesStepRenderer: React.FC<WorkoutPreferencesStepRendererPro
         />
       );
     
-    case 2: // Step 15
+    case 1: // Step 16
       return (
         <ActivitiesStep
           selectedActivities={formData.activities}
@@ -50,7 +52,7 @@ const WorkoutPreferencesStepRenderer: React.FC<WorkoutPreferencesStepRendererPro
         />
       );
     
-    case 3: // Step 16
+    case 2: // Step 17
       return (
         <WorkoutLocationStep
           selectedLocation={formData.workoutLocation}
@@ -58,7 +60,7 @@ const WorkoutPreferencesStepRenderer: React.FC<WorkoutPreferencesStepRendererPro
         />
       );
     
-    case 4: // Step 17
+    case 3: // Step 18
       return (
         <WorkoutIntensityStep
           selectedIntensity={formData.workoutIntensity}
@@ -66,7 +68,7 @@ const WorkoutPreferencesStepRenderer: React.FC<WorkoutPreferencesStepRendererPro
         />
       );
     
-    case 5: // Step 18
+    case 4: // Step 19
       return (
         <WorkoutFrequencyStep
           selected={formData.workoutFrequency}
@@ -74,7 +76,7 @@ const WorkoutPreferencesStepRenderer: React.FC<WorkoutPreferencesStepRendererPro
         />
       );
     
-    case 6: // Step 19
+    case 5: // Step 20
       return (
         <WorkoutDurationStep
           selected={formData.workoutDuration}
@@ -82,7 +84,7 @@ const WorkoutPreferencesStepRenderer: React.FC<WorkoutPreferencesStepRendererPro
         />
       );
     
-    case 7: // Step 20
+    case 6: // Step 21
       return (
         <ExercisePreferencesStep
           preferences={formData.exercisePreferences}
@@ -93,7 +95,7 @@ const WorkoutPreferencesStepRenderer: React.FC<WorkoutPreferencesStepRendererPro
         />
       );
     
-    case 8: // Step 21
+    case 7: // Step 22
       return (
         <DesiredBodyStep
           selectedBody={formData.desiredBody}
@@ -102,6 +104,7 @@ const WorkoutPreferencesStepRenderer: React.FC<WorkoutPreferencesStepRendererPro
       );
       
     default:
+      console.warn(`WorkoutPreferencesStepRenderer: No component for local step ${localStep}`);
       return null;
   }
 };

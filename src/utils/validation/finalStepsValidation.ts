@@ -2,104 +2,115 @@ import { FormData } from "@/types/survey";
 import type { ToastParams } from "@/hooks/use-toast";
 
 // Validate the "Out of Breath" self-assessment step
-const validateOutOfBreathStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
+export const validateSelfAssessmentOutOfBreathStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (formData.selfAssessments.outOfBreath === null) {
     toast({
-      title: "Self Assessment Required",
-      description: "Please indicate how much you agree with the statement",
-      variant: "destructive",
+      title: "Необходима е оценка",
+      description: "Моля, оценете колко бързо се задъхвате",
+      variant: "default",
     });
     return false;
   }
-  console.log("outOfBreath validation passed with value:", formData.selfAssessments.outOfBreath);
   return true;
 };
 
 // Validate the "Falling Back" self-assessment step
-const validateFallingBackStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
+export const validateSelfAssessmentFallingBackStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (formData.selfAssessments.fallingBack === null) {
     toast({
-      title: "Self Assessment Required",
-      description: "Please indicate how much you agree with the statement",
-      variant: "destructive",
+      title: "Необходима е оценка",
+      description: "Моля, оценете колко често се връщате към стари навици",
+      variant: "default",
     });
     return false;
   }
-  console.log("fallingBack validation passed with value:", formData.selfAssessments.fallingBack);
   return true;
 };
 
 // Validate the "Motivation Level" self-assessment step
-const validateMotivationLevelStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
-  if (formData.selfAssessments.motivationLevel === null) {
+export const validateSelfAssessmentSuitableWorkoutsStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
+  if (formData.selfAssessments.suitableWorkouts === null) {
     toast({
-      title: "Self Assessment Required",
-      description: "Please indicate how much you agree with the statement",
-      variant: "destructive",
+      title: "Необходима е оценка",
+      description: "Моля, оценете колко трудно намирате подходящи тренировки",
+      variant: "default",
     });
     return false;
   }
-  console.log("motivationLevel validation passed with value:", formData.selfAssessments.motivationLevel);
   return true;
 };
 
 // Validate the "Diet Consistency" self-assessment step
-const validateDietConsistencyStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
-  if (formData.selfAssessments.dietConsistency === null) {
+export const validateSelfAssessmentMotivationStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
+  if (formData.selfAssessments.motivationLevel === null) {
     toast({
-      title: "Self Assessment Required",
-      description: "Please indicate how much you agree with the statement",
-      variant: "destructive",
+      title: "Необходима е оценка",
+      description: "Моля, оценете вашето ниво на мотивация",
+      variant: "default",
     });
     return false;
   }
-  console.log("dietConsistency validation passed with value:", formData.selfAssessments.dietConsistency);
+  return true;
+};
+
+// Validate the "Diet Consistency" self-assessment step
+export const validateSelfAssessmentDietConsistencyStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
+  if (formData.selfAssessments.dietConsistency === null) {
+    toast({
+      title: "Необходима е оценка",
+      description: "Моля, оценете вашата последователност в диетата",
+      variant: "default",
+    });
+    return false;
+  }
   return true;
 };
 
 // Validate the personal info step
-const validatePersonalInfoStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
-  // Name validation
-  if (!formData.personalInfo.name) {
+export const validatePersonalInfoStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
+  const { name, email } = formData.personalInfo || { name: null, email: null };
+  
+  // If both fields are empty, consider it valid in non-strict mode
+  // This allows users to proceed without filling in personal info
+  if (!name && !email) {
+    console.log("Personal info is empty, but allowing in non-strict mode");
+    return true;
+  }
+  
+  // If one field is filled but not the other, show validation error
+  if ((name && !email) || (!name && email)) {
     toast({
-      title: "Name Required",
-      description: "Please enter your name",
-      variant: "destructive",
+      title: "Непълна информация",
+      description: "Моля, попълнете и двете полета или оставете и двете празни",
+      variant: "default",
     });
     return false;
   }
   
-  // Email validation
-  if (!formData.personalInfo.email) {
-    toast({
-      title: "Email Required",
-      description: "Please enter your email address",
-      variant: "destructive",
-    });
-    return false;
-  }
-  
-  // Email format validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(formData.personalInfo.email)) {
-    toast({
-      title: "Invalid Email",
-      description: "Please enter a valid email address",
-      variant: "destructive",
-    });
-    return false;
+  // If both fields are filled, validate email format
+  if (name && email) {
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast({
+        title: "Невалиден имейл",
+        description: "Моля, въведете валиден имейл адрес",
+        variant: "default",
+      });
+      return false;
+    }
   }
   
   return true;
 };
 
 // Validate the start commitment step
-const validateStartCommitmentStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
+export const validateStartCommitmentStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (!formData.startCommitment) {
     toast({
-      title: "Selection Required",
-      description: "Please select when you want to start",
-      variant: "destructive",
+      title: "Необходим е избор",
+      description: "Моля, изберете кога искате да започнете",
+      variant: "default",
     });
     return false;
   }
@@ -112,24 +123,31 @@ export const validateFinalStepsStep = (
   formData: FormData,
   toast: (props: ToastParams) => void
 ): boolean => {
-  console.log("Validating final step:", step);
+  console.log(`Validating final steps step ${step}`);
   
-  // Map the global step numbers to the specific validation functions
+  // Map the global step numbers (27-33) to the specific validation functions
+  // The FinalStepsRenderer maps steps as follows:
+  // 28 (localStep 1) -> Out of Breath
+  // 29 (localStep 2) -> Falling Back
+  // 30 (localStep 3) -> Motivation Level
+  // 31 (localStep 4) -> Diet Consistency
+  // 32 (localStep 5) -> Personal Info
+  // 33 (localStep 6) -> Start Commitment
   switch (step) {
-    case 27:
-      return validateOutOfBreathStep(formData, toast);
     case 28:
-      return validateFallingBackStep(formData, toast);
+      return validateSelfAssessmentOutOfBreathStep(formData, toast);
     case 29:
-      return validateMotivationLevelStep(formData, toast);
+      return validateSelfAssessmentFallingBackStep(formData, toast);
     case 30:
-      return validateDietConsistencyStep(formData, toast);
+      return validateSelfAssessmentMotivationStep(formData, toast);
     case 31:
-      return validatePersonalInfoStep(formData, toast);
+      return validateSelfAssessmentDietConsistencyStep(formData, toast);
     case 32:
+      return validatePersonalInfoStep(formData, toast);
+    case 33:
       return validateStartCommitmentStep(formData, toast);
     default:
       console.log(`No specific validation for final steps step ${step}`);
       return true;
   }
-};
+}; 

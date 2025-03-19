@@ -1,38 +1,36 @@
 import { FormData } from "@/types/survey";
 import type { ToastParams } from "@/hooks/use-toast";
 
-export const validateHealthConcernsStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
-  // Health concerns are optional, but if a custom option is being added, it should not be empty
-  if (formData.healthConcerns.length === 0 && formData.customHealthConcern === null) {
-    // This is valid - user has no health concerns
-    return true;
+export const validateHeightStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
+  if (!formData.height) {
+    toast({
+      title: "Необходима е информация",
+      description: "Моля, въведете вашата височина",
+      variant: "default",
+    });
+    return false;
   }
-  
-  // If there's at least one health concern or a valid custom concern, it's valid
-  if (formData.healthConcerns.length > 0 || (formData.customHealthConcern && formData.customHealthConcern.trim() !== '')) {
-    return true;
-  }
-  
-  toast({
-    title: "Health Concerns Selection Required",
-    description: "Please select at least one health concern or choose 'None of the above'",
-    variant: "destructive",
-  });
-  
-  return false;
+  return true;
 };
 
-export const validateProblemAreasStep = (): boolean => {
-  // Problem areas are optional
+export const validateWeightStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
+  if (!formData.currentWeight) {
+    toast({
+      title: "Необходима е информация",
+      description: "Моля, въведете вашето текущо тегло",
+      variant: "default",
+    });
+    return false;
+  }
   return true;
 };
 
 export const validateBestShapeStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (!formData.bestShapeTime) {
     toast({
-      title: "Best Shape Time Selection Required",
-      description: "Please select when you were in your best shape",
-      variant: "destructive",
+      title: "Необходим е избор",
+      description: "Моля, изберете кога сте били в най-добра форма",
+      variant: "default",
     });
     return false;
   }
@@ -42,55 +40,35 @@ export const validateBestShapeStep = (formData: FormData, toast: (props: ToastPa
 export const validateWeightChangeStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (!formData.weightChange) {
     toast({
-      title: "Weight Change Pattern Required",
-      description: "Please select how your weight typically changes",
-      variant: "destructive",
+      title: "Необходим е избор",
+      description: "Моля, изберете как обикновено се променя теглото ви",
+      variant: "default",
     });
     return false;
   }
   return true;
 };
 
-export const validateActivitiesStep = (): boolean => {
-  // Activities are optional
+export const validateProgressGraphStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
+  // This is an informational step, no validation needed
   return true;
 };
 
-export const validateProgressGraphStep = (): boolean => {
-  // This is an informational step
+export const validateHormoneGraphStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
+  // This is an informational step, no validation needed
   return true;
 };
 
-export const validateHeightInputStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
-  if (!formData.height) {
-    toast({
-      title: "Height Required",
-      description: "Please enter your height",
-      variant: "destructive",
-    });
-    return false;
-  }
+export const validateHealthConcernsStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
+  // Health concerns can be empty if the user has no concerns
   return true;
 };
 
-export const validateWeightInputStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
-  if (!formData.currentWeight) {
-    toast({
-      title: "Weight Required",
-      description: "Please enter your weight",
-      variant: "destructive",
-    });
-    return false;
-  }
+export const validateAllergiesStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
+  // Allergies can be empty if the user has no allergies
   return true;
 };
 
-export const validateAllergiesStep = (formData: FormData): boolean => {
-  // Allergies are optional, so we don't need to validate anything here
-  return true;
-};
-
-// Main validation function for this module
 export const validateBodyAssessmentStep = (
   step: number,
   formData: FormData,
@@ -101,25 +79,23 @@ export const validateBodyAssessmentStep = (
   // Map the global step numbers to the specific validation functions
   switch (step) {
     case 6:
-      return validateHeightInputStep(formData, toast);
+      return validateHeightStep(formData, toast);
     case 7:
-      return validateWeightInputStep(formData, toast);
+      return validateWeightStep(formData, toast);
     case 8:
       return validateBestShapeStep(formData, toast);
     case 9:
       return validateWeightChangeStep(formData, toast);
     case 10:
-      return validateProgressGraphStep();
+      return validateProgressGraphStep(formData, toast);
     case 11:
-      return true; // Hormone graph step doesn't need validation
+      return validateHormoneGraphStep(formData, toast);
     case 12:
-      console.log("Validating health concerns step");
       return validateHealthConcernsStep(formData, toast);
     case 13:
-      console.log("Validating allergies step");
-      return validateAllergiesStep(formData);
+      return validateAllergiesStep(formData, toast);
     default:
       console.log(`No specific validation for body assessment step ${step}`);
       return true;
   }
-};
+}; 

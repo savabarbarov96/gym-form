@@ -1,4 +1,3 @@
-
 import React from "react";
 
 interface HeightUnitSelectorProps {
@@ -14,14 +13,14 @@ export const HeightUnitSelector: React.FC<HeightUnitSelectorProps> = ({ unit, to
         onClick={toggleUnit}
         className={`px-4 py-2 rounded-l-lg transition-colors ${unit === "cm" ? "bg-orange text-white" : "bg-secondary text-foreground"}`}
       >
-        Centimeters
+        Сантиметри
       </button>
       <button
         type="button"
         onClick={toggleUnit}
         className={`px-4 py-2 rounded-r-lg transition-colors ${unit === "ft" ? "bg-orange text-white" : "bg-secondary text-foreground"}`}
       >
-        Feet & Inches
+        Футове и Инчове
       </button>
     </div>
   );

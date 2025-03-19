@@ -1,7 +1,7 @@
 import { FormData } from "@/types/survey";
 
 // Define the webhook URL as a constant
-const WEBHOOK_URL = "https://sava.automationaid.eu/webhook/8ffb7f1e-6c6f-412c-8022-eef6957d78d4";
+const WEBHOOK_URL = "https://sava.automationaid.eu/webhook/9de1dab9-8128-4b4a-9445-b2272727343b";
 
 // Format date to ISO string with readable format for AI
 const formatDate = (dateString: string | null): string | null => {
@@ -312,7 +312,7 @@ const createAIOptimizedPayload = (formData: FormData): Record<string, any> => {
         frequencyValue: getWorkoutFrequencyValue(formData.workoutFrequency),
         sessionDuration: formData.workoutDuration,
         durationInMinutes: getWorkoutDurationValue(formData.workoutDuration),
-        exercisePreferences: Object.entries(formData.exercisePreferences).map(([exercise, preference]) => ({
+        exercisePreferences: Object.entries(formData.exercisePreferences || {}).map(([exercise, preference]) => ({
           exerciseName: exercise,
           preference: preference
         })).filter(item => item.preference !== null)
@@ -325,7 +325,9 @@ const createAIOptimizedPayload = (formData: FormData): Record<string, any> => {
         sugaryFoodsConsumption: formData.sugaryFoods,
         sugaryFoodsFrequencyPerWeek: getSugaryFoodsFrequencyValue(formData.sugaryFoods),
         waterIntakeMilliliters: formData.waterIntake,
-        waterIntakeLiters: formData.waterIntake ? (formData.waterIntake / 1000).toFixed(1) : null
+        waterIntakeLiters: formData.waterIntake ? (formData.waterIntake / 1000).toFixed(1) : null,
+        traditionalFoods: formData.traditionalFoods,
+        customTraditionalFood: formData.customTraditionalFood
       },
       sleep: {
         averageHoursPerNight: formData.sleepAmount
@@ -399,4 +401,4 @@ export const submitToWebhook = async (formData: FormData): Promise<boolean> => {
     console.error('Error submitting to webhook:', error);
     return false;
   }
-};
+}; 

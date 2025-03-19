@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Weight, Dumbbell, Target, Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -11,35 +10,35 @@ interface FitnessGoalStepProps {
 const FitnessGoalStep = ({ selectedGoal, onSelect }: FitnessGoalStepProps) => {
   const goals = [
     { 
-      label: "Lose Weight", 
+      label: "Отслабване", 
       id: "lose-weight", 
       icon: Weight,
-      description: "Reduce body fat and improve body composition" 
+      description: "Намаляване на телесните мазнини и подобряване на телесната композиция" 
     },
     { 
-      label: "Gain Muscle Mass", 
+      label: "Натрупване на мускулна маса", 
       id: "gain-muscle", 
       icon: Dumbbell,
-      description: "Build strength and increase muscle size" 
+      description: "Изграждане на сила и увеличаване на мускулния обем" 
     },
     { 
-      label: "Get Shredded", 
+      label: "Постигане на релеф", 
       id: "get-shredded", 
       icon: Target,
-      description: "Achieve maximum definition and low body fat" 
+      description: "Постигане на максимална дефиниция и ниско съдържание на мазнини" 
     },
     { 
-      label: "Boost Well-Being", 
+      label: "Подобряване на благосъстоянието", 
       id: "boost-wellbeing", 
       icon: Heart,
-      description: "Improve overall health and energy levels" 
+      description: "Подобряване на цялостното здраве и нивата на енергия" 
     },
   ];
 
   return (
     <div className="text-center">
-      <h1 className="text-4xl sm:text-5xl font-bold mb-6">Choose your goal</h1>
-      <p className="text-muted-foreground text-xl mb-8">What are you looking to achieve?</p>
+      <h1 className="text-4xl sm:text-5xl font-bold mb-6">Изберете Вашата цел</h1>
+      <p className="text-muted-foreground text-xl mb-8">Какво искате да постигнете?</p>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
         {goals.map((goal) => {

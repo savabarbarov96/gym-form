@@ -50,7 +50,7 @@ const CustomConcern: React.FC<CustomConcernProps> = ({
             size="icon" 
             onClick={removeCustom} 
             className="text-muted-foreground hover:text-orange hover:bg-orange/10"
-            aria-label="Remove custom concern"
+            aria-label="Премахване на собствена здравословна грижа"
           >
             <X className="w-4 h-4" />
           </Button>
@@ -68,13 +68,13 @@ const CustomConcern: React.FC<CustomConcernProps> = ({
         transition={{ duration: 0.3 }}
       >
         <label className="text-sm font-medium mb-3 block text-left">
-          Add your specific concern:
+          Добавете Вашия специфичен проблем:
         </label>
         <div className="flex gap-2">
           <Input
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            placeholder="e.g., Elbow pain, neck stiffness"
+            placeholder="напр. Болка в лакътя, скованост на врата"
             className="flex-1"
             autoFocus
           />
@@ -84,7 +84,7 @@ const CustomConcern: React.FC<CustomConcernProps> = ({
             disabled={!inputValue.trim()}
             className="bg-orange hover:bg-orange/90 text-white"
           >
-            Add
+            Добави
           </Button>
         </div>
       </motion.div>
@@ -105,7 +105,7 @@ const CustomConcern: React.FC<CustomConcernProps> = ({
         <div className="bg-muted rounded-full p-2 w-12 h-12 flex items-center justify-center mb-3">
           <MessageSquarePlus className="w-5 h-5 text-orange" />
         </div>
-        <p className="text-sm text-muted-foreground font-medium">Add another concern</p>
+        <p className="text-sm text-muted-foreground font-medium">Добавете друг проблем</p>
       </div>
     </motion.div>
   );

@@ -1,4 +1,3 @@
-
 export { default as GenderSelectionStep } from './GenderSelectionStep';
 export { default as AgeSelectionStep } from './AgeSelectionStep';
 export { default as BodyTypeStep } from './BodyTypeStep';
@@ -12,6 +11,7 @@ export { default as ActivitiesStep } from './ActivitiesStep';
 export { default as ProgressGraphStep } from './ProgressGraphStep';
 export { default as HealthConcernsStep } from './HealthConcernsStep';
 export { default as AllergiesStep } from './AllergiesStep';
+export { default as TraditionalFoodsStep } from './TraditionalFoodsStep';
 export { default as WorkoutLocationStep } from './WorkoutLocationStep';
 export { default as WorkoutIntensityStep } from './WorkoutIntensityStep';
 export { default as WorkoutFrequencyStep } from './WorkoutFrequencyStep';

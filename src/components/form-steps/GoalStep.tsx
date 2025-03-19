@@ -1,4 +1,3 @@
-
 import React, { useMemo } from "react";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
@@ -176,13 +175,13 @@ const GoalStep = ({ value, onChange, currentBodyFat = 25, onCurrentBodyFatChange
       </div>
       
       <div className="bg-card rounded-lg p-6 flex flex-col">
-        <h1 className="text-3xl sm:text-4xl font-bold mb-8">Choose your body fat levels</h1>
+        <h1 className="text-3xl sm:text-4xl font-bold mb-8">Изберете нивата на телесни мазнини</h1>
         
         {onCurrentBodyFatChange && (
           <div className="mb-6">
-            <label className="text-lg font-medium mb-2 block">Your current body fat:</label>
+            <label className="text-lg font-medium mb-2 block">Вашите текущи телесни мазнини:</label>
             <div className="bg-secondary p-4 rounded-md text-center mb-4 text-lg font-medium">
-              {currentBodyFat}% Body Fat
+              {currentBodyFat}% Телесни мазнини
             </div>
             
             <Slider
@@ -202,9 +201,9 @@ const GoalStep = ({ value, onChange, currentBodyFat = 25, onCurrentBodyFatChange
         )}
         
         <div className="mt-2">
-          <label className="text-lg font-medium mb-2 block">Your target body fat:</label>
+          <label className="text-lg font-medium mb-2 block">Вашите целеви телесни мазнини:</label>
           <div className="bg-secondary p-4 rounded-md text-center mb-4 text-lg font-medium">
-            {value}% Body Fat
+            {value}% Телесни мазнини
           </div>
           
           <Slider
@@ -217,24 +216,24 @@ const GoalStep = ({ value, onChange, currentBodyFat = 25, onCurrentBodyFatChange
           />
           
           <div className="flex justify-between text-sm text-muted-foreground">
-            <span>5% (Competition)</span>
-            <span>40% (Obese)</span>
+            <span>5% (Състезателно)</span>
+            <span>40% (Затлъстяване)</span>
           </div>
           
           <div className="mt-6 p-4 rounded-md bg-muted">
-            <h3 className="font-medium text-lg mb-2">Your target: {value}% body fat</h3>
+            <h3 className="font-medium text-lg mb-2">Вашата цел: {value}% телесни мазнини</h3>
             <p className="text-muted-foreground">
               {value <= 10 ? 
-                "Essential fat levels. Extremely lean, visible muscle striations. Typically seen in bodybuilders during competition." :
+                "Нива на основни мазнини. Изключително слабо, видими мускулни линии. Обикновено се наблюдава при бодибилдъри по време на състезание." :
                 value <= 15 ?
-                "Athletic build with visible abs and muscle definition. Fitness model physique." :
+                "Атлетично телосложение с видими коремни мускули и мускулна дефиниция. Физика на фитнес модел." :
                 value <= 20 ?
-                "Fit appearance with some muscle definition. Healthy and athletic." :
+                "Стегнат вид с известна мускулна дефиниция. Здрав и атлетичен." :
                 value <= 25 ?
-                "Average build with less visible muscle definition. Healthy range for many people." :
+                "Средно телосложение с по-малко видима мускулна дефиниция. Здравословен диапазон за много хора." :
                 value <= 30 ?
-                "Some excess fat storage, less muscle definition visible. Common starting point." :
-                "Higher body fat levels. Focusing on consistent habits will help reduce this over time."
+                "Известно натрупване на мазнини, по-малко видима мускулна дефиниция. Често срещана начална точка." :
+                "По-високи нива на телесни мазнини. Фокусирането върху последователни навици ще помогне за намаляването им с времето."
               }
             </p>
           </div>

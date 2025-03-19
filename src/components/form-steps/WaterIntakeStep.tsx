@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Slider } from "@/components/ui/slider";
 import { Droplets, Info } from 'lucide-react';
@@ -21,17 +20,17 @@ const WaterIntakeStep: React.FC<WaterIntakeStepProps> = ({ value, onChange }) =>
   const getIntakeMessage = () => {
     if (intake < recommendedIntake * 0.7) {
       return {
-        message: "You're drinking less water than recommended. Increasing your water intake can improve energy levels and overall health.",
+        message: "Пиете по-малко вода от препоръчителното. Увеличаването на приема на вода може да подобри нивата на енергия и цялостното здраве.",
         type: "warning"
       };
     } else if (intake > recommendedIntake * 1.3) {
       return {
-        message: "You're drinking more water than the average recommendation, which is great for hydration!",
+        message: "Пиете повече вода от средната препоръка, което е чудесно за хидратацията!",
         type: "success"
       };
     } else {
       return {
-        message: "You're drinking a healthy amount of water, close to the recommended daily intake.",
+        message: "Пиете здравословно количество вода, близко до препоръчителния дневен прием.",
         type: "info"
       };
     }
@@ -41,7 +40,7 @@ const WaterIntakeStep: React.FC<WaterIntakeStepProps> = ({ value, onChange }) =>
   
   return (
     <div className="max-w-2xl mx-auto w-full">
-      <h2 className="text-2xl font-bold text-center mb-6">Approximately how much water do you drink daily?</h2>
+      <h2 className="text-2xl font-bold text-center mb-6">Приблизително колко вода пиете дневно?</h2>
 
       <div className="flex flex-col items-center mb-12">
         <div className="flex items-center gap-3 mb-8 bg-card p-6 rounded-lg w-full justify-center">

@@ -1,13 +1,12 @@
-
 import { FormData } from "@/types/survey";
 import type { ToastParams } from "@/hooks/use-toast";
 
 export const validateGenderStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (!formData.gender) {
     toast({
-      title: "Gender Selection Required",
-      description: "Please select your gender to continue",
-      variant: "destructive",
+      title: "Необходим е избор",
+      description: "Моля, изберете вашия пол",
+      variant: "default",
     });
     return false;
   }
@@ -17,9 +16,9 @@ export const validateGenderStep = (formData: FormData, toast: (props: ToastParam
 export const validateAgeStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (!formData.age) {
     toast({
-      title: "Age Selection Required",
-      description: "Please select your age group to continue",
-      variant: "destructive",
+      title: "Необходим е избор",
+      description: "Моля, изберете вашата възрастова група",
+      variant: "default",
     });
     return false;
   }
@@ -29,9 +28,9 @@ export const validateAgeStep = (formData: FormData, toast: (props: ToastParams) 
 export const validateBodyTypeStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (!formData.bodyType) {
     toast({
-      title: "Body Type Selection Required",
-      description: "Please select your body type to continue",
-      variant: "destructive",
+      title: "Необходим е избор",
+      description: "Моля, изберете вашия тип тяло",
+      variant: "default",
     });
     return false;
   }
@@ -39,23 +38,16 @@ export const validateBodyTypeStep = (formData: FormData, toast: (props: ToastPar
 };
 
 export const validateGoalStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
-  if (!formData.goal) {
-    toast({
-      title: "Goal Selection Required",
-      description: "Please select your goal to continue",
-      variant: "destructive",
-    });
-    return false;
-  }
+  // Goal step has default values, so it's always valid
   return true;
 };
 
 export const validateFitnessGoalStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (!formData.fitnessGoal) {
     toast({
-      title: "Fitness Goal Selection Required",
-      description: "Please select your fitness goal to continue",
-      variant: "destructive",
+      title: "Необходим е избор",
+      description: "Моля, изберете вашата фитнес цел",
+      variant: "default",
     });
     return false;
   }
@@ -65,8 +57,8 @@ export const validateFitnessGoalStep = (formData: FormData, toast: (props: Toast
 export const validateDesiredBodyStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   if (!formData.desiredBody) {
     toast({
-      title: "Desired Body Selection Required",
-      description: "Please select your desired body to continue",
+      title: "Необходим е избор на желано тяло",
+      description: "Моля, изберете вашето желано тяло, за да продължите",
       variant: "destructive",
     });
     return false;
@@ -99,4 +91,4 @@ export const validateBasicInfoStep = (
       console.log(`No specific validation for basic info step ${step}`);
       return true;
   }
-};
+}; 

@@ -1,4 +1,3 @@
-
 import React from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { motion } from "framer-motion";
@@ -26,10 +25,10 @@ const WorkoutFrequencyStep: React.FC<WorkoutFrequencyStepProps> = ({ selected, o
   };
 
   const options = [
-    { value: "none", label: "None" },
-    { value: "1-2-times", label: "1-2 times a week" },
-    { value: "3-times", label: "3 times a week" },
-    { value: "more-than-3", label: "More than 3 times a week" }
+    { value: "none", label: "Нито веднъж" },
+    { value: "1-2-times", label: "1-2 пъти седмично" },
+    { value: "3-times", label: "3 пъти седмично" },
+    { value: "more-than-3", label: "Повече от 3 пъти седмично" }
   ];
 
   const handleChange = (value: string) => {
@@ -44,7 +43,7 @@ const WorkoutFrequencyStep: React.FC<WorkoutFrequencyStepProps> = ({ selected, o
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        How many times per week have you worked out in the last 3 months?
+        Колко пъти седмично сте тренирали през последните 3 месеца?
       </motion.h1>
       
       <motion.div
@@ -78,8 +77,8 @@ const WorkoutFrequencyStep: React.FC<WorkoutFrequencyStepProps> = ({ selected, o
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3 }}
           >
-            <p className="text-orange font-bold text-xl mb-2">Congratulations! 🎉</p>
-            <p>You've worked out 65% more than the average user. Your dedication to fitness is impressive!</p>
+            <p className="text-orange font-bold text-xl mb-2">Поздравления! 🎉</p>
+            <p>Тренирали сте 65% повече от средния потребител. Вашата отдаденост на фитнеса е впечатляваща!</p>
           </motion.div>
         )}
         
@@ -90,8 +89,8 @@ const WorkoutFrequencyStep: React.FC<WorkoutFrequencyStepProps> = ({ selected, o
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3 }}
           >
-            <p className="text-lg mb-2">We'll help you create a solid habit!</p>
-            <p>Our plan will help you establish a consistent workout routine that fits your lifestyle.</p>
+            <p className="text-lg mb-2">Ще Ви помогнем да създадете солиден навик!</p>
+            <p>Нашият план ще Ви помогне да установите постоянна тренировъчна рутина, която пасва на Вашия начин на живот.</p>
           </motion.div>
         )}
       </motion.div>

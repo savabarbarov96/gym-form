@@ -1,4 +1,3 @@
-
 import React from "react";
 import { motion } from "framer-motion";
 
@@ -11,8 +10,8 @@ export const HeightInfoTooltip: React.FC = () => {
       exit={{ opacity: 0, y: -10 }}
     >
       <p className="text-sm">
-        Body Mass Index (BMI) is a value derived from your height and weight. 
-        It helps us tailor workout plans that are appropriate for your body composition.
+        Индексът на телесната маса (BMI) е стойност, получена от Вашата височина и тегло. 
+        Това ни помага да изготвим тренировъчни планове, които са подходящи за Вашата телесна композиция.
       </p>
     </motion.div>
   );

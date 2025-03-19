@@ -1,4 +1,3 @@
-
 import React from "react";
 import { motion } from "framer-motion";
 import { CheckCircle, Mail, Dumbbell, Calendar } from "lucide-react";
@@ -32,7 +31,7 @@ const SuccessState: React.FC = () => {
           transition={{ delay: 0.4 }}
           className="text-4xl font-bold mb-4"
         >
-          Your Plan Is On The Way!
+          Вашият План Идва!
         </motion.h1>
         
         <motion.p
@@ -41,8 +40,8 @@ const SuccessState: React.FC = () => {
           transition={{ delay: 0.6 }}
           className="text-muted-foreground text-lg mb-8"
         >
-          We've created your personalized workout plan and sent it to your email. 
-          Get ready to transform your fitness journey!
+          Създадохме Вашия персонализиран тренировъчен план и го изпратихме на Вашия имейл.
+          Пригответе се да трансформирате фитнес пътуването си!
         </motion.p>
         
         <motion.div
@@ -53,17 +52,17 @@ const SuccessState: React.FC = () => {
         >
           <div className="bg-background p-6 rounded-lg shadow-sm">
             <Mail className="w-10 h-10 text-orange mb-3 mx-auto" />
-            <h3 className="font-semibold text-lg mb-2">Check Your Inbox</h3>
+            <h3 className="font-semibold text-lg mb-2">Проверете Своя Имейл</h3>
             <p className="text-muted-foreground">
-              Your personalized plan has been sent to your email inbox
+              Вашият персонализиран план е изпратен на Вашия имейл
             </p>
           </div>
           
           <div className="bg-background p-6 rounded-lg shadow-sm">
             <Calendar className="w-10 h-10 text-orange mb-3 mx-auto" />
-            <h3 className="font-semibold text-lg mb-2">Start Today</h3>
+            <h3 className="font-semibold text-lg mb-2">Започнете Днес</h3>
             <p className="text-muted-foreground">
-              Begin your fitness journey with your new custom workout plan
+              Започнете фитнес пътуването си с Вашия нов персонализиран тренировъчен план
             </p>
           </div>
         </motion.div>
@@ -76,10 +75,10 @@ const SuccessState: React.FC = () => {
         >
           <div className="flex items-center justify-center gap-2 mb-1">
             <Dumbbell className="w-5 h-5" />
-            <span className="font-medium">Pro Tip</span>
+            <span className="font-medium">Професионален Съвет</span>
           </div>
           <p className="text-sm">
-            For the best results, follow your plan consistently and track your progress!
+            За най-добри резултати, следвайте плана си последователно и проследявайте напредъка си!
           </p>
         </motion.div>
       </motion.div>

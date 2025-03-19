@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Apple, Egg, Fish, Wheat, X, Milk, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -23,40 +22,40 @@ const AllergiesStep = ({
 
   const allergies = [
     { 
-      label: "Gluten", 
+      label: "Глутен", 
       id: "gluten", 
       icon: Wheat,
-      description: "Wheat, barley, rye products" 
+      description: "Продукти от пшеница, ечемик, ръж" 
     },
     { 
-      label: "Dairy", 
+      label: "Млечни продукти", 
       id: "dairy", 
       icon: Milk,
-      description: "Milk, cheese, yogurt" 
+      description: "Мляко, сирене, кисело мляко" 
     },
     { 
-      label: "Eggs", 
+      label: "Яйца", 
       id: "eggs", 
       icon: Egg,
-      description: "Eggs and egg-based products" 
+      description: "Яйца и продукти на основата на яйца" 
     },
     { 
-      label: "Fish/Shellfish", 
+      label: "Риба/Морски дарове", 
       id: "fish", 
       icon: Fish,
-      description: "Seafood allergies" 
+      description: "Алергии към морска храна" 
     },
     { 
-      label: "Nuts", 
+      label: "Ядки", 
       id: "nuts", 
       icon: Apple,
-      description: "Tree nuts and peanuts" 
+      description: "Ядки от дърво и фъстъци" 
     },
     { 
-      label: "Add Custom", 
+      label: "Добави друга", 
       id: "custom", 
       icon: Plus,
-      description: "Specify your own allergy" 
+      description: "Посочете Вашата собствена алергия" 
     },
   ];
 
@@ -87,8 +86,8 @@ const AllergiesStep = ({
 
   return (
     <div className="text-center">
-      <h1 className="text-4xl sm:text-5xl font-bold mb-6">Do you have any allergies?</h1>
-      <p className="text-muted-foreground text-xl mb-8">Select any that apply to customize your nutrition plan</p>
+      <h1 className="text-4xl sm:text-5xl font-bold mb-6">Имате ли някакви алергии?</h1>
+      <p className="text-muted-foreground text-xl mb-8">Изберете всички, които важат за Вас, за да персонализираме Вашия хранителен план</p>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
         {allergies.map((allergy) => {
@@ -131,20 +130,20 @@ const AllergiesStep = ({
       
       {showCustomInput && (
         <div className="mt-6 p-6 border border-border rounded-xl max-w-xl mx-auto">
-          <h3 className="text-lg font-medium mb-3">Add Custom Allergy</h3>
+          <h3 className="text-lg font-medium mb-3">Добавете собствена алергия</h3>
           <Input
             type="text"
-            placeholder="Enter your specific allergy"
+            placeholder="Въведете Вашата конкретна алергия"
             value={customInput}
             onChange={(e) => setCustomInput(e.target.value)}
             className="mb-4"
           />
           <div className="flex gap-3 justify-end">
             <Button variant="outline" onClick={handleCancelCustomAllergy}>
-              Cancel
+              Отказ
             </Button>
             <Button onClick={handleSaveCustomAllergy}>
-              Save
+              Запази
             </Button>
           </div>
         </div>
@@ -173,7 +172,7 @@ const AllergiesStep = ({
       
       {selectedAllergies.length === 0 && !customAllergy && !showCustomInput && (
         <div className="mt-8 text-lg text-muted-foreground">
-          No allergies? Great! Just continue to the next step.
+          Нямате алергии? Чудесно! Просто продължете към следващата стъпка.
         </div>
       )}
     </div>

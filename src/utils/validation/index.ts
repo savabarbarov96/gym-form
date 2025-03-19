@@ -9,6 +9,10 @@ import { FormData } from "@/types/survey";
 // Track active validation errors to manage their lifecycle
 const activeValidationErrors = new Map<number, string>();
 
+// Flag to enable/disable strict validation
+// When false, validation will show warnings but allow users to proceed
+const STRICT_VALIDATION = false;
+
 /**
  * Common validation function that delegates to the correct validation module
  * based on the current step number
@@ -59,17 +63,25 @@ export const validateStep = (
     if (!isValid) {
       // If validation failed, store the error state for this step
       activeValidationErrors.set(step, `Validation failed for step ${step}`);
+      
+      // If not in strict mode, allow users to proceed despite validation errors
+      if (!STRICT_VALIDATION) {
+        console.log(`Validation failed for step ${step}, but proceeding due to non-strict mode`);
+        return true;
+      }
     }
     
     return isValid;
   } catch (error) {
     console.error(`Validation error in step ${step}:`, error);
     toast({
-      title: "Validation Error",
-      description: "An unexpected error occurred during validation",
+      title: "Грешка при валидация",
+      description: "Възникна неочаквана грешка при валидацията",
       variant: "destructive",
     });
-    return false;
+    
+    // In non-strict mode, allow users to proceed despite errors
+    return !STRICT_VALIDATION;
   }
 };
 
@@ -88,4 +100,4 @@ export const clearValidationErrorForStep = (step: number) => {
 // Function to check if a specific step has validation errors
 export const hasValidationErrorForStep = (step: number): boolean => {
   return activeValidationErrors.has(step);
-};
+}; 
