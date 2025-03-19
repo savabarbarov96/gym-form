@@ -26,7 +26,7 @@ export const useSurveySubmit = (
       { duration: 300, easing: 'ease-out' }
     );
     
-    // Start loading state
+    // Start loading state - this begins the 120-second loading animation
     setAppState("loading");
     setLoadingProgress(0);
     
@@ -55,35 +55,84 @@ export const useSurveySubmit = (
 
   // Function for combined plan (both meal and workout)
   const handleGetPlan = async (formData: FormData) => {
-    await handleCommonSubmit(formData, "We're generating your personalized workout and meal plans");
+    await handleCommonSubmit(formData, "Създаваме вашия персонализиран план за хранене и тренировка");
     
-    // Send to webhook while showing loading animation
-    const success = await submitToWebhook(formData);
-    
-    // Update loading animation based on webhook response
-    await updateLoadingAfterWebhook(success, setAppState, setLoadingProgress);
+    // Send POST request immediately after starting the loading state
+    // This doesn't wait for the loading to complete - they happen in parallel
+    try {
+      submitToWebhook(formData)
+        .then(success => {
+          if (!success) {
+            console.error("Failed to submit to webhook");
+            // We'll let the loading continue anyway
+          }
+        });
+      
+      // Wait for loading to complete (120 seconds) and then transition to success
+      setTimeout(() => {
+        setAppState("success");
+      }, 120500); // 120 seconds + 500ms buffer
+    } catch (error) {
+      console.error("Error during plan submission:", error);
+      // Even if there's an error, we continue with the UI flow
+      setTimeout(() => {
+        setAppState("success");
+      }, 120500);
+    }
   };
 
   // Function for meal plan only
   const handleGetMealPlan = async (formData: FormData) => {
-    await handleCommonSubmit(formData, "We're generating your personalized meal plan");
+    await handleCommonSubmit(formData, "Създаваме вашия персонализиран план за хранене");
     
-    // Send to meal plan webhook while showing loading animation
-    const success = await submitToMealPlanWebhook(formData);
-    
-    // Update loading animation based on webhook response
-    await updateLoadingAfterWebhook(success, setAppState, setLoadingProgress);
+    // Send POST request immediately
+    try {
+      submitToMealPlanWebhook(formData)
+        .then(success => {
+          if (!success) {
+            console.error("Failed to submit to meal plan webhook");
+            // We'll let the loading continue anyway
+          }
+        });
+      
+      // Wait for loading to complete (120 seconds) and then transition to success
+      setTimeout(() => {
+        setAppState("success");
+      }, 120500); // 120 seconds + 500ms buffer
+    } catch (error) {
+      console.error("Error during meal plan submission:", error);
+      // Even if there's an error, we continue with the UI flow
+      setTimeout(() => {
+        setAppState("success");
+      }, 120500);
+    }
   };
 
   // Function for workout plan only
   const handleGetWorkoutPlan = async (formData: FormData) => {
-    await handleCommonSubmit(formData, "We're generating your personalized workout plan");
+    await handleCommonSubmit(formData, "Създаваме вашия персонализиран тренировъчен план");
     
-    // Send to workout plan webhook while showing loading animation
-    const success = await submitToWorkoutPlanWebhook(formData);
-    
-    // Update loading animation based on webhook response
-    await updateLoadingAfterWebhook(success, setAppState, setLoadingProgress);
+    // Send POST request immediately
+    try {
+      submitToWorkoutPlanWebhook(formData)
+        .then(success => {
+          if (!success) {
+            console.error("Failed to submit to workout plan webhook");
+            // We'll let the loading continue anyway
+          }
+        });
+      
+      // Wait for loading to complete (120 seconds) and then transition to success
+      setTimeout(() => {
+        setAppState("success");
+      }, 120500); // 120 seconds + 500ms buffer
+    } catch (error) {
+      console.error("Error during workout plan submission:", error);
+      // Even if there's an error, we continue with the UI flow
+      setTimeout(() => {
+        setAppState("success");
+      }, 120500);
+    }
   };
 
   return {
