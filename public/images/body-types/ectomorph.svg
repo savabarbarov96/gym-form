@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 450" width="300" height="450">
+  <rect width="300" height="450" fill="#f2f2f2" rx="15" />
+  <g transform="translate(75, 40)">
+    <!-- Head -->
+    <circle cx="75" cy="40" r="35" fill="#e6e6e6" stroke="#333" stroke-width="1.5" />
+    
+    <!-- Shoulders and Torso - Thinner for ectomorph -->
+    <path d="M35,100 C35,90 115,90 115,100 L120,220 C120,230 30,230 30,220 Z" fill="#e6e6e6" stroke="#333" stroke-width="1.5" />
+    
+    <!-- Arms - Thinner for ectomorph -->
+    <path d="M35,100 C35,100 25,140 22,190 C21,210 29,210 30,190 C31,170 38,130 38,110" fill="#e6e6e6" stroke="#333" stroke-width="1.5" />
+    <path d="M115,100 C115,100 125,140 128,190 C129,210 121,210 120,190 C119,170 112,130 112,110" fill="#e6e6e6" stroke="#333" stroke-width="1.5" />
+    
+    <!-- Legs - Thinner for ectomorph -->
+    <path d="M60,220 C60,220 55,300 50,360 C49,370 61,370 60,360 C59,320 63,260 63,230" fill="#e6e6e6" stroke="#333" stroke-width="1.5" />
+    <path d="M90,220 C90,220 95,300 100,360 C101,370 89,370 90,360 C91,320 87,260 87,230" fill="#e6e6e6" stroke="#333" stroke-width="1.5" />
+  </g>
+  
+  <!-- Body Type Label -->
+  <text x="150" y="425" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#333">Ектоморф</text>
+</svg> 
