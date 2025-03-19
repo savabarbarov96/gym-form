@@ -1,4 +1,3 @@
-
 import React from "react";
 import { AnimatePresence } from "framer-motion";
 import { FormData } from "@/types/survey";
@@ -29,7 +28,11 @@ const FormState: React.FC<FormStateProps> = ({
   
   return (
     <>
-      <ProgressBar progress={progress} />
+      <ProgressBar 
+        progress={progress} 
+        step={step} 
+        totalSteps={totalSteps} 
+      />
       
       <AnimatePresence custom={animationDirection} mode="wait">
         <StepRenderer 
