@@ -125,17 +125,11 @@ const createAIOptimizedPayload = (formData: FormData): Record<string, any> => {
       factorsCount++;
       factorsConsidered.push("workout frequency");
       
-      if (formData.workoutFrequency === 'none') {
-        fitnessScore += 1;
-      }
-      else if (formData.workoutFrequency === '1-2-times') {
-        fitnessScore += 2;
-      }
-      else if (formData.workoutFrequency === '3-times') {
-        fitnessScore += 3;
-      }
-      else if (formData.workoutFrequency === 'more-than-3') {
-        fitnessScore += 4;
+      switch(formData.workoutFrequency) {
+        case 'none': fitnessScore += 1; break;
+        case '1-2-times': fitnessScore += 2; break;
+        case '3-times': fitnessScore += 3; break;
+        case 'more-than-3': fitnessScore += 4; break;
       }
     }
     
@@ -251,7 +245,6 @@ const createAIOptimizedPayload = (formData: FormData): Record<string, any> => {
       purpose: "Generate personalized workout and nutrition plan"
     },
     
-    // Demographics section with basic user information
     demographics: {
       gender: formData.gender,
       ageGroup: formData.age,
@@ -262,14 +255,13 @@ const createAIOptimizedPayload = (formData: FormData): Record<string, any> => {
       marketingConsent: formData.personalInfo.emailConsent
     },
     
-    // Body metrics and goals section
     bodyProfile: {
       currentMetrics: {
         height: formData.height ? `${formData.height} cm` : null,
         currentWeight: formData.currentWeight ? `${formData.currentWeight} ${formData.weightUnit}` : null,
         currentBodyFatPercentage: formData.currentBodyFat,
-        bmi: bmi,
-        bmiCategory: bmiCategory
+        bmi,
+        bmiCategory
       },
       bodyType: formData.bodyType,
       goalMetrics: {
@@ -287,7 +279,6 @@ const createAIOptimizedPayload = (formData: FormData): Record<string, any> => {
       weightChangeHistory: formData.weightChange
     },
     
-    // Health considerations
     healthStatus: {
       physicalLimitations: formData.healthConcerns,
       customHealthConcern: formData.customHealthConcern,
@@ -298,7 +289,6 @@ const createAIOptimizedPayload = (formData: FormData): Record<string, any> => {
       fitnessAssessmentFactors: fitnessAssessment.factorsConsidered
     },
     
-    // Current activities and workout preferences
     activityProfile: {
       currentActivities: {
         activities: formData.activities,
@@ -321,7 +311,6 @@ const createAIOptimizedPayload = (formData: FormData): Record<string, any> => {
       }
     },
     
-    // Lifestyle and self-assessment
     lifestyle: {
       nutrition: {
         sugaryFoodsConsumption: formData.sugaryFoods,
@@ -336,7 +325,6 @@ const createAIOptimizedPayload = (formData: FormData): Record<string, any> => {
       }
     },
     
-    // Self-assessments with detailed descriptions of what each means
     selfAssessments: {
       breathingDifficulty: {
         statement: "I am often out of breath when I climb the stairs",
@@ -367,18 +355,14 @@ const createAIOptimizedPayload = (formData: FormData): Record<string, any> => {
       }
     },
     
-    // Program timing information
     programTiming: {
       startCommitment: formData.startCommitment,
       isReadyToStartImmediately: formData.startCommitment === 'immediately'
-    },
-    
-    // Raw form data for reference (in case AI needs to access original values)
-    rawFormData: formData
+    }
   };
 };
 
-// Function to submit the optimized payload to the webhook
+// Function to submit the optimized payload to both webhooks
 export const submitToWebhook = async (formData: FormData): Promise<boolean> => {
   try {
     // Create the AI-optimized payload

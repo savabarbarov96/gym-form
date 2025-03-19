@@ -1,4 +1,3 @@
-
 import { Dispatch, SetStateAction } from "react";
 import { AppState } from "@/types/survey";
 
@@ -9,24 +8,13 @@ export const updateLoadingAfterWebhook = (
 ): Promise<void> => {
   return new Promise((resolve) => {
     if (success) {
-      // If webhook succeeded, complete the loading animation
-      const interval = setInterval(() => {
-        setLoadingProgress(prev => {
-          if (prev >= 100) {
-            clearInterval(interval);
-            
-            // Add a small delay before changing to the success state
-            setTimeout(() => {
-              setAppState("success");
-              resolve();
-            }, 500);
-            
-            return 100;
-          }
-          // Finish the loading quickly now that we have a response
-          return Math.min(prev + 3, 100);
-        });
-      }, 50);
+      // When the webhook succeeds, we let the loading continue - we don't modify it
+      // as it will complete in 120 seconds anyway and go to the success state
+      setTimeout(() => {
+        // We'll resolve the promise after most of the loading is done
+        // This just handles successful webhook scenario
+        resolve();
+      }, 1000);
     } else {
       // If webhook failed, show error
       setAppState("results");
