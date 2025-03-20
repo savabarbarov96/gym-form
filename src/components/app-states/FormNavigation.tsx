@@ -102,9 +102,9 @@ const FormNavigation: React.FC<FormNavigationProps> = ({
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.3, duration: 0.5 }}
-      className="text-center text-xs text-muted-foreground mt-3 px-4"
+      className="text-center text-xs text-muted-foreground mt-2 px-4"
     >
-      <p>Препоръчваме Ви да се консултирате с Вашия лекар преди да започнете каквато и да е тренировъчна програма</p>
+      <p className="text-[10px]">Консултирайте се с лекар преди започване на тренировки.</p>
     </motion.div>
   );
 
@@ -117,11 +117,11 @@ const FormNavigation: React.FC<FormNavigationProps> = ({
             initial={{ opacity: 0, scale: 0.8, y: 100 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 100 }}
-            className="sm:hidden fixed bottom-6 right-6 z-50"
+            className="sm:hidden fixed bottom-8 right-6 z-50"
           >
             <motion.button
               whileHover={{ scale: 1.08, boxShadow: "0 8px 20px rgba(255, 71, 0, 0.3)" }}
-              whileTap={{ scale: 0.95 }}
+              whileTap={{ scale: 0.92 }}
               onClick={() => {
                 playClickSound();
                 handleNext(false);
@@ -130,10 +130,10 @@ const FormNavigation: React.FC<FormNavigationProps> = ({
                   document.activeElement.blur();
                 }
               }}
-              className="w-16 h-16 rounded-full bg-gradient-to-r from-orange to-orange-600 text-white shadow-lg shadow-orange/20 flex items-center justify-center"
+              className="w-16 h-16 rounded-full bg-gradient-to-r from-orange/95 to-orange-600/95 backdrop-blur-md text-white shadow-lg shadow-orange/30 flex items-center justify-center touch-manipulation active:shadow-inner"
               aria-label="Продължи"
             >
-              <Check size={28} />
+              <Check size={26} strokeWidth={2.5} />
             </motion.button>
           </motion.div>
         )}
@@ -141,7 +141,7 @@ const FormNavigation: React.FC<FormNavigationProps> = ({
 
       {/* Main navigation bar */}
       <motion.div 
-        className={`fixed bottom-0 left-0 right-0 z-40 px-4 py-3 sm:py-4 bg-gradient-to-t from-background via-background to-transparent ${isInputFocused ? 'sm:flex hidden' : 'flex'} flex-col`}
+        className={`fixed bottom-0 left-0 right-0 z-40 px-4 pb-5 pt-3 sm:py-4 bg-gradient-to-t from-background via-background to-transparent ${isInputFocused ? 'sm:flex hidden' : 'flex'} flex-col`}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
@@ -158,7 +158,7 @@ const FormNavigation: React.FC<FormNavigationProps> = ({
                 transition: { duration: 0.2 } 
               }}
               whileTap={{ 
-                scale: 0.97,
+                scale: 0.95,
                 transition: { duration: 0.1 } 
               }}
             >
@@ -168,10 +168,10 @@ const FormNavigation: React.FC<FormNavigationProps> = ({
                   handleBack();
                 }}
                 variant="outline"
-                className="w-full sm:w-auto h-16 sm:h-14 px-8 py-4 border-2 border-border text-foreground rounded-2xl hover:bg-secondary hover:text-orange transition-all duration-300 shadow-sm hover:shadow-md flex items-center justify-center gap-3 font-medium text-base"
+                className="w-full sm:w-auto h-[3.25rem] sm:h-14 px-6 sm:px-8 py-3 sm:py-4 border-2 border-border text-foreground rounded-2xl hover:bg-secondary hover:text-orange transition-all duration-300 shadow-sm hover:shadow-md flex items-center justify-center gap-2 sm:gap-3 font-medium text-sm sm:text-base bg-transparent backdrop-blur-sm touch-manipulation active:scale-[0.98] active:bg-background/30"
               >
-                <ChevronLeft size={20} />
-                Назад
+                <ChevronLeft size={18} />
+                <span className="relative -top-[1px]">Назад</span>
               </Button>
             </motion.div>
           )}
@@ -183,7 +183,7 @@ const FormNavigation: React.FC<FormNavigationProps> = ({
               transition: { duration: 0.2 }
             }}
             whileTap={{ 
-              scale: 0.97,
+              scale: 0.95,
               transition: { duration: 0.1 } 
             }}
           >
@@ -192,12 +192,12 @@ const FormNavigation: React.FC<FormNavigationProps> = ({
                 playClickSound();
                 handleNext(false);
               }}
-              className="w-full sm:w-auto h-16 sm:h-14 px-10 py-4 bg-gradient-to-r from-orange to-orange-600 hover:from-orange-600 hover:to-orange text-white rounded-2xl flex items-center justify-center gap-3 transition-all duration-300 shadow-md hover:shadow-lg font-medium text-base"
+              className="w-full sm:w-auto h-[3.25rem] sm:h-14 px-8 sm:px-10 py-3 sm:py-4 bg-gradient-to-r from-orange to-orange-600 hover:from-orange-600 hover:to-orange text-white rounded-2xl flex items-center justify-center gap-2 sm:gap-3 transition-all duration-300 shadow-md hover:shadow-lg font-medium text-sm sm:text-base touch-manipulation active:shadow-inner active:scale-[0.98]"
               tabIndex={0}
               aria-label={step === totalSteps ? "Завърши" : "Продължи"}
             >
-              {step === totalSteps ? "Завърши" : "Продължи"}
-              <ChevronRight size={20} />
+              <span className="relative -top-[1px]">{step === totalSteps ? "Завърши" : "Продължи"}</span>
+              <ChevronRight size={18} />
             </Button>
           </motion.div>
         </div>
@@ -205,7 +205,7 @@ const FormNavigation: React.FC<FormNavigationProps> = ({
         {/* Doctor's recommendation below the buttons */}
         <DoctorsRecommendation />
         
-        <div className="h-2 sm:h-3" />
+        <div className="h-4 sm:h-2" />
       </motion.div>
     </>
   );
