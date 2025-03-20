@@ -1,246 +1,266 @@
-import React, { useMemo } from "react";
-import { Slider } from "@/components/ui/slider";
-import { cn } from "@/lib/utils";
+import React, { useState } from 'react';
+import { cn } from '@/lib/utils';
 
 interface GoalStepProps {
-  value: number;
-  onChange: (value: number) => void;
+  value?: number;
   currentBodyFat?: number;
+  onChange?: (value: number) => void;
   onCurrentBodyFatChange?: (value: number) => void;
 }
 
-const GoalStep = ({ value, onChange, currentBodyFat = 25, onCurrentBodyFatChange }: GoalStepProps) => {
-  // Calculate fatness level - ranges from 0 (5%) to 7 (40%)
-  const fatnessLevel = useMemo(() => {
-    const levels = [5, 10, 15, 20, 25, 30, 35, 40];
-    const valueToUse = onCurrentBodyFatChange ? currentBodyFat : value;
-    return levels.findIndex(level => valueToUse <= level);
-  }, [value, currentBodyFat, onCurrentBodyFatChange]);
+interface BodyFatOption {
+  range: string;
+  percentage: string;
+  numericPercentage: number;
+  description: string;
+  icon: string;
+  imageSrc: string;
+}
 
-  // Generate body parameters based on body fat percentage
-  const bodyParams = useMemo(() => {
-    // Base parameters - improved proportions
-    const baseNeckWidth = 12;
-    const baseShoulderWidth = 40;
-    const baseChestWidth = 36;
-    const baseWaistWidth = 32;
-    const baseHipWidth = 36;
-    const baseThighWidth = 16;
-    const baseArmLength = 35;
-    
-    // Calculate adjustment based on body fat - made more gradual
-    const valueToUse = onCurrentBodyFatChange ? currentBodyFat : value;
-    const fatAdjustment = (valueToUse - 10) / 30; // Normalized from 10%-40% to 0-1
-    const adjustmentFactor = Math.max(0, fatAdjustment);
-    
-    return {
-      neckWidth: baseNeckWidth + (adjustmentFactor * 3),
-      shoulderWidth: baseShoulderWidth + (adjustmentFactor * 6),
-      chestWidth: baseChestWidth + (adjustmentFactor * 10),
-      waistWidth: baseWaistWidth + (adjustmentFactor * 18),
-      hipWidth: baseHipWidth + (adjustmentFactor * 14),
-      thighWidth: baseThighWidth + (adjustmentFactor * 7),
-      armLength: baseArmLength,
-      opacity: 0.7 + (adjustmentFactor * 0.3),
-    };
-  }, [value, currentBodyFat, onCurrentBodyFatChange]);
+const currentBodyFatOptions: BodyFatOption[] = [
+  {
+    range: "5-10%",
+    percentage: "5-10%",
+    numericPercentage: 7.5,
+    description: "Много ниско ниво на телесни мазнини",
+    icon: "💪",
+    imageSrc: "/images/body-fat/5-10.jpg"
+  },
+  {
+    range: "10-15%",
+    percentage: "10-15%",
+    numericPercentage: 12.5,
+    description: "Атлетично ниво на телесни мазнини",
+    icon: "🏃",
+    imageSrc: "/images/body-fat/10-15.jpg"
+  },
+  {
+    range: "15-20%",
+    percentage: "15-20%",
+    numericPercentage: 17.5,
+    description: "Нормално ниво на телесни мазнини",
+    icon: "👌",
+    imageSrc: "/images/body-fat/15-20.jpg"
+  },
+  {
+    range: "20-25%",
+    percentage: "20-25%",
+    numericPercentage: 22.5,
+    description: "Леко завишено ниво на телесни мазнини",
+    icon: "🤔",
+    imageSrc: "/images/body-fat/20-25.jpg"
+  },
+  {
+    range: "25-30%",
+    percentage: "25-30%",
+    numericPercentage: 27.5,
+    description: "Високо ниво на телесни мазнини",
+    icon: "😟",
+    imageSrc: "/images/body-fat/25-30.jpg"
+  },
+  {
+    range: "30-40%",
+    percentage: "30-40%",
+    numericPercentage: 35,
+    description: "Много високо ниво на телесни мазнини",
+    icon: "😰",
+    imageSrc: "/images/body-fat/30-40.jpg"
+  }
+];
+
+const targetBodyFatOptions = [...currentBodyFatOptions];
+
+export function GoalStep({ value, currentBodyFat, onChange, onCurrentBodyFatChange }: GoalStepProps) {
+  const [step, setStep] = useState<'current' | 'target'>('current');
+  const [selectedCurrent, setSelectedCurrent] = useState<BodyFatOption | null>(
+    currentBodyFatOptions.find(opt => Math.abs(opt.numericPercentage - (currentBodyFat || 25)) < 5) || null
+  );
+  const [selectedTarget, setSelectedTarget] = useState<BodyFatOption | null>(
+    targetBodyFatOptions.find(opt => Math.abs(opt.numericPercentage - (value || 20)) < 5) || null
+  );
+
+  const handleCurrentSelection = (option: BodyFatOption) => {
+    setSelectedCurrent(option);
+    onCurrentBodyFatChange(option.numericPercentage);
+    setStep('target');
+  };
+
+  const handleTargetSelection = (option: BodyFatOption) => {
+    setSelectedTarget(option);
+    onChange(option.numericPercentage);
+  };
+
+  const availableTargets = selectedCurrent 
+    ? targetBodyFatOptions.filter(opt => opt.numericPercentage <= selectedCurrent.numericPercentage)
+    : targetBodyFatOptions;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-      <div className="flex flex-col items-center justify-center">
-        <div className="relative w-full max-w-[300px] aspect-square flex items-center justify-center">
-          {/* Background gradient circles */}
-          <div className="absolute inset-0 bg-orange/5 rounded-full"></div>
-          <div className="absolute inset-[10%] bg-orange/10 rounded-full"></div>
-          
-          {/* Interactive human body visualization */}
+    <div className="max-w-4xl mx-auto space-y-6">
+      {/* Progress Header */}
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center space-x-4 w-full">
           <div className={cn(
-            "body-shape relative flex items-center justify-center",
-            `fatness-level-${fatnessLevel}`
-          )}>
-            {/* Improved human body silhouette with T-pose */}
-            <svg viewBox="0 0 140 220" className="w-3/4 h-3/4">
-              {/* Head */}
-              <circle 
-                cx="70" 
-                cy="25" 
-                r="18" 
-                className="fill-orange/60 stroke-orange"
-              />
-              
-              {/* Neck - thinner and more natural */}
-              <rect 
-                x={70 - bodyParams.neckWidth/2} 
-                y="42" 
-                width={bodyParams.neckWidth} 
-                height="8" 
-                className="fill-orange/60 stroke-orange"
-                rx="4"
-              />
-              
-              {/* Shoulders */}
-              <rect 
-                x={70 - bodyParams.shoulderWidth/2} 
-                y="50" 
-                width={bodyParams.shoulderWidth} 
-                height="6" 
-                rx="3"
-                className="fill-orange/60 stroke-orange"
-              />
-              
-              {/* Arms in T-pose - positioned more naturally */}
-              <rect 
-                x={70 - bodyParams.shoulderWidth/2 - bodyParams.armLength}
-                y="48" 
-                width={bodyParams.armLength} 
-                height="10" 
-                rx="5"
-                className="fill-orange/60 stroke-orange"
-              />
-              <rect 
-                x={70 + bodyParams.shoulderWidth/2}
-                y="48" 
-                width={bodyParams.armLength} 
-                height="10" 
-                rx="5"
-                className="fill-orange/60 stroke-orange"
-              />
-              
-              {/* Torso - improved shape with curves */}
-              <path 
-                d={`
-                  M${70 - bodyParams.chestWidth/2},55
-                  C${70 - bodyParams.chestWidth/2},55 ${70 - bodyParams.waistWidth/2 - 5},85 ${70 - bodyParams.waistWidth/2},95
-                  L${70 - bodyParams.hipWidth/2},115
-                  L${70 + bodyParams.hipWidth/2},115
-                  L${70 + bodyParams.waistWidth/2},95
-                  C${70 + bodyParams.waistWidth/2 + 5},85 ${70 + bodyParams.chestWidth/2},55 ${70 + bodyParams.chestWidth/2},55
-                  Z
-                `}
-                className="fill-orange/60 stroke-orange"
-              />
-              
-              {/* Legs - more anatomically correct */}
-              <path
-                d={`
-                  M${70 - bodyParams.hipWidth/2 + 5},115
-                  L${70 - bodyParams.thighWidth - 8},175
-                  Q${70 - bodyParams.thighWidth - 10},195 ${70 - bodyParams.thighWidth + 6},205
-                  L${70 - 5},205
-                  L${70 - 5},115
-                `}
-                className="fill-orange/60 stroke-orange"
-              />
-              
-              <path
-                d={`
-                  M${70 + bodyParams.hipWidth/2 - 5},115
-                  L${70 + bodyParams.thighWidth + 8},175
-                  Q${70 + bodyParams.thighWidth + 10},195 ${70 + bodyParams.thighWidth - 6},205
-                  L${70 + 5},205
-                  L${70 + 5},115
-                `}
-                className="fill-orange/60 stroke-orange"
-              />
-              
-              {/* Muscle definition lines - only visible in lower body fat */}
-              {(onCurrentBodyFatChange ? currentBodyFat : value) < 15 && (
-                <g className="stroke-orange/90 stroke-[0.8]">
-                  {/* Abs */}
-                  <line x1="63" y1="65" x2="77" y2="65" />
-                  <line x1="62" y1="75" x2="78" y2="75" />
-                  <line x1="61" y1="85" x2="79" y2="85" />
-                  <line x1="70" y1="55" x2="70" y2="95" />
-                  
-                  {/* Pecs */}
-                  <path d="M60,60 Q70,65 80,60" />
-                  
-                  {/* Arm muscle definition */}
-                  <path d="M30,53 Q25,53 20,53" />
-                  <path d="M110,53 Q115,53 120,53" />
-                  
-                  {/* Leg muscle definition */}
-                  <path d="M60,140 Q65,150 60,160" />
-                  <path d="M80,140 Q75,150 80,160" />
-                </g>
-              )}
-            </svg>
-            
-            {/* Body fat percentage label */}
-            <div className="absolute bottom-0 text-lg font-bold text-orange">
-              {onCurrentBodyFatChange ? currentBodyFat : value}%
+            "flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium transition-colors",
+            step === 'current' ? "bg-orange text-white" : "bg-orange/20 text-orange"
+          )}>1</div>
+          <div className="h-1 flex-1 bg-gray-200 rounded">
+            <div className={cn(
+              "h-full bg-orange transition-all rounded",
+              step === 'current' ? "w-0" : "w-full"
+            )} />
+          </div>
+          <div className={cn(
+            "flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium transition-colors",
+            step === 'target' ? "bg-orange text-white" : "bg-orange/20 text-orange"
+          )}>2</div>
+        </div>
+      </div>
+
+      {/* Current Body Fat Selection */}
+      {step === 'current' && (
+        <div className="space-y-6">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold mb-2">Какво е вашето текущо ниво на телесни мазнини?</h2>
+            <p className="text-gray-600">Изберете опцията, която най-добре описва вашето текущо състояние</p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+            {currentBodyFatOptions.map((option) => (
+              <button
+                key={option.range}
+                onClick={() => handleCurrentSelection(option)}
+                className={cn(
+                  "flex flex-col items-center justify-center p-4 rounded-lg border-2 transition-all",
+                  "hover:border-blue-500 hover:bg-blue-50",
+                  selectedCurrent?.range === option.range
+                    ? "border-blue-500 bg-blue-50"
+                    : "border-gray-200 bg-white"
+                )}
+              >
+                <div className="relative w-full aspect-square mb-2 overflow-hidden rounded-lg">
+                  <img
+                    src={option.imageSrc}
+                    alt={`Body fat ${option.percentage}`}
+                    className="object-cover w-full h-full"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                      e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                    }}
+                  />
+                  <div className="hidden text-4xl absolute inset-0 flex items-center justify-center bg-gray-100">
+                    {option.icon}
+                  </div>
+                </div>
+                <span className="font-medium text-gray-900">{option.percentage}</span>
+                <span className="text-sm text-gray-600 text-center mt-1">
+                  {option.description}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Target Body Fat Selection */}
+      {step === 'target' && (
+        <div className="space-y-6">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold mb-2">Каква е вашата цел?</h2>
+            <p className="text-gray-600">Изберете желаното ниво на телесни мазнини, което искате да постигнете</p>
+          </div>
+
+          <div className="relative">
+            {/* Current Selection Summary */}
+            <div className="bg-orange/5 rounded-xl p-4 mb-6 flex items-center space-x-4">
+              <span className="text-3xl">{selectedCurrent?.icon}</span>
+              <div>
+                <p className="text-sm text-gray-600">Текущо ниво</p>
+                <p className="font-medium">{selectedCurrent?.range} - {selectedCurrent?.description}</p>
+              </div>
+              <button 
+                onClick={() => setStep('current')}
+                className="ml-auto text-orange hover:text-orange-600 text-sm underline"
+              >
+                Промяна
+              </button>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {availableTargets.map((option) => (
+                option.numericPercentage < (selectedCurrent?.numericPercentage || 100) && (
+                  <button
+                    key={option.range}
+                    onClick={() => handleTargetSelection(option)}
+                    className={cn(
+                      "flex flex-col items-center justify-center p-4 rounded-lg border-2 transition-all",
+                      "hover:border-blue-500 hover:bg-blue-50",
+                      selectedTarget?.range === option.range
+                        ? "border-blue-500 bg-blue-50"
+                        : "border-gray-200 bg-white"
+                    )}
+                  >
+                    <div className="relative w-full aspect-square mb-2 overflow-hidden rounded-lg">
+                      <img
+                        src={option.imageSrc}
+                        alt={`Body fat ${option.percentage}`}
+                        className="object-cover w-full h-full"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                          e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                        }}
+                      />
+                      <div className="hidden text-4xl absolute inset-0 flex items-center justify-center bg-gray-100">
+                        {option.icon}
+                      </div>
+                    </div>
+                    <span className="font-medium text-gray-900">{option.percentage}</span>
+                    <span className="text-sm text-gray-600 text-center mt-1">
+                      {option.description}
+                    </span>
+                  </button>
+                )
+              ))}
             </div>
           </div>
         </div>
-      </div>
-      
-      <div className="bg-card rounded-lg p-6 flex flex-col">
-        <h1 className="text-3xl sm:text-4xl font-bold mb-8">Изберете нивата на телесни мазнини</h1>
-        
-        {onCurrentBodyFatChange && (
-          <div className="mb-6">
-            <label className="text-lg font-medium mb-2 block">Вашите текущи телесни мазнини:</label>
-            <div className="bg-secondary p-4 rounded-md text-center mb-4 text-lg font-medium">
-              {currentBodyFat}% Телесни мазнини
+      )}
+
+      {/* Goal Summary */}
+      {step === 'target' && selectedCurrent && selectedTarget && (
+        <div className="mt-8 p-6 bg-white rounded-xl border-2 border-gray-200">
+          <h3 className="text-xl font-bold text-gray-900 mb-4">
+            Детайли за Трансформацията
+          </h3>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Текущо ниво</p>
+                <p className="font-medium text-gray-900">{selectedCurrent.percentage}</p>
+                <p className="text-sm text-gray-600">{selectedCurrent.description}</p>
+              </div>
+              <span className="text-4xl">{selectedCurrent.icon}</span>
             </div>
-            
-            <Slider
-              defaultValue={[currentBodyFat]}
-              max={40}
-              min={5}
-              step={1}
-              onValueChange={(val) => onCurrentBodyFatChange(val[0])}
-              className="my-4"
-            />
-            
-            <div className="flex justify-between text-sm text-muted-foreground mb-6">
-              <span>5%</span>
-              <span>40%</span>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Целево ниво</p>
+                <p className="font-medium text-gray-900">{selectedTarget.percentage}</p>
+                <p className="text-sm text-gray-600">{selectedTarget.description}</p>
+              </div>
+              <span className="text-4xl">{selectedTarget.icon}</span>
             </div>
-          </div>
-        )}
-        
-        <div className="mt-2">
-          <label className="text-lg font-medium mb-2 block">Вашите целеви телесни мазнини:</label>
-          <div className="bg-secondary p-4 rounded-md text-center mb-4 text-lg font-medium">
-            {value}% Телесни мазнини
-          </div>
-          
-          <Slider
-            defaultValue={[value]}
-            max={40}
-            min={5}
-            step={1}
-            onValueChange={(val) => onChange(val[0])}
-            className="my-4"
-          />
-          
-          <div className="flex justify-between text-sm text-muted-foreground">
-            <span>5% (Състезателно)</span>
-            <span>40% (Затлъстяване)</span>
-          </div>
-          
-          <div className="mt-6 p-4 rounded-md bg-muted">
-            <h3 className="font-medium text-lg mb-2">Вашата цел: {value}% телесни мазнини</h3>
-            <p className="text-muted-foreground">
-              {value <= 10 ? 
-                "Нива на основни мазнини. Изключително слабо, видими мускулни линии. Обикновено се наблюдава при бодибилдъри по време на състезание." :
-                value <= 15 ?
-                "Атлетично телосложение с видими коремни мускули и мускулна дефиниция. Физика на фитнес модел." :
-                value <= 20 ?
-                "Стегнат вид с известна мускулна дефиниция. Здрав и атлетичен." :
-                value <= 25 ?
-                "Средно телосложение с по-малко видима мускулна дефиниция. Здравословен диапазон за много хора." :
-                value <= 30 ?
-                "Известно натрупване на мазнини, по-малко видима мускулна дефиниция. Често срещана начална точка." :
-                "По-високи нива на телесни мазнини. Фокусирането върху последователни навици ще помогне за намаляването им с времето."
-              }
-            </p>
+            <div className="pt-4 border-t border-gray-200">
+              <div className="text-center">
+                <p className="text-3xl font-bold text-blue-600">
+                  {(selectedCurrent.numericPercentage - selectedTarget.numericPercentage).toFixed(1)}%
+                </p>
+                <p className="text-sm text-gray-600">намаляване</p>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
-};
+}
 
 export default GoalStep;
