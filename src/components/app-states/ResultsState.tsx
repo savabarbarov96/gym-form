@@ -165,6 +165,11 @@ const ResultsState: React.FC<ResultsStateProps> = ({
           >
             <h2 className="text-2xl font-bold mb-8 text-center bg-gradient-to-r from-orange to-orange-600 bg-clip-text text-transparent">Изберете своя план</h2>
             
+            <div className="text-center mb-6 text-sm text-muted-foreground">
+              <p>След избор на план, ще изпратим вашата поръчка и ще създадем персонализирана програма, 
+              която ще бъде изпратена на вашия имейл адрес.</p>
+            </div>
+            
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Meal Plan Option */}
               <motion.div 

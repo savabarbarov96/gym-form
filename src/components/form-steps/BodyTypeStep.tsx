@@ -43,7 +43,7 @@ const BodyTypeStep = ({
       
       // Short delay to allow the user to see their selection
       const timer = setTimeout(() => {
-        handleNext();
+        handleNext(true);
       }, 800);
       
       return () => clearTimeout(timer);

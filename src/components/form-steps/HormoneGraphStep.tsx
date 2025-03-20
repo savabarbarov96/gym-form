@@ -254,7 +254,7 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) =
       .style("font-size", isMobile ? "16px" : "20px")
       .style("fill", "#fff")
       .style("font-weight", "bold")
-      .text("Очаквани промени в благосъстоянието");
+      .text("Прогнозирано подобрение на менталното здраве");
     
     // Add x-axis label
     svg.append("text")
@@ -289,21 +289,21 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) =
 
   return (
     <div className="text-center max-w-3xl mx-auto">
-      <h1 className="text-4xl sm:text-5xl font-bold mb-6">Вашето благосъстояние ще се подобри</h1>
+      <h1 className="text-4xl sm:text-5xl font-bold mb-6 bg-gradient-to-r from-orange to-primary bg-clip-text text-transparent">Подобрение на цялостното здраве</h1>
       <p className="text-xl text-muted-foreground mb-10 max-w-xl mx-auto">
         Докато следвате нашата програма, нивото на щастие ще се увеличи, а нивото на стрес ще намалее
       </p>
       
-      <div className="bg-card border border-border p-6 rounded-xl mb-10">
-        {/* Legend positioned at the top for better visibility */}
-        <div className="flex justify-center items-center gap-6 mb-4">
+      <div className="bg-card border border-border p-6 rounded-xl mb-10 shadow-lg hover:shadow-xl transition-all duration-300">
+        {/* Legend positioned at the top with improved styling */}
+        <div className="flex justify-center items-center gap-8 mb-6 p-3 bg-background/50 rounded-lg">
           <div className="flex items-center">
-            <div className="w-4 h-4 bg-[#54D62C] rounded-sm mr-2"></div>
-            <span className="text-sm">Ниво на щастие</span>
+            <div className="w-5 h-5 bg-[#54D62C] rounded-md mr-2 shadow-sm"></div>
+            <span className="text-sm font-medium">Ниво на щастие</span>
           </div>
           <div className="flex items-center">
-            <div className="w-4 h-4 bg-[#FF6B35] rounded-sm mr-2"></div>
-            <span className="text-sm">Ниво на стрес</span>
+            <div className="w-5 h-5 bg-[#FF6B35] rounded-md mr-2 shadow-sm"></div>
+            <span className="text-sm font-medium">Ниво на стрес</span>
           </div>
         </div>
         
@@ -313,7 +313,12 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) =
         ></div>
       </div>
       
-      {/* Removed the duplicate continue button */}
+      {/* Motivational message with improved styling */}
+      <div className="p-4 bg-background/50 border border-orange/20 rounded-lg max-w-xl mx-auto">
+        <p className="text-orange font-medium">
+          Следвайки нашата програма, ще постигнете значително подобрение във Вашето ментално и физическо състояние.
+        </p>
+      </div>
     </div>
   );
 };

@@ -130,7 +130,7 @@ const SuccessState: React.FC = () => {
               <h3 className="text-white text-2xl font-semibold mb-6">Последвайте ни в социалните мрежи</h3>
               <div className="flex flex-wrap justify-center gap-8 mb-8">
                 <motion.a 
-                  href="#" 
+                  href="https://www.instagram.com/palm_fitness1" 
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                   className="flex flex-col items-center"
@@ -155,7 +155,7 @@ const SuccessState: React.FC = () => {
                 </motion.a>
                 
                 <motion.a 
-                  href="#" 
+                  href="https://www.tiktok.com/@palm_fitness1?_t=ZN-8uptWNUc5e2&_r=1" 
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                   className="flex flex-col items-center"

@@ -35,10 +35,8 @@ export const SurveyProvider: React.FC<SurveyProviderProps> = ({ children, initia
   
   // Initialize navigation with form completion handler
   const handleSurveyComplete = () => {
-    setAppState("loading");
-    simulateLoading().then(() => {
-      setAppState("results");
-    });
+    // Go directly to results state, skipping the initial loading animation
+    setAppState("results");
   };
   
   const { 

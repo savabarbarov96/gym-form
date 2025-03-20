@@ -29,12 +29,6 @@ const SurveyHeader = () => {
   );
 };
 
-const SurveyFooter = () => (
-  <footer className="p-4 text-center text-sm text-muted-foreground border-t border-border bg-background/70 backdrop-blur-md z-10 relative">
-    <p>Препоръчваме Ви да се консултирате с Вашия лекар преди да започнете каквато и да е тренировъчна програма</p>
-  </footer>
-);
-
 const SurveyContent = () => {
   const { 
     appState, 
@@ -52,7 +46,7 @@ const SurveyContent = () => {
   } = useSurvey();
 
   return (
-    <main className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 relative overflow-hidden z-10">
+    <main className="flex-1 overflow-x-hidden relative z-[1] pb-20">
       {appState === "form" && (
         <FormState
           step={step}
@@ -145,7 +139,6 @@ const Index = () => {
         
         <SurveyHeader />
         <SurveyContent />
-        <SurveyFooter />
       </div>
     </SurveyProvider>
   );
