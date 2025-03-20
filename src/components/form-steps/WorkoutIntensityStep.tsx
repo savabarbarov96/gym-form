@@ -25,8 +25,8 @@ const WorkoutIntensityStep = ({
       label: "Леко натоварване",
       description: "По-ниска интензивност, подходяща за начинаещи или възстановяване",
       icon: Feather,
-      color: "bg-blue-50",
-      borderColor: "border-blue-300",
+      color: "bg-blue-500/10",
+      borderColor: "border-blue-500/30",
       iconColor: "text-blue-500"
     },
     {
@@ -34,8 +34,8 @@ const WorkoutIntensityStep = ({
       label: "Умерено натоварване",
       description: "Балансирана интензивност, подходяща за повечето нива на физическа подготовка",
       icon: Gauge,
-      color: "bg-green-50",
-      borderColor: "border-green-300",
+      color: "bg-green-500/10",
+      borderColor: "border-green-500/30",
       iconColor: "text-green-500"
     },
     {
@@ -43,8 +43,8 @@ const WorkoutIntensityStep = ({
       label: "Тежко натоварване",
       description: "Висока интензивност, предизвикателни тренировки за опитни потребители",
       icon: Dumbbell,
-      color: "bg-orange-50",
-      borderColor: "border-orange-300",
+      color: "bg-orange-500/10",
+      borderColor: "border-orange-500/30",
       iconColor: "text-orange-500"
     },
     {
@@ -52,8 +52,8 @@ const WorkoutIntensityStep = ({
       label: "Оставете на нас",
       description: "Ще оптимизираме според Вашите цели и ниво на физическа подготовка",
       icon: Activity,
-      color: "bg-purple-50",
-      borderColor: "border-purple-300",
+      color: "bg-purple-500/10",
+      borderColor: "border-purple-500/30",
       iconColor: "text-purple-500"
     }
   ];
@@ -107,7 +107,7 @@ const WorkoutIntensityStep = ({
         className="mb-8"
       >
         <div className="inline-block bg-orange-500 text-white text-sm font-medium px-3 py-1 rounded-full mb-4">
-          Стъпка 22
+          Стъпка 18
         </div>
         <h1 className="text-2xl sm:text-3xl font-bold leading-tight">
           Изберете предпочитаното ниво на тренировки
@@ -118,79 +118,85 @@ const WorkoutIntensityStep = ({
       </motion.div>
       
       {/* Options */}
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
+      <RadioGroup 
+        value={selectedIntensity || ""} 
+        onValueChange={handleSelectIntensity}
         className="space-y-4"
       >
-        {intensities.map((intensity) => (
-          <motion.div
-            key={intensity.id}
-            variants={itemVariants}
-            className={cn(
-              "relative overflow-hidden rounded-xl shadow-sm border-2 transition-all duration-300",
-              selectedIntensity === intensity.id 
-                ? `${intensity.borderColor} ${intensity.color} shadow-md` 
-                : "border-gray-100 bg-white hover:border-gray-200 hover:shadow-md"
-            )}
-            onClick={() => handleSelectIntensity(intensity.id)}
-          >
-            <div className="p-4 sm:p-5">
-              <div className="flex items-start gap-4">
-                {/* Icon */}
-                <div className={cn(
-                  "flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center",
-                  selectedIntensity === intensity.id 
-                    ? intensity.color 
-                    : "bg-gray-50"
-                )}>
-                  <intensity.icon 
-                    className={cn(
-                      "w-6 h-6",
-                      selectedIntensity === intensity.id 
-                        ? intensity.iconColor 
-                        : "text-gray-400"
-                    )} 
-                  />
-                </div>
-                
-                {/* Content */}
-                <div className="flex-grow text-left">
-                  <div className="flex justify-between">
-                    <label 
-                      htmlFor={intensity.id} 
-                      className="text-lg font-medium block cursor-pointer"
-                    >
-                      {intensity.label}
-                    </label>
-                    
-                    {/* Radio button */}
-                    <div className="hidden sm:block">
-                      <RadioGroupItem 
-                        value={intensity.id} 
-                        id={intensity.id} 
-                        className="mt-1"
-                      />
-                    </div>
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="space-y-4"
+        >
+          {intensities.map((intensity) => (
+            <motion.div
+              key={intensity.id}
+              variants={itemVariants}
+              className={cn(
+                "relative overflow-hidden rounded-xl shadow-sm border-2 transition-all duration-300 active:scale-[0.98] touch-manipulation",
+                selectedIntensity === intensity.id 
+                  ? `${intensity.borderColor} ${intensity.color} shadow-md` 
+                  : "border-gray-500/10 bg-background/40 hover:border-gray-400/30 hover:shadow-md backdrop-blur-sm"
+              )}
+              onClick={() => handleSelectIntensity(intensity.id)}
+            >
+              <div className="p-5 sm:p-5">
+                <div className="flex items-start gap-4">
+                  {/* Icon */}
+                  <div className={cn(
+                    "flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center",
+                    selectedIntensity === intensity.id 
+                      ? intensity.color 
+                      : "bg-gray-500/10"
+                  )}>
+                    <intensity.icon 
+                      className={cn(
+                        "w-6 h-6 sm:w-7 sm:h-7",
+                        selectedIntensity === intensity.id 
+                          ? intensity.iconColor 
+                          : "text-gray-400"
+                      )} 
+                    />
                   </div>
                   
-                  <p className="text-sm text-gray-500 mt-1">
-                    {intensity.description}
-                  </p>
+                  {/* Content */}
+                  <div className="flex-grow text-left">
+                    <div className="flex justify-between">
+                      <label 
+                        htmlFor={intensity.id} 
+                        className="text-lg font-medium block cursor-pointer"
+                      >
+                        {intensity.label}
+                      </label>
+                      
+                      {/* Radio button */}
+                      <div className="hidden sm:block">
+                        <RadioGroupItem 
+                          value={intensity.id} 
+                          id={intensity.id} 
+                          className="mt-1"
+                        />
+                      </div>
+                    </div>
+                    
+                    <p className="text-sm text-gray-500 mt-1">
+                      {intensity.description}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-            
-            {/* Selected indicator (mobile) */}
-            {selectedIntensity === intensity.id && (
-              <div className="absolute top-0 right-0 p-2 sm:hidden">
-                <CheckCircle2 className="w-5 h-5 text-green-500" />
-              </div>
-            )}
-          </motion.div>
-        ))}
-      </motion.div>
+              
+              {/* Selected indicator (mobile) */}
+              {selectedIntensity === intensity.id && (
+                <div className="absolute top-2 right-2 p-2 sm:hidden">
+                  <CheckCircle2 className="w-6 h-6 text-green-500" />
+                </div>
+              )}
+            </motion.div>
+          ))}
+        </motion.div>
+      </RadioGroup>
       
       {/* Auto-advance indicator */}
       <AnimatePresence>
@@ -206,18 +212,6 @@ const WorkoutIntensityStep = ({
           </motion.p>
         )}
       </AnimatePresence>
-      
-      {/* Hidden RadioGroup for accessibility */}
-      <div className="sr-only">
-        <RadioGroup 
-          value={selectedIntensity || ""} 
-          onValueChange={handleSelectIntensity} 
-        >
-          {intensities.map((intensity) => (
-            <RadioGroupItem key={intensity.id} value={intensity.id} id={intensity.id} />
-          ))}
-        </RadioGroup>
-      </div>
     </div>
   );
 };
