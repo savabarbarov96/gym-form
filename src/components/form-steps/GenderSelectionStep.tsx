@@ -72,7 +72,7 @@ const GenderSelectionStep: React.FC<GenderSelectionStepProps> = ({
       // Set a timeout to advance after a delay
       timerRef.current = window.setTimeout(() => {
         console.log('GenderSelectionStep: Auto-advancing to next step');
-        handleNext();
+        handleNext(true);
         timerRef.current = null;
       }, 1500);
     }

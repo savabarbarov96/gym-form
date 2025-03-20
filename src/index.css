@@ -187,7 +187,33 @@
 
   /* Improve mobile buttons */
   button.mobile-friendly {
-    @apply min-h-[44px] min-w-[44px];
+    @apply min-h-[48px] min-w-[48px] rounded-xl text-base;
+  }
+  
+  /* Enhanced touch targets for mobile */
+  .touch-target {
+    @apply min-h-[48px] min-w-[48px];
+  }
+  
+  /* Premium mobile buttons */
+  .btn-premium {
+    @apply rounded-2xl border-2 shadow-md transition-all duration-300;
+  }
+  
+  .btn-premium:hover, .btn-premium:focus {
+    @apply shadow-lg transform scale-[1.02];
+  }
+  
+  .btn-premium-primary {
+    @apply bg-gradient-to-r from-orange to-orange-600 text-white;
+  }
+  
+  .btn-premium-primary:hover, .btn-premium-primary:focus {
+    @apply from-orange-600 to-orange;
+  }
+  
+  .btn-premium-outline {
+    @apply border-2 border-border hover:bg-secondary hover:text-orange;
   }
 }
 

@@ -6,9 +6,48 @@ import { saveUserData } from "@/lib/supabase";
 
 export const useSurveySubmit = (
   setAppState: (state: any) => void, 
-  setLoadingProgress: (progress: number) => void
+  setLoadingProgress: (progress: number | ((prev: number) => number)) => void
 ) => {
   const { toast } = useToast();
+
+  // Simulate a loading progress over 120 seconds
+  const simulateProgressFor120Seconds = (): void => {
+    // Reset progress and start at 1%
+    setLoadingProgress(1);
+    
+    // Calculate timing for 120 seconds (120000ms)
+    const totalTimeMs = 120000; // 120 seconds
+    const maxProgressWithoutResponse = 95; // Only go to 95% without actual response
+    const incrementsTotal = maxProgressWithoutResponse - 1; // Steps from 1% to 95%
+    const incrementDelay = totalTimeMs / incrementsTotal; // Time between increments
+    
+    let currentProgress = 1; // Start at 1%
+    
+    // Create an interval that updates progress smoothly with an easing function
+    const loadingInterval = setInterval(() => {
+      // Use an easing function to make progress slower towards the end
+      // This gives the impression that harder work is happening as progress approaches 95%
+      const progressStep = 1 - 0.5 * (currentProgress / maxProgressWithoutResponse);
+      currentProgress += progressStep;
+      
+      if (currentProgress >= maxProgressWithoutResponse) {
+        clearInterval(loadingInterval);
+        setLoadingProgress(maxProgressWithoutResponse);
+        return;
+      }
+      
+      // Update the loading progress
+      setLoadingProgress(Math.min(currentProgress, maxProgressWithoutResponse));
+    }, incrementDelay);
+    
+    // Safety cleanup - clear interval after 125 seconds just in case
+    setTimeout(() => {
+      clearInterval(loadingInterval);
+      // Don't automatically set to 100% - this should happen only on success response
+      // Instead, ensure we're at least at 95%
+      setLoadingProgress(prev => Math.max(prev, maxProgressWithoutResponse));
+    }, totalTimeMs + 5000);
+  };
 
   // Common function to handle data saving and loading UI
   const handleCommonSubmit = async (formData: FormData, description: string) => {
@@ -26,9 +65,11 @@ export const useSurveySubmit = (
       { duration: 300, easing: 'ease-out' }
     );
     
-    // Start loading state - this begins the 120-second loading animation
+    // Start loading state
     setAppState("loading");
-    setLoadingProgress(0);
+    
+    // Begin the progress simulation immediately - this runs independently of the webhook call
+    simulateProgressFor120Seconds();
     
     // Save user data to Supabase
     if (formData.personalInfo?.name && formData.personalInfo?.email) {
@@ -58,25 +99,38 @@ export const useSurveySubmit = (
     await handleCommonSubmit(formData, "Създаваме вашия персонализиран план за хранене и тренировка");
     
     // Send POST request immediately after starting the loading state
-    // This doesn't wait for the loading to complete - they happen in parallel
     try {
+      // Use try-catch with fetch directly to handle CORS errors better
       submitToWebhook(formData)
         .then(success => {
-          if (!success) {
+          if (success) {
+            // On success, complete the loading bar
+            setTimeout(() => {
+              setLoadingProgress(100);
+              setTimeout(() => setAppState("success"), 500); // Short delay after reaching 100%
+            }, 500); // Small delay for visual effect
+          } else {
             console.error("Failed to submit to webhook");
             // We'll let the loading continue anyway
           }
+        })
+        .catch(err => {
+          console.error("Error submitting to webhooks:", err);
+          // Loading animation continues regardless of error
         });
       
       // Wait for loading to complete (120 seconds) and then transition to success
+      // even if the webhook didn't respond or failed
       setTimeout(() => {
-        setAppState("success");
+        setLoadingProgress(100);
+        setTimeout(() => setAppState("success"), 500);
       }, 120500); // 120 seconds + 500ms buffer
     } catch (error) {
       console.error("Error during plan submission:", error);
       // Even if there's an error, we continue with the UI flow
       setTimeout(() => {
-        setAppState("success");
+        setLoadingProgress(100);
+        setTimeout(() => setAppState("success"), 500);
       }, 120500);
     }
   };
@@ -89,21 +143,33 @@ export const useSurveySubmit = (
     try {
       submitToMealPlanWebhook(formData)
         .then(success => {
-          if (!success) {
+          if (success) {
+            // On success, complete the loading bar
+            setTimeout(() => {
+              setLoadingProgress(100);
+              setTimeout(() => setAppState("success"), 500); // Short delay after reaching 100%
+            }, 500); // Small delay for visual effect
+          } else {
             console.error("Failed to submit to meal plan webhook");
             // We'll let the loading continue anyway
           }
+        })
+        .catch(err => {
+          console.error("Error submitting to meal plan webhook:", err);
+          // Loading animation continues regardless of error
         });
       
       // Wait for loading to complete (120 seconds) and then transition to success
       setTimeout(() => {
-        setAppState("success");
+        setLoadingProgress(100);
+        setTimeout(() => setAppState("success"), 500);
       }, 120500); // 120 seconds + 500ms buffer
     } catch (error) {
       console.error("Error during meal plan submission:", error);
       // Even if there's an error, we continue with the UI flow
       setTimeout(() => {
-        setAppState("success");
+        setLoadingProgress(100);
+        setTimeout(() => setAppState("success"), 500);
       }, 120500);
     }
   };
@@ -116,21 +182,33 @@ export const useSurveySubmit = (
     try {
       submitToWorkoutPlanWebhook(formData)
         .then(success => {
-          if (!success) {
+          if (success) {
+            // On success, complete the loading bar
+            setTimeout(() => {
+              setLoadingProgress(100);
+              setTimeout(() => setAppState("success"), 500); // Short delay after reaching 100%
+            }, 500); // Small delay for visual effect
+          } else {
             console.error("Failed to submit to workout plan webhook");
             // We'll let the loading continue anyway
           }
+        })
+        .catch(err => {
+          console.error("Error submitting to workout plan webhook:", err);
+          // Loading animation continues regardless of error
         });
       
       // Wait for loading to complete (120 seconds) and then transition to success
       setTimeout(() => {
-        setAppState("success");
+        setLoadingProgress(100);
+        setTimeout(() => setAppState("success"), 500);
       }, 120500); // 120 seconds + 500ms buffer
     } catch (error) {
       console.error("Error during workout plan submission:", error);
       // Even if there's an error, we continue with the UI flow
       setTimeout(() => {
-        setAppState("success");
+        setLoadingProgress(100);
+        setTimeout(() => setAppState("success"), 500);
       }, 120500);
     }
   };

@@ -59,37 +59,20 @@ const AgeSelectionStep: React.FC<AgeSelectionStepProps> = ({
     };
   }, []);
   
-  // Handle auto-advance logic
+  // Auto-advance effect
   useEffect(() => {
-    // Skip if auto-advance is disabled or if we're already advancing
-    if (!autoAdvance || isAdvancing) return;
-    
-    // Only advance if this is a new selection (not returning to a previous step)
-    if (selectedAge !== null && initialValueRef.current === null) {
-      console.log('AgeSelectionStep: Selection made, preparing to auto-advance', selectedAge);
+    if (autoAdvance && 
+        selectedAge !== null && 
+        initialValueRef.current === null) {
       
-      // Play the selection sound
-      try {
-        const audio = new Audio('/assets/sounds/click.mp3');
-        audio.volume = 0.3;
-        audio.play().catch(error => {
-          console.log('Error playing sound:', error);
-        });
-      } catch (error) {
-        console.log('Error creating audio instance:', error);
-      }
+      // Short delay to allow the user to see their selection
+      const timer = setTimeout(() => {
+        handleNext(true); // Pass true to indicate this is auto-next
+      }, 800);
       
-      // Set advancing state to prevent multiple advances
-      setIsAdvancing(true);
-      
-      // Set a timeout to advance after a delay
-      timerRef.current = window.setTimeout(() => {
-        console.log('AgeSelectionStep: Auto-advancing to next step');
-        handleNext();
-        timerRef.current = null;
-      }, 1500);
+      return () => clearTimeout(timer);
     }
-  }, [selectedAge, autoAdvance, handleNext, isAdvancing]);
+  }, [selectedAge, autoAdvance, handleNext]);
 
   const handleSelectAge = (age: string) => {
     // Don't allow changes if we're already in the process of advancing

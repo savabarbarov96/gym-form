@@ -1,6 +1,9 @@
 import React, { useEffect, useRef } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useSurvey } from '@/contexts/SurveyContext';
+import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
+import { Dumbbell, Feather, Gauge, Activity, CheckCircle2 } from "lucide-react";
 
 interface WorkoutIntensityStepProps {
   selectedIntensity: string | null;
@@ -20,22 +23,38 @@ const WorkoutIntensityStep = ({
     {
       id: "light",
       label: "Леко натоварване",
-      description: "По-ниска интензивност, подходяща за начинаещи или възстановяване"
+      description: "По-ниска интензивност, подходяща за начинаещи или възстановяване",
+      icon: Feather,
+      color: "bg-blue-50",
+      borderColor: "border-blue-300",
+      iconColor: "text-blue-500"
     },
     {
       id: "moderate",
       label: "Умерено натоварване",
-      description: "Балансирана интензивност, подходяща за повечето нива на физическа подготовка"
+      description: "Балансирана интензивност, подходяща за повечето нива на физическа подготовка",
+      icon: Gauge,
+      color: "bg-green-50",
+      borderColor: "border-green-300",
+      iconColor: "text-green-500"
     },
     {
       id: "heavy",
       label: "Тежко натоварване",
-      description: "Висока интензивност, предизвикателни тренировки за опитни потребители"
+      description: "Висока интензивност, предизвикателни тренировки за опитни потребители",
+      icon: Dumbbell,
+      color: "bg-orange-50",
+      borderColor: "border-orange-300",
+      iconColor: "text-orange-500"
     },
     {
       id: "auto",
       label: "Оставете на нас",
-      description: "Ще оптимизираме според Вашите цели и ниво на физическа подготовка"
+      description: "Ще оптимизираме според Вашите цели и ниво на физическа подготовка",
+      icon: Activity,
+      color: "bg-purple-50",
+      borderColor: "border-purple-300",
+      iconColor: "text-purple-500"
     }
   ];
   
@@ -58,43 +77,146 @@ const WorkoutIntensityStep = ({
     onSelect(intensity);
   };
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: { 
+        staggerChildren: 0.1
+      }
+    }
+  };
+  
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.4 }
+    }
+  };
+
   return (
-    <div className="text-center">
-      <h1 className="text-4xl sm:text-5xl font-bold mb-12">Изберете предпочитаното ниво на тренировки</h1>
-      <p className="text-xl mb-8">Ще коригираме интензивността на упражненията съответно</p>
+    <div className="text-center px-5 max-w-md mx-auto">
+      {/* Step indicator and header */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="mb-8"
+      >
+        <div className="inline-block bg-orange-500 text-white text-sm font-medium px-3 py-1 rounded-full mb-4">
+          Стъпка 22
+        </div>
+        <h1 className="text-2xl sm:text-3xl font-bold leading-tight">
+          Изберете предпочитаното ниво на тренировки
+        </h1>
+        <p className="text-base text-gray-500 mt-3">
+          Ще адаптираме интензивността според Вашия избор
+        </p>
+      </motion.div>
       
-      <div className="max-w-3xl mx-auto">
-        <RadioGroup 
-          value={selectedIntensity || ""} 
-          onValueChange={handleSelectIntensity} 
-          className="grid grid-cols-1 md:grid-cols-2 gap-6"
-        >
-          {intensities.map((intensity) => (
-            <div
-              key={intensity.id}
-              className={`option-card ${selectedIntensity === intensity.id ? 'selected' : ''}`}
-              onClick={() => handleSelectIntensity(intensity.id)}
-            >
-              <div className="p-6">
-                <div className="flex items-start gap-3">
-                  <RadioGroupItem value={intensity.id} id={intensity.id} className="mt-1" />
-                  <div>
-                    <label htmlFor={intensity.id} className="text-xl font-medium block cursor-pointer">
+      {/* Options */}
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="space-y-4"
+      >
+        {intensities.map((intensity) => (
+          <motion.div
+            key={intensity.id}
+            variants={itemVariants}
+            className={cn(
+              "relative overflow-hidden rounded-xl shadow-sm border-2 transition-all duration-300",
+              selectedIntensity === intensity.id 
+                ? `${intensity.borderColor} ${intensity.color} shadow-md` 
+                : "border-gray-100 bg-white hover:border-gray-200 hover:shadow-md"
+            )}
+            onClick={() => handleSelectIntensity(intensity.id)}
+          >
+            <div className="p-4 sm:p-5">
+              <div className="flex items-start gap-4">
+                {/* Icon */}
+                <div className={cn(
+                  "flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center",
+                  selectedIntensity === intensity.id 
+                    ? intensity.color 
+                    : "bg-gray-50"
+                )}>
+                  <intensity.icon 
+                    className={cn(
+                      "w-6 h-6",
+                      selectedIntensity === intensity.id 
+                        ? intensity.iconColor 
+                        : "text-gray-400"
+                    )} 
+                  />
+                </div>
+                
+                {/* Content */}
+                <div className="flex-grow text-left">
+                  <div className="flex justify-between">
+                    <label 
+                      htmlFor={intensity.id} 
+                      className="text-lg font-medium block cursor-pointer"
+                    >
                       {intensity.label}
                     </label>
-                    <p className="text-muted-foreground mt-1">{intensity.description}</p>
+                    
+                    {/* Radio button */}
+                    <div className="hidden sm:block">
+                      <RadioGroupItem 
+                        value={intensity.id} 
+                        id={intensity.id} 
+                        className="mt-1"
+                      />
+                    </div>
                   </div>
+                  
+                  <p className="text-sm text-gray-500 mt-1">
+                    {intensity.description}
+                  </p>
                 </div>
               </div>
             </div>
+            
+            {/* Selected indicator (mobile) */}
+            {selectedIntensity === intensity.id && (
+              <div className="absolute top-0 right-0 p-2 sm:hidden">
+                <CheckCircle2 className="w-5 h-5 text-green-500" />
+              </div>
+            )}
+          </motion.div>
+        ))}
+      </motion.div>
+      
+      {/* Auto-advance indicator */}
+      <AnimatePresence>
+        {autoAdvance && selectedIntensity !== null && initialValueRef.current === null && (
+          <motion.p 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="text-sm text-gray-500 mt-6 flex items-center justify-center"
+          >
+            <span className="mr-2 inline-block w-4 h-4 rounded-full bg-orange-500 animate-pulse"></span>
+            Преминаване към следващия въпрос...
+          </motion.p>
+        )}
+      </AnimatePresence>
+      
+      {/* Hidden RadioGroup for accessibility */}
+      <div className="sr-only">
+        <RadioGroup 
+          value={selectedIntensity || ""} 
+          onValueChange={handleSelectIntensity} 
+        >
+          {intensities.map((intensity) => (
+            <RadioGroupItem key={intensity.id} value={intensity.id} id={intensity.id} />
           ))}
         </RadioGroup>
-        
-        {autoAdvance && selectedIntensity !== null && initialValueRef.current === null && (
-          <p className="text-sm text-muted-foreground mt-6 animate-pulse">
-            Преминаване към следващия въпрос...
-          </p>
-        )}
       </div>
     </div>
   );

@@ -20,7 +20,8 @@ const STRICT_VALIDATION = false;
 export const validateStep = (
   step: number, 
   formData: FormData, 
-  toast: (props: ToastParams) => void
+  toast: (props: ToastParams) => void,
+  showErrors: boolean = true
 ): boolean => {
   // Always clear previous errors for this step when validating again
   if (activeValidationErrors.has(step)) {
@@ -36,27 +37,27 @@ export const validateStep = (
   try {
     // Determine which validation module to use based on the step range
     if (step >= 1 && step <= 5) {
-      isValid = validateBasicInfoStep(step, formData, toast);
+      isValid = validateBasicInfoStep(step, formData, showErrors ? toast : () => {});
       console.log(`Basic info validation result: ${isValid}`);
     }
     
     else if (step >= 6 && step <= 13) {
-      isValid = validateBodyAssessmentStep(step, formData, toast);
+      isValid = validateBodyAssessmentStep(step, formData, showErrors ? toast : () => {});
       console.log(`Body assessment validation result: ${isValid}`);
     }
     
     else if (step >= 14 && step <= 21) {
-      isValid = validateWorkoutPreferencesStep(step, formData, toast);
+      isValid = validateWorkoutPreferencesStep(step, formData, showErrors ? toast : () => {});
       console.log(`Workout preferences validation result: ${isValid}`);
     }
     
     else if (step >= 22 && step <= 26) {
-      isValid = validateLifestyleStep(step, formData, toast);
+      isValid = validateLifestyleStep(step, formData, showErrors ? toast : () => {});
       console.log(`Lifestyle validation result: ${isValid}`);
     }
     
     else if (step >= 27 && step <= 32) {
-      isValid = validateFinalStepsStep(step, formData, toast);
+      isValid = validateFinalStepsStep(step, formData, showErrors ? toast : () => {});
       console.log(`Final steps validation result: ${isValid}`);
     }
     
@@ -74,11 +75,13 @@ export const validateStep = (
     return isValid;
   } catch (error) {
     console.error(`Validation error in step ${step}:`, error);
-    toast({
-      title: "Грешка при валидация",
-      description: "Възникна неочаквана грешка при валидацията",
-      variant: "destructive",
-    });
+    if (showErrors) {
+      toast({
+        title: "Грешка при валидация",
+        description: "Възникна неочаквана грешка при валидацията",
+        variant: "destructive",
+      });
+    }
     
     // In non-strict mode, allow users to proceed despite errors
     return !STRICT_VALIDATION;

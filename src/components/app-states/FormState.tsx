@@ -11,7 +11,7 @@ interface FormStateProps {
   animationDirection: string;
   formData: FormData;
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
-  handleNext: () => void;
+  handleNext: (isAutoNext?: boolean) => void;
   handleBack: () => void;
 }
 
@@ -27,22 +27,24 @@ const FormState: React.FC<FormStateProps> = ({
   const progress = (step / totalSteps) * 100;
   
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <ProgressBar 
         progress={progress} 
         step={step} 
         totalSteps={totalSteps} 
       />
       
-      <AnimatePresence custom={animationDirection} mode="wait">
-        <StepRenderer 
-          step={step}
-          formData={formData}
-          setFormData={setFormData}
-          handleNext={handleNext}
-          animationDirection={animationDirection}
-        />
-      </AnimatePresence>
+      <div className="flex-1 pb-36 sm:pb-28">
+        <AnimatePresence custom={animationDirection} mode="wait">
+          <StepRenderer 
+            step={step}
+            formData={formData}
+            setFormData={setFormData}
+            handleNext={handleNext}
+            animationDirection={animationDirection}
+          />
+        </AnimatePresence>
+      </div>
       
       <FormNavigation 
         step={step}
@@ -50,7 +52,7 @@ const FormState: React.FC<FormStateProps> = ({
         handleNext={handleNext}
         handleBack={handleBack}
       />
-    </>
+    </div>
   );
 };
 
