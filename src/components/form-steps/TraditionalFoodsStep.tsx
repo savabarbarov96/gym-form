@@ -53,6 +53,7 @@ const TraditionalFoodsStep = ({
 
   // Common Bulgarian market items with categories
   const marketItems = [
+    // ХЛЕБНИ
     { 
       label: "Бял хляб (Питка)", 
       id: "white_bread", 
@@ -63,6 +64,33 @@ const TraditionalFoodsStep = ({
       id: "whole_grain_bread", 
       category: "Хлебни"
     },
+    {
+      label: "Лаваш",
+      id: "lavash",
+      category: "Хлебни"
+    },
+    {
+      label: "Тортиля",
+      id: "tortilla",
+      category: "Хлебни"
+    },
+    {
+      label: "Питка за бургер (пълнозърнеста)",
+      id: "burger_bun",
+      category: "Хлебни"
+    },
+    {
+      label: "Юфка",
+      id: "yufka",
+      category: "Хлебни"
+    },
+    {
+      label: "Пълнозърнеста юфка с фибри",
+      id: "whole_grain_yufka",
+      category: "Хлебни"
+    },
+    
+    // МЛЕЧНИ
     { 
       label: "Мляко", 
       id: "milk", 
@@ -88,6 +116,48 @@ const TraditionalFoodsStep = ({
       id: "butter", 
       category: "Млечни"
     },
+    {
+      label: "Cottage Cheese (без мазнини)",
+      id: "cottage_cheese",
+      category: "Млечни"
+    },
+    {
+      label: "Извара (без мазнини)",
+      id: "quark",
+      category: "Млечни"
+    },
+    {
+      label: "Скир (без мазнини)",
+      id: "skyr",
+      category: "Млечни"
+    },
+    {
+      label: "Скир без лактоза (без мазнини)",
+      id: "lactose_free_skyr",
+      category: "Млечни"
+    },
+    {
+      label: "Гръцки йогурт",
+      id: "greek_yogurt",
+      category: "Млечни"
+    },
+    {
+      label: "Нискомаслен гръцки йогурт",
+      id: "low_fat_greek_yogurt",
+      category: "Млечни"
+    },
+    {
+      label: "Моцарела (нискомаслена)",
+      id: "low_fat_mozzarella",
+      category: "Млечни"
+    },
+    {
+      label: "Кашкавал",
+      id: "kashkaval",
+      category: "Млечни"
+    },
+    
+    // МАСЛА
     { 
       label: "Слънчогледово олио", 
       id: "sunflower_oil", 
@@ -98,6 +168,18 @@ const TraditionalFoodsStep = ({
       id: "vegetable_oils", 
       category: "Масла"
     },
+    {
+      label: "Зехтин",
+      id: "olive_oil",
+      category: "Масла"
+    },
+    {
+      label: "Масло (за готвене)",
+      id: "cooking_butter",
+      category: "Масла"
+    },
+    
+    // ЗА ПЕЧЕНЕ
     { 
       label: "Захар", 
       id: "sugar", 
@@ -108,6 +190,8 @@ const TraditionalFoodsStep = ({
       id: "flour", 
       category: "За печене"
     },
+    
+    // ЗЪРНЕНИ
     { 
       label: "Ориз", 
       id: "rice", 
@@ -118,6 +202,58 @@ const TraditionalFoodsStep = ({
       id: "pasta", 
       category: "Зърнени"
     },
+    { 
+      label: "Бобови (боб, леща)", 
+      id: "legumes", 
+      category: "Зърнени"
+    },
+    {
+      label: "Бял ориз",
+      id: "white_rice",
+      category: "Зърнени"
+    },
+    {
+      label: "Пълнозърнест кафяв ориз",
+      id: "brown_rice",
+      category: "Зърнени"
+    },
+    {
+      label: "Черен ориз Императорски",
+      id: "black_rice",
+      category: "Зърнени"
+    },
+    {
+      label: "Оризов грис",
+      id: "rice_semolina",
+      category: "Зърнени"
+    },
+    {
+      label: "Оризовки",
+      id: "rice_cakes",
+      category: "Зърнени"
+    },
+    {
+      label: "Овес",
+      id: "oats",
+      category: "Зърнени"
+    },
+    {
+      label: "Булгур",
+      id: "bulgur",
+      category: "Зърнени"
+    },
+    {
+      label: "Пшеничен грис",
+      id: "wheat_semolina",
+      category: "Зърнени"
+    },
+    {
+      label: "Нахут",
+      id: "chickpeas",
+      category: "Зърнени"
+    },
+    
+    // ЗЕЛЕНЧУЦИ
     { 
       label: "Картофи", 
       id: "potatoes", 
@@ -153,6 +289,118 @@ const TraditionalFoodsStep = ({
       id: "carrots", 
       category: "Зеленчуци"
     },
+    {
+      label: "Обикновен картоф",
+      id: "regular_potato",
+      category: "Зеленчуци"
+    },
+    {
+      label: "Сладък картоф (батат)",
+      id: "sweet_potato",
+      category: "Зеленчуци"
+    },
+    {
+      label: "Червен картоф",
+      id: "red_potato",
+      category: "Зеленчуци"
+    },
+    {
+      label: "Маруля",
+      id: "lettuce",
+      category: "Зеленчуци"
+    },
+    {
+      label: "Айсберг",
+      id: "iceberg",
+      category: "Зеленчуци"
+    },
+    {
+      label: "Рукола",
+      id: "arugula",
+      category: "Зеленчуци"
+    },
+    {
+      label: "Спанак",
+      id: "spinach",
+      category: "Зеленчуци"
+    },
+    {
+      label: "Кейл",
+      id: "kale",
+      category: "Зеленчуци"
+    },
+    {
+      label: "Зеле (бяло, червено, китайско)",
+      id: "cabbage",
+      category: "Зеленчуци"
+    },
+    {
+      label: "Репички",
+      id: "radishes",
+      category: "Зеленчуци"
+    },
+    {
+      label: "Броколи",
+      id: "broccoli",
+      category: "Зеленчуци"
+    },
+    {
+      label: "Карфиол",
+      id: "cauliflower",
+      category: "Зеленчуци"
+    },
+    {
+      label: "Аспержи",
+      id: "asparagus",
+      category: "Зеленчуци"
+    },
+    {
+      label: "Целина",
+      id: "celery",
+      category: "Зеленчуци"
+    },
+    {
+      label: "Тиквички",
+      id: "zucchini",
+      category: "Зеленчуци"
+    },
+    {
+      label: "Гъби (печурки, кладница, шийтаке)",
+      id: "mushrooms",
+      category: "Зеленчуци"
+    },
+    {
+      label: "Зелен фасул",
+      id: "green_beans",
+      category: "Зеленчуци"
+    },
+    {
+      label: "Патладжан",
+      id: "eggplant",
+      category: "Зеленчуци"
+    },
+    {
+      label: "Праз лук",
+      id: "leek",
+      category: "Зеленчуци"
+    },
+    {
+      label: "Брюкселско зеле",
+      id: "brussels_sprouts",
+      category: "Зеленчуци"
+    },
+    {
+      label: "Царевица",
+      id: "corn",
+      category: "Зеленчуци"
+    },
+    {
+      label: "Грах",
+      id: "peas",
+      category: "Зеленчуци"
+    },
+    
+    // ПЛОДОВЕ
     { 
       label: "Ябълки", 
       id: "apples", 
@@ -168,6 +416,138 @@ const TraditionalFoodsStep = ({
       id: "citrus_fruits", 
       category: "Плодове"
     },
+    {
+      label: "Круша",
+      id: "pear",
+      category: "Плодове"
+    },
+    {
+      label: "Праскова",
+      id: "peach",
+      category: "Плодове"
+    },
+    {
+      label: "Нектарина",
+      id: "nectarine",
+      category: "Плодове"
+    },
+    {
+      label: "Грозде",
+      id: "grapes",
+      category: "Плодове"
+    },
+    {
+      label: "Череши",
+      id: "cherries",
+      category: "Плодове"
+    },
+    {
+      label: "Диня",
+      id: "watermelon",
+      category: "Плодове"
+    },
+    {
+      label: "Пъпеш",
+      id: "melon",
+      category: "Плодове"
+    },
+    {
+      label: "Киви",
+      id: "kiwi",
+      category: "Плодове"
+    },
+    {
+      label: "Ананас",
+      id: "pineapple",
+      category: "Плодове"
+    },
+    {
+      label: "Кайсия",
+      id: "apricot",
+      category: "Плодове"
+    },
+    {
+      label: "Слива",
+      id: "plum",
+      category: "Плодове"
+    },
+    {
+      label: "Смокиня",
+      id: "fig",
+      category: "Плодове"
+    },
+    {
+      label: "Фурми",
+      id: "dates",
+      category: "Плодове"
+    },
+    {
+      label: "Портокал",
+      id: "orange",
+      category: "Плодове"
+    },
+    {
+      label: "Мандарина",
+      id: "tangerine",
+      category: "Плодове"
+    },
+    {
+      label: "Лимон",
+      id: "lemon",
+      category: "Плодове"
+    },
+    {
+      label: "Грейпфрут",
+      id: "grapefruit",
+      category: "Плодове"
+    },
+    {
+      label: "Нар",
+      id: "pomegranate",
+      category: "Плодове"
+    },
+    {
+      label: "Ягоди",
+      id: "strawberries",
+      category: "Плодове"
+    },
+    {
+      label: "Малини",
+      id: "raspberries",
+      category: "Плодове"
+    },
+    {
+      label: "Къпини",
+      id: "blackberries",
+      category: "Плодове"
+    },
+    {
+      label: "Боровинки",
+      id: "blueberries",
+      category: "Плодове"
+    },
+    {
+      label: "Замразени плодове микс",
+      id: "frozen_fruit_mix",
+      category: "Плодове"
+    },
+    {
+      label: "Помело",
+      id: "pomelo",
+      category: "Плодове"
+    },
+    {
+      label: "Стафиди",
+      id: "raisins",
+      category: "Плодове"
+    },
+    {
+      label: "Джинджифил",
+      id: "ginger",
+      category: "Плодове"
+    },
+    
+    // МЕСО
     { 
       label: "Пилешко месо", 
       id: "chicken", 
@@ -178,30 +558,175 @@ const TraditionalFoodsStep = ({
       id: "pork", 
       category: "Месо"
     },
+    {
+      label: "Телешко (шол)",
+      id: "beef_round",
+      category: "Месо"
+    },
+    {
+      label: "Пилешко (гърди)",
+      id: "chicken_breast",
+      category: "Месо"
+    },
+    {
+      label: "Пуешко (гърди)",
+      id: "turkey_breast",
+      category: "Месо"
+    },
+    {
+      label: "Свинско (бонфиле)",
+      id: "pork_tenderloin",
+      category: "Месо"
+    },
+    
+    // МОРСКИ
     { 
       label: "Риба", 
       id: "fish", 
       category: "Морски"
     },
     { 
-      label: "Колбаси", 
-      id: "sausages", 
-      category: "Преработени"
-    },
-    { 
       label: "Консерва риба тон", 
       id: "canned_tuna", 
       category: "Морски"
     },
-    { 
-      label: "Бобови (боб, леща)", 
-      id: "legumes", 
-      category: "Зърнени"
+    {
+      label: "Хек",
+      id: "hake",
+      category: "Морски"
     },
+    {
+      label: "Лаврак",
+      id: "sea_bass",
+      category: "Морски"
+    },
+    {
+      label: "Пангасиус",
+      id: "pangasius",
+      category: "Морски"
+    },
+    {
+      label: "Треска",
+      id: "cod",
+      category: "Морски"
+    },
+    {
+      label: "Сьомга/Сьомгова пъстърва",
+      id: "salmon",
+      category: "Морски"
+    },
+    {
+      label: "Скумрия",
+      id: "mackerel",
+      category: "Морски"
+    },
+    {
+      label: "Херинга",
+      id: "herring",
+      category: "Морски"
+    },
+    {
+      label: "Сардини",
+      id: "sardines",
+      category: "Морски"
+    },
+    {
+      label: "Скариди",
+      id: "shrimp",
+      category: "Морски"
+    },
+    {
+      label: "Миди",
+      id: "mussels",
+      category: "Морски"
+    },
+    {
+      label: "Октопод",
+      id: "octopus",
+      category: "Морски"
+    },
+    {
+      label: "Калмари",
+      id: "calamari",
+      category: "Морски"
+    },
+    
+    // ПРЕРАБОТЕНИ
+    { 
+      label: "Колбаси", 
+      id: "sausages", 
+      category: "Преработени"
+    },
+    
+    // НАПИТКИ
     { 
       label: "Минерална вода", 
       id: "mineral_water", 
       category: "Напитки"
+    },
+    
+    // ВЕГАН/ВЕГЕТАРИАНСКИ
+    {
+      label: "Тофу",
+      id: "tofu",
+      category: "Веган/Вегетариански"
+    },
+    
+    // МАЗНИНИ
+    {
+      label: "Авокадо",
+      id: "avocado",
+      category: "Мазнини"
+    },
+    {
+      label: "Черен шоколад (75%+)",
+      id: "dark_chocolate",
+      category: "Мазнини"
+    },
+    {
+      label: "Кокосови стърготини",
+      id: "coconut_flakes",
+      category: "Мазнини"
+    },
+    {
+      label: "Орехи (сурови)",
+      id: "walnuts",
+      category: "Мазнини"
+    },
+    {
+      label: "Бадеми (сурови)",
+      id: "almonds",
+      category: "Мазнини"
+    },
+    {
+      label: "Кашу (сурови)",
+      id: "cashews",
+      category: "Мазнини"
+    },
+    {
+      label: "Лешници (сурови)",
+      id: "hazelnuts",
+      category: "Мазнини"
+    },
+    {
+      label: "Фъстъци",
+      id: "peanuts",
+      category: "Мазнини"
+    },
+    {
+      label: "Маслини",
+      id: "olives",
+      category: "Мазнини"
+    },
+    {
+      label: "Фъстъчен тахан/масло",
+      id: "peanut_butter",
+      category: "Мазнини"
+    },
+    {
+      label: "Бадемов тахан",
+      id: "almond_butter",
+      category: "Мазнини"
     }
   ];
 
