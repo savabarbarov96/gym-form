@@ -135,29 +135,29 @@ const GenderSelectionStep: React.FC<GenderSelectionStepProps> = ({
                 className="h-48 bg-cover bg-center relative" 
                 style={{ backgroundImage: `url(${option.image})` }}
               >
-                <div className="w-full h-full bg-gradient-to-t from-black/70 to-transparent flex items-end">
-                  <div className="p-6 w-full">
+                <div className="w-full h-full bg-gradient-to-t from-black/70 to-transparent">
+                  <div className="absolute top-4 right-4">
                     <motion.div 
                       className={cn(
-                        "w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-2",
+                        "w-12 h-12 rounded-full flex items-center justify-center",
                         isSelected ? "bg-orange text-white" : "bg-white/90 text-orange"
                       )}
                       animate={isSelected ? { scale: [1, 1.1, 1] } : {}}
                       transition={{ duration: 0.5 }}
                     >
-                      <Icon size={30} />
+                      <Icon size={24} />
                     </motion.div>
                   </div>
                 </div>
                 
                 {isSelected && (
                   <motion.div 
-                    className="absolute top-0 right-0 m-4 bg-orange text-white rounded-full p-2"
+                    className="absolute top-4 right-20 bg-orange text-white rounded-full p-2"
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                   >
                     <motion.div animate={{ rotate: 360 }} transition={{ duration: 0.5 }}>
-                      <CheckCircle size={24} />
+                      <CheckCircle size={20} />
                     </motion.div>
                   </motion.div>
                 )}

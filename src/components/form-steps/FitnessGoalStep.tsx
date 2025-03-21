@@ -1,5 +1,5 @@
 import React from "react";
-import { Weight, Dumbbell, Target, Heart, Clock, Activity } from "lucide-react";
+import { Clock, Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface FitnessGoalStepProps {
@@ -9,30 +9,6 @@ interface FitnessGoalStepProps {
 
 const FitnessGoalStep = ({ selectedGoal, onSelect }: FitnessGoalStepProps) => {
   const goals = [
-    { 
-      label: "Отслабване", 
-      id: "lose-weight", 
-      icon: Weight,
-      description: "Намаляване на телесните мазнини и подобряване на телесната композиция" 
-    },
-    { 
-      label: "Натрупване на мускулна маса", 
-      id: "gain-muscle", 
-      icon: Dumbbell,
-      description: "Изграждане на сила и увеличаване на мускулния обем" 
-    },
-    { 
-      label: "Постигане на релеф", 
-      id: "get-shredded", 
-      icon: Target,
-      description: "Постигане на максимална дефиниция и ниско съдържание на мазнини" 
-    },
-    { 
-      label: "Подобряване на благосъстоянието", 
-      id: "boost-wellbeing", 
-      icon: Heart,
-      description: "Подобряване на цялостното здраве и нивата на енергия" 
-    },
     { 
       label: "Дълголетие и здраве", 
       id: "longevity-health", 
@@ -52,37 +28,46 @@ const FitnessGoalStep = ({ selectedGoal, onSelect }: FitnessGoalStepProps) => {
       <h1 className="text-4xl sm:text-5xl font-bold mb-6">Изберете Вашата цел</h1>
       <p className="text-muted-foreground text-xl mb-8">Какво искате да постигнете?</p>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+      <div className="flex flex-col gap-6 max-w-2xl mx-auto">
         {goals.map((goal) => {
           const Icon = goal.icon;
           return (
             <div
               key={goal.id}
               className={cn(
-                "option-card card-hover-effect p-8",
-                selectedGoal === goal.id ? 'selected' : ''
+                "option-card card-hover-effect p-8 transition-all duration-300",
+                selectedGoal === goal.id 
+                  ? 'selected border-2 border-orange bg-orange/5 transform scale-[1.02]' 
+                  : 'border-2 border-transparent hover:border-orange/30'
               )}
               onClick={() => onSelect(goal.id)}
             >
               <div className="flex items-center gap-6">
                 <div className={cn(
-                  "icon-container transition-all",
+                  "icon-container transition-all p-4 rounded-full",
                   selectedGoal === goal.id ? "bg-orange/30" : "bg-secondary"
                 )}>
                   <Icon className={cn(
-                    "icon-md",
+                    "w-8 h-8",
                     selectedGoal === goal.id ? "text-orange" : "text-muted-foreground"
                   )} />
                 </div>
-                <div className="text-left">
+                <div className="text-left flex-1">
                   <h3 className={cn(
-                    "text-xl font-medium mb-1",
+                    "text-2xl font-medium mb-2",
                     selectedGoal === goal.id ? "text-orange" : ""
                   )}>
                     {goal.label}
                   </h3>
-                  <p className="text-sm text-muted-foreground">{goal.description}</p>
+                  <p className="text-base text-muted-foreground leading-relaxed">{goal.description}</p>
                 </div>
+                {selectedGoal === goal.id && (
+                  <div className="text-orange">
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                )}
               </div>
             </div>
           )
