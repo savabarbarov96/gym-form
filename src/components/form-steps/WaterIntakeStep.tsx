@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Slider } from "@/components/ui/slider";
-import { Droplets, Info } from 'lucide-react';
+import { Droplets, Info, Dumbbell } from 'lucide-react';
 
 interface WaterIntakeStepProps {
   value: number | null;
@@ -74,6 +74,41 @@ const WaterIntakeStep: React.FC<WaterIntakeStepProps> = ({ value, onChange }) =>
         <p className="text-sm text-muted-foreground">
           {intakeInfo.message}
         </p>
+      </div>
+
+      {/* Water Benefits Section */}
+      <div className="mt-8 bg-gray-800/90 p-6 rounded-lg text-gray-100">
+        <h3 className="text-xl font-semibold mb-4 text-center">Ползи от правилната хидратация при тренировка</h3>
+        
+        <div className="flex flex-col md:flex-row gap-6 items-center">
+          <div className="relative w-full md:w-1/3 h-48 rounded-lg overflow-hidden bg-gray-700 flex items-center justify-center">
+            <div className="flex flex-col items-center justify-center">
+              <Droplets className="h-24 w-24 text-blue-400" />
+              <Dumbbell className="h-16 w-16 text-blue-300 mt-2" />
+            </div>
+          </div>
+          
+          <div className="md:w-2/3">
+            <ul className="space-y-2 text-sm">
+              <li className="flex items-start gap-2">
+                <Droplets className="h-5 w-5 text-blue-400 min-w-5 mt-0.5" />
+                <span>Подобрява физическата издръжливост и предотвратява мускулни крампи</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Droplets className="h-5 w-5 text-blue-400 min-w-5 mt-0.5" />
+                <span>Ускорява метаболизма и подпомага изгарянето на мазнини</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Droplets className="h-5 w-5 text-blue-400 min-w-5 mt-0.5" />
+                <span>Спомага за по-бързото възстановяване на мускулите след тренировка</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Droplets className="h-5 w-5 text-blue-400 min-w-5 mt-0.5" />
+                <span>Препоръчва се пиене на 500 мл вода 2 часа преди тренировка и по 250 мл на всеки 15-20 минути по време на тренировка</span>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   );
