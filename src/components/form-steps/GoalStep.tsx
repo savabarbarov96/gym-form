@@ -121,7 +121,7 @@ export function GoalStep({ value, currentBodyFat, onChange, onCurrentBodyFatChan
         <div className="space-y-6">
           <div className="text-center">
             <h2 className="text-2xl font-bold mb-2">Какво е вашето текущо ниво на телесни мазнини?</h2>
-            <p className="text-gray-600">Изберете опцията, която най-добре описва вашето текущо състояние</p>
+            <p className="text-gray-500 font-medium">Изберете опцията, която най-добре описва вашето текущо състояние</p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
@@ -134,7 +134,7 @@ export function GoalStep({ value, currentBodyFat, onChange, onCurrentBodyFatChan
                   "hover:border-blue-500 hover:bg-blue-50",
                   selectedCurrent?.range === option.range
                     ? "border-blue-500 bg-blue-50"
-                    : "border-gray-200 bg-white"
+                    : "border-gray-200 bg-gray-50/80"
                 )}
               >
                 <div className="relative w-full aspect-square mb-2 overflow-hidden rounded-lg">
@@ -166,7 +166,7 @@ export function GoalStep({ value, currentBodyFat, onChange, onCurrentBodyFatChan
         <div className="space-y-6">
           <div className="text-center">
             <h2 className="text-2xl font-bold mb-2">Каква е вашата цел?</h2>
-            <p className="text-gray-600">Изберете желаното ниво на телесни мазнини, което искате да постигнете</p>
+            <p className="text-gray-500 font-medium">Изберете желаното ниво на телесни мазнини, което искате да постигнете</p>
           </div>
 
           <div className="relative">
@@ -174,7 +174,7 @@ export function GoalStep({ value, currentBodyFat, onChange, onCurrentBodyFatChan
             <div className="bg-orange/5 rounded-xl p-4 mb-6 flex items-center space-x-4">
               <span className="text-3xl">{selectedCurrent?.icon}</span>
               <div>
-                <p className="text-sm text-gray-600">Текущо ниво</p>
+                <p className="text-sm text-gray-500 font-medium">Текущо ниво</p>
                 <p className="font-medium">{selectedCurrent?.range} - {selectedCurrent?.description}</p>
               </div>
               <button 
@@ -196,7 +196,7 @@ export function GoalStep({ value, currentBodyFat, onChange, onCurrentBodyFatChan
                       "hover:border-blue-500 hover:bg-blue-50",
                       selectedTarget?.range === option.range
                         ? "border-blue-500 bg-blue-50"
-                        : "border-gray-200 bg-white"
+                        : "border-gray-200 bg-gray-100"
                     )}
                   >
                     <div className="relative w-full aspect-square mb-2 overflow-hidden rounded-lg">
