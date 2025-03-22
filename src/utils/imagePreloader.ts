@@ -22,7 +22,7 @@ export const preloadImages = (imagePaths: string[]): Promise<void[]> => {
 /**
  * List of possible extensions to try for each background
  */
-const POSSIBLE_EXTENSIONS = ['.jpg', '.JPG', '.jpeg', '.JPEG'];
+const POSSIBLE_EXTENSIONS = ['-min.jpg', '-min.JPG', '-min.jpeg', '-min.JPEG', '.jpg', '.JPG', '.jpeg', '.JPEG'];
 
 /**
  * Generate background image paths with multiple possible extensions
