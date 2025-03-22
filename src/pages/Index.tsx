@@ -9,11 +9,12 @@ import { preloadImages, getBackgroundPaths, detectBackgroundCount } from "@/util
 import LogoPlaceholder from "@/components/LogoPlaceholder";
 
 // Custom hook for background rotation
-const useBackgroundRotation = (maxBackgrounds = 40, intervalMs = 10000) => {
+const useBackgroundRotation = (intervalMs = 15000) => {
   const [currentBgIndex, setCurrentBgIndex] = useState(0);
   const [nextBgIndex, setNextBgIndex] = useState(1);
+  const [fadeState, setFadeState] = useState<'in' | 'out' | 'stable'>('stable');
   const [isLoading, setIsLoading] = useState(true);
-  const [totalBackgrounds, setTotalBackgrounds] = useState(5); // Default to 5 until detection completes
+  const [totalBackgrounds, setTotalBackgrounds] = useState(0); 
   const [backgroundPaths, setBackgroundPaths] = useState<string[]>([]);
   
   // First, detect how many background images are available
@@ -21,21 +22,36 @@ const useBackgroundRotation = (maxBackgrounds = 40, intervalMs = 10000) => {
     const detectBackgrounds = async () => {
       setIsLoading(true);
       try {
-        const result = await detectBackgroundCount(maxBackgrounds);
-        const { count, extensions } = result;
-        console.log(`Detected ${count} background images with various extensions`);
+        const result = await detectBackgroundCount();
+        const { count } = result;
+        console.log(`Detected ${count} background images`);
+        
+        if (count === 0) {
+          console.error('No background images found');
+          setIsLoading(false);
+          return;
+        }
+        
         setTotalBackgrounds(count);
         
-        // Now preload the detected images with their correct extensions
-        const paths = getBackgroundPaths(count, extensions);
+        // Get the paths of all found images
+        const paths = getBackgroundPaths(new Map(
+          result.extensions.map((ext, i) => [i + 1, ext])
+        ));
         setBackgroundPaths(paths);
         
         await preloadImages(paths);
         console.log('Background images preloaded successfully:', paths);
         
         // Set initial random indexes
-        setCurrentBgIndex(Math.floor(Math.random() * count));
-        setNextBgIndex(Math.floor(Math.random() * count));
+        const initialIndex = Math.floor(Math.random() * count);
+        let secondIndex;
+        do {
+          secondIndex = Math.floor(Math.random() * count);
+        } while (secondIndex === initialIndex && count > 1);
+        
+        setCurrentBgIndex(initialIndex);
+        setNextBgIndex(secondIndex);
       } catch (error) {
         console.error("Failed during background detection or preloading:", error);
       } finally {
@@ -44,23 +60,37 @@ const useBackgroundRotation = (maxBackgrounds = 40, intervalMs = 10000) => {
     };
     
     detectBackgrounds();
-  }, [maxBackgrounds]);
+  }, []);
   
   useEffect(() => {
     if (isLoading || backgroundPaths.length === 0) return; // Don't start rotation until images are loaded
     
     const rotateBackground = () => {
-      // Save the current index as the previous
-      setCurrentBgIndex(nextBgIndex);
+      // Start fade-out animation
+      setFadeState('out');
       
-      // Select a new random index different from the current one
-      let newIndex;
-      do {
-        newIndex = Math.floor(Math.random() * totalBackgrounds);
-      } while (newIndex === nextBgIndex && totalBackgrounds > 1);
-      
-      setNextBgIndex(newIndex);
-      console.log(`Rotating to random background index: ${newIndex} of ${totalBackgrounds} total`);
+      // After fade out completes, change the image and start fade-in
+      setTimeout(() => {
+        // Save the current index as the previous
+        setCurrentBgIndex(nextBgIndex);
+        
+        // Select a new random index different from the current one
+        let newIndex;
+        do {
+          newIndex = Math.floor(Math.random() * totalBackgrounds);
+        } while (newIndex === nextBgIndex && totalBackgrounds > 1);
+        
+        setNextBgIndex(newIndex);
+        console.log(`Rotating to random background index: ${newIndex} of ${totalBackgrounds} total`);
+        
+        // Start fade-in animation
+        setFadeState('in');
+        
+        // Reset to stable state after fade-in completes
+        setTimeout(() => {
+          setFadeState('stable');
+        }, 1000);
+      }, 1000);
     };
     
     const intervalId = setInterval(rotateBackground, intervalMs);
@@ -69,7 +99,7 @@ const useBackgroundRotation = (maxBackgrounds = 40, intervalMs = 10000) => {
     return () => clearInterval(intervalId);
   }, [totalBackgrounds, intervalMs, isLoading, nextBgIndex, backgroundPaths]);
   
-  return { currentBgIndex, nextBgIndex, isLoading, totalBackgrounds, backgroundPaths };
+  return { currentBgIndex, nextBgIndex, isLoading, totalBackgrounds, backgroundPaths, fadeState };
 };
 
 const SurveyHeader = () => {
@@ -154,11 +184,11 @@ const Index = () => {
   const initialStep = stepNumber ? parseInt(stepNumber, 10) : undefined;
   
   // Use the background rotation hook with dynamic background detection
-  const { currentBgIndex, nextBgIndex, isLoading, totalBackgrounds, backgroundPaths } = useBackgroundRotation(40, 10000);
+  const { currentBgIndex, nextBgIndex, isLoading, totalBackgrounds, backgroundPaths, fadeState } = useBackgroundRotation(15000);
   
   // Log the current background image path whenever it changes
   useEffect(() => {
-    if (backgroundPaths.length > 0) {
+    if (backgroundPaths.length > 0 && currentBgIndex < backgroundPaths.length) {
       const imagePath = backgroundPaths[currentBgIndex];
       console.log(`Current background image: ${imagePath} (${currentBgIndex + 1} of ${totalBackgrounds})`);
     }
@@ -170,6 +200,18 @@ const Index = () => {
     return backgroundPaths[index % backgroundPaths.length];
   };
   
+  // Determine animation classes based on fade state
+  const getAnimationClasses = () => {
+    if (isLoading) return 'opacity-0';
+    
+    switch (fadeState) {
+      case 'in': return 'opacity-100 scale-100 transition-all duration-1000 ease-out';
+      case 'out': return 'opacity-30 scale-105 transition-all duration-1000 ease-in';
+      case 'stable': return 'opacity-100';
+      default: return 'opacity-100';
+    }
+  };
+  
   return (
     <SurveyProvider initialStep={initialStep}>
       <div className="min-h-screen bg-background text-foreground flex flex-col relative">
@@ -177,35 +219,57 @@ const Index = () => {
         <div className="absolute inset-0 w-full h-full overflow-hidden z-0">
           {/* Side-by-side portrait background images */}
           <div className="flex h-full w-full">
-            {/* Left image - with zoom out effect */}
+            {/* Left image - with premium transition effects */}
             <div className="w-1/2 h-full relative overflow-hidden">
-              <img 
+              <motion.img 
                 src={getCurrentImagePath(currentBgIndex)}
                 alt="Background Left" 
-                className={`w-full h-full object-cover transition-all duration-2500 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+                className={`w-full h-full object-cover ${getAnimationClasses()}`}
                 style={{ 
-                  transform: 'scale(0.8)', // Increased zoom out
                   filter: 'brightness(1.2)' // Make image lighter
                 }}
+                initial={{ scale: 0.8 }}
+                animate={{ 
+                  scale: fadeState === 'out' ? 0.85 : fadeState === 'in' ? 0.8 : 0.8,
+                  y: fadeState === 'out' ? -10 : fadeState === 'in' ? 0 : 0
+                }}
+                transition={{ duration: 2.5, ease: "easeInOut" }}
               />
             </div>
             
             {/* Right image - using next random background */}
             <div className="w-1/2 h-full relative overflow-hidden">
-              <img 
+              <motion.img 
                 src={getCurrentImagePath(nextBgIndex)}
                 alt="Background Right" 
-                className={`w-full h-full object-cover transition-all duration-2500 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+                className={`w-full h-full object-cover ${getAnimationClasses()}`}
                 style={{ 
-                  transform: 'scale(0.8)', // Increased zoom out
                   filter: 'brightness(1.2) hue-rotate(15deg)' // Lighter + hue
                 }}
+                initial={{ scale: 0.8 }}
+                animate={{ 
+                  scale: fadeState === 'out' ? 0.85 : fadeState === 'in' ? 0.8 : 0.8,
+                  y: fadeState === 'out' ? 10 : fadeState === 'in' ? 0 : 0
+                }}
+                transition={{ duration: 2.5, ease: "easeInOut" }}
               />
             </div>
           </div>
           
-          {/* Lighter dark overlay with gradients - slightly lighter */}
-          <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/50 to-slate-900/65 mix-blend-multiply z-[2]"></div>
+          {/* Premium gradient overlay with subtle animation */}
+          <motion.div 
+            className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/50 to-slate-900/65 mix-blend-multiply z-[2]"
+            animate={{ 
+              opacity: [0.7, 0.65, 0.7],
+              backgroundPosition: ['0% 0%', '100% 100%', '0% 0%'] 
+            }}
+            transition={{ 
+              duration: 20, 
+              ease: "easeInOut", 
+              repeat: Infinity,
+              repeatType: "reverse" 
+            }}
+          ></motion.div>
           
           {/* Animated gradient overlay */}
           <motion.div 

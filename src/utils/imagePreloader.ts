@@ -20,54 +20,62 @@ export const preloadImages = (imagePaths: string[]): Promise<void[]> => {
 };
 
 /**
- * List of possible extensions to try for each background
+ * List of possible extensions to try for each background in priority order
+ * Only using minified versions for performance
  */
-const POSSIBLE_EXTENSIONS = ['-min.jpg', '-min.JPG', '-min.jpeg', '-min.JPEG', '.jpg', '.JPG', '.jpeg', '.JPEG'];
+const POSSIBLE_EXTENSIONS = [
+  // Only using minified versions
+  '-min.jpg', '-min.JPG', '-min.jpeg', '-min.JPEG'
+];
+
+// Known working minified backgrounds under 2MB (add or remove as needed)
+const CONFIRMED_BACKGROUNDS = [
+  1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 19, 30
+];
 
 /**
  * Generate background image paths with multiple possible extensions
- * @param count Number of backgrounds
  * @returns Array of arrays containing possible paths for each background
  */
-export const getAllPossiblePaths = (count: number): string[][] => {
-  return Array.from({ length: count }, (_, i) => {
-    const basePathWithoutExtension = `/backgrounds/background-${i + 1}`;
+export const getAllPossiblePaths = (): string[][] => {
+  return CONFIRMED_BACKGROUNDS.map(num => {
+    const basePathWithoutExtension = `/backgrounds/background-${num}`;
     return POSSIBLE_EXTENSIONS.map(ext => `${basePathWithoutExtension}${ext}`);
   });
 };
 
 /**
  * Generate background image paths with first found extension
- * @param count Number of backgrounds
- * @param foundExtensions Array of found extensions for each background
+ * @param foundImages Map of image indices to their found extensions
  * @returns Array of background image paths
  */
-export const getBackgroundPaths = (count: number, foundExtensions: string[]): string[] => {
-  return Array.from({ length: count }, (_, i) => {
-    const ext = foundExtensions[i] || '.jpg'; // Default to .jpg if no extension found
-    return `/backgrounds/background-${i + 1}${ext}`;
-  });
+export const getBackgroundPaths = (foundImages: Map<number, string>): string[] => {
+  return Array.from(foundImages.entries())
+    .sort((a, b) => a[0] - b[0])
+    .map(([num, ext]) => `/backgrounds/background-${num}${ext}`);
 };
 
 /**
- * Dynamically detect available background images
- * @param maxImagesToCheck Maximum number of images to check for
- * @returns Promise that resolves with the object containing count and found extensions
+ * Dynamically detect available background images with improved logging and error handling
+ * @returns Promise that resolves with the object containing count and paths
  */
-export const detectBackgroundCount = async (maxImagesToCheck: number = 40): Promise<{count: number, extensions: string[]}> => {
-  let availableCount = 0;
-  const foundExtensions: string[] = Array(maxImagesToCheck).fill('');
+export const detectBackgroundCount = async (): Promise<{count: number, extensions: string[]}> => {
+  const foundImages = new Map<number, string>();
+  const failedImages: number[] = [];
   
   // Get all possible path combinations
-  const allPossiblePaths = getAllPossiblePaths(maxImagesToCheck);
+  const allPossiblePaths = getAllPossiblePaths();
   
   // For each background index, try all possible extensions
-  const checkPromises = allPossiblePaths.map((pathOptions, idx) => {
+  const checkPromises = CONFIRMED_BACKGROUNDS.map((num, idx) => {
+    const pathOptions = allPossiblePaths[idx];
+    
     return new Promise<boolean>(resolve => {
       // Try each extension one by one
       const tryNextExtension = (extIndex: number) => {
         if (extIndex >= pathOptions.length) {
           // No valid extension found for this background
+          failedImages.push(num);
           resolve(false);
           return;
         }
@@ -76,8 +84,8 @@ export const detectBackgroundCount = async (maxImagesToCheck: number = 40): Prom
         const img = new Image();
         
         img.onload = () => {
-          availableCount++;
-          foundExtensions[idx] = POSSIBLE_EXTENSIONS[extIndex];
+          foundImages.set(num, POSSIBLE_EXTENSIONS[extIndex]);
+          console.debug(`Found image: ${path}`);
           resolve(true);
         };
         
@@ -96,12 +104,18 @@ export const detectBackgroundCount = async (maxImagesToCheck: number = 40): Prom
   
   await Promise.all(checkPromises);
   
-  // Clean up the extensions array to match the actual count
-  const finalExtensions = foundExtensions.slice(0, Math.max(availableCount, 1));
+  // Log failed images
+  if (failedImages.length > 0) {
+    console.warn(`Failed to load background images: ${failedImages.join(', ')}`);
+  }
+  
+  // Generate final paths
+  const finalPaths = getBackgroundPaths(foundImages);
+  console.log('Available background images:', finalPaths);
   
   // Ensure we return at least 1 if no images are found
   return {
-    count: Math.max(availableCount, 1),
-    extensions: finalExtensions
+    count: Math.max(foundImages.size, 1),
+    extensions: Array.from(foundImages.values())
   };
 }; 
