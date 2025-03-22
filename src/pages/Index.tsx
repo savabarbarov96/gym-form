@@ -5,7 +5,7 @@ import { SurveyProvider, useSurvey } from "@/contexts/SurveyContext";
 import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { MessageSquareQuote } from "lucide-react";
-import { preloadImages, getBackgroundPaths, detectBackgroundCount } from "@/utils/imagePreloader";
+import { preloadImages, getBackgroundPaths, detectBackgroundCount, FALLBACK_BACKGROUND } from "@/utils/imagePreloader";
 import LogoPlaceholder from "@/components/LogoPlaceholder";
 
 // Custom hook for background rotation
@@ -164,10 +164,13 @@ const Index = () => {
     }
   }, [currentBgIndex, totalBackgrounds, backgroundPaths]);
   
-  // Get current image path safely
+  // Get current image path safely with fallback
   const getCurrentImagePath = (index: number) => {
-    if (backgroundPaths.length === 0) return '';
-    return backgroundPaths[index % backgroundPaths.length];
+    if (backgroundPaths.length === 0) return FALLBACK_BACKGROUND;
+    
+    const path = backgroundPaths[index % backgroundPaths.length];
+    // Return fallback if path is undefined or empty
+    return path && path.trim() !== '' ? path : FALLBACK_BACKGROUND;
   };
   
   return (

@@ -1,4 +1,9 @@
 /**
+ * Default fallback background image path to use if others fail
+ */
+export const FALLBACK_BACKGROUND = '/assets/backgrounds/fallback-background.jpg';
+
+/**
  * Utility to preload images
  * @param imagePaths Array of image paths to preload
  * @returns Promise that resolves when all images are loaded
@@ -11,6 +16,11 @@ export const preloadImages = (imagePaths: string[]): Promise<void[]> => {
       '/backgrounds/background-20.jpg', 
       '/backgrounds/background-21.jpg'].includes(path)
   );
+  
+  // Add fallback image if not already included
+  if (!filteredPaths.includes(FALLBACK_BACKGROUND)) {
+    filteredPaths.push(FALLBACK_BACKGROUND);
+  }
   
   const loadPromises = filteredPaths.map(path => {
     return new Promise<void>((resolve, reject) => {
