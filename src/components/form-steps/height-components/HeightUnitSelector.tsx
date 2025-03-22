@@ -7,18 +7,28 @@ interface HeightUnitSelectorProps {
 
 export const HeightUnitSelector: React.FC<HeightUnitSelectorProps> = ({ unit, toggleUnit }) => {
   return (
-    <div className="flex justify-center mb-6">
+    <div className="flex w-full rounded-lg overflow-hidden shadow-sm">
       <button
         type="button"
         onClick={toggleUnit}
-        className={`px-4 py-2 rounded-l-lg transition-colors ${unit === "cm" ? "bg-orange text-white" : "bg-secondary text-foreground"}`}
+        className={`flex-1 py-3 text-sm sm:text-base font-medium transition-all ${
+          unit === "cm" 
+            ? "bg-orange-500 text-white" 
+            : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+        }`}
+        aria-pressed={unit === "cm"}
       >
         Сантиметри
       </button>
       <button
         type="button"
         onClick={toggleUnit}
-        className={`px-4 py-2 rounded-r-lg transition-colors ${unit === "ft" ? "bg-orange text-white" : "bg-secondary text-foreground"}`}
+        className={`flex-1 py-3 text-sm sm:text-base font-medium transition-all ${
+          unit === "ft" 
+            ? "bg-orange-500 text-white" 
+            : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+        }`}
+        aria-pressed={unit === "ft"}
       >
         Футове и Инчове
       </button>

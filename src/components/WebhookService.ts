@@ -125,17 +125,11 @@ const createAIOptimizedPayload = (formData: FormData): Record<string, any> => {
       factorsCount++;
       factorsConsidered.push("workout frequency");
       
-      if (formData.workoutFrequency === 'none') {
-        fitnessScore += 1;
-      }
-      else if (formData.workoutFrequency === '1-2-times') {
-        fitnessScore += 2;
-      }
-      else if (formData.workoutFrequency === '3-times') {
-        fitnessScore += 3;
-      }
-      else if (formData.workoutFrequency === 'more-than-3') {
-        fitnessScore += 4;
+      switch(formData.workoutFrequency) {
+        case 'none': fitnessScore += 1; break;
+        case '1-2-times': fitnessScore += 2; break;
+        case '3-times': fitnessScore += 3; break;
+        case 'more-than-3': fitnessScore += 4; break;
       }
     }
     
@@ -251,7 +245,6 @@ const createAIOptimizedPayload = (formData: FormData): Record<string, any> => {
       purpose: "Generate personalized workout and nutrition plan"
     },
     
-    // Demographics section with basic user information
     demographics: {
       gender: formData.gender,
       ageGroup: formData.age,
@@ -262,14 +255,13 @@ const createAIOptimizedPayload = (formData: FormData): Record<string, any> => {
       marketingConsent: formData.personalInfo.emailConsent
     },
     
-    // Body metrics and goals section
     bodyProfile: {
       currentMetrics: {
         height: formData.height ? `${formData.height} cm` : null,
         currentWeight: formData.currentWeight ? `${formData.currentWeight} ${formData.weightUnit}` : null,
         currentBodyFatPercentage: formData.currentBodyFat,
-        bmi: bmi,
-        bmiCategory: bmiCategory
+        bmi,
+        bmiCategory
       },
       bodyType: formData.bodyType,
       goalMetrics: {
@@ -287,7 +279,6 @@ const createAIOptimizedPayload = (formData: FormData): Record<string, any> => {
       weightChangeHistory: formData.weightChange
     },
     
-    // Health considerations
     healthStatus: {
       physicalLimitations: formData.healthConcerns,
       customHealthConcern: formData.customHealthConcern,
@@ -298,7 +289,6 @@ const createAIOptimizedPayload = (formData: FormData): Record<string, any> => {
       fitnessAssessmentFactors: fitnessAssessment.factorsConsidered
     },
     
-    // Current activities and workout preferences
     activityProfile: {
       currentActivities: {
         activities: formData.activities,
@@ -321,7 +311,6 @@ const createAIOptimizedPayload = (formData: FormData): Record<string, any> => {
       }
     },
     
-    // Lifestyle and self-assessment
     lifestyle: {
       nutrition: {
         sugaryFoodsConsumption: formData.sugaryFoods,
@@ -336,7 +325,6 @@ const createAIOptimizedPayload = (formData: FormData): Record<string, any> => {
       }
     },
     
-    // Self-assessments with detailed descriptions of what each means
     selfAssessments: {
       breathingDifficulty: {
         statement: "I am often out of breath when I climb the stairs",
@@ -367,47 +355,56 @@ const createAIOptimizedPayload = (formData: FormData): Record<string, any> => {
       }
     },
     
-    // Program timing information
     programTiming: {
       startCommitment: formData.startCommitment,
       isReadyToStartImmediately: formData.startCommitment === 'immediately'
-    },
-    
-    // Raw form data for reference (in case AI needs to access original values)
-    rawFormData: formData
+    }
   };
 };
 
-// Function to submit the optimized payload to the webhook
+// Function to submit the optimized payload to both webhooks
 export const submitToWebhook = async (formData: FormData): Promise<boolean> => {
   try {
     // Create the AI-optimized payload
     const aiOptimizedPayload = createAIOptimizedPayload(formData);
     
     // Post the optimized payload to both webhooks
-    const [mealPlanResponse, workoutPlanResponse] = await Promise.all([
-      fetch(MEAL_PLAN_WEBHOOK_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(aiOptimizedPayload),
-      }),
-      fetch(WORKOUT_PLAN_WEBHOOK_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(aiOptimizedPayload),
-      })
-    ]);
-    
-    if (!mealPlanResponse.ok || !workoutPlanResponse.ok) {
-      console.error(`Webhook submission failed. Meal plan status: ${mealPlanResponse.status}, Workout plan status: ${workoutPlanResponse.status}`);
+    try {
+      const [mealPlanResponse, workoutPlanResponse] = await Promise.all([
+        fetch(MEAL_PLAN_WEBHOOK_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(aiOptimizedPayload),
+        }),
+        fetch(WORKOUT_PLAN_WEBHOOK_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(aiOptimizedPayload),
+        })
+      ]);
+      
+      if (!mealPlanResponse.ok || !workoutPlanResponse.ok) {
+        console.error(`Webhook submission failed. Meal plan status: ${mealPlanResponse.status}, Workout plan status: ${workoutPlanResponse.status}`);
+        if (mealPlanResponse.status === 0 || workoutPlanResponse.status === 0) {
+          console.warn('Received status 0, likely a CORS error. Frontend loading will continue regardless.');
+        }
+        return false;
+      }
+      
+      return true;
+    } catch (fetchError) {
+      // Specifically handle network/CORS errors
+      if (fetchError instanceof TypeError && fetchError.message.includes('Failed to fetch')) {
+        console.warn('CORS or network error detected. This is expected during testing with disabled endpoints. User experience will continue normally.', fetchError);
+      } else {
+        console.error('Error fetching from webhooks:', fetchError);
+      }
       return false;
     }
-    
-    return true;
   } catch (error) {
     console.error('Error submitting to webhooks:', error);
     return false;
@@ -421,20 +418,33 @@ export const submitToMealPlanWebhook = async (formData: FormData): Promise<boole
     const aiOptimizedPayload = createAIOptimizedPayload(formData);
     
     // Post the optimized payload to the meal plan webhook
-    const response = await fetch(MEAL_PLAN_WEBHOOK_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(aiOptimizedPayload),
-    });
-    
-    if (!response.ok) {
-      console.error(`Meal plan webhook submission failed with status: ${response.status}`);
+    try {
+      const response = await fetch(MEAL_PLAN_WEBHOOK_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(aiOptimizedPayload),
+      });
+      
+      if (!response.ok) {
+        console.error(`Meal plan webhook submission failed with status: ${response.status}`);
+        if (response.status === 0) {
+          console.warn('Received status 0, likely a CORS error. Frontend loading will continue regardless.');
+        }
+        return false;
+      }
+      
+      return true;
+    } catch (fetchError) {
+      // Specifically handle network/CORS errors
+      if (fetchError instanceof TypeError && fetchError.message.includes('Failed to fetch')) {
+        console.warn('CORS or network error detected for meal plan webhook. This is expected during testing with disabled endpoints. User experience will continue normally.', fetchError);
+      } else {
+        console.error('Error fetching from meal plan webhook:', fetchError);
+      }
       return false;
     }
-    
-    return true;
   } catch (error) {
     console.error('Error submitting to meal plan webhook:', error);
     return false;
@@ -448,20 +458,33 @@ export const submitToWorkoutPlanWebhook = async (formData: FormData): Promise<bo
     const aiOptimizedPayload = createAIOptimizedPayload(formData);
     
     // Post the optimized payload to the workout plan webhook
-    const response = await fetch(WORKOUT_PLAN_WEBHOOK_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(aiOptimizedPayload),
-    });
-    
-    if (!response.ok) {
-      console.error(`Workout plan webhook submission failed with status: ${response.status}`);
+    try {
+      const response = await fetch(WORKOUT_PLAN_WEBHOOK_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(aiOptimizedPayload),
+      });
+      
+      if (!response.ok) {
+        console.error(`Workout plan webhook submission failed with status: ${response.status}`);
+        if (response.status === 0) {
+          console.warn('Received status 0, likely a CORS error. Frontend loading will continue regardless.');
+        }
+        return false;
+      }
+      
+      return true;
+    } catch (fetchError) {
+      // Specifically handle network/CORS errors
+      if (fetchError instanceof TypeError && fetchError.message.includes('Failed to fetch')) {
+        console.warn('CORS or network error detected for workout plan webhook. This is expected during testing with disabled endpoints. User experience will continue normally.', fetchError);
+      } else {
+        console.error('Error fetching from workout plan webhook:', fetchError);
+      }
       return false;
     }
-    
-    return true;
   } catch (error) {
     console.error('Error submitting to workout plan webhook:', error);
     return false;

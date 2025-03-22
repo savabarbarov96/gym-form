@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { FormData } from '@/types/survey';
-import { GoalStep } from '@/components/form-steps';
+import GoalStep from '@/components/form-steps/GoalStep';
 
 interface GoalStepRendererProps {
   formData: FormData;

@@ -3,11 +3,12 @@ import Logo from "@/components/Logo";
 import { FormState, LoadingState, ResultsState, SuccessState } from "@/components/app-states";
 import { SurveyProvider, useSurvey } from "@/contexts/SurveyContext";
 import { useParams } from "react-router-dom";
+import { BackgroundSlider } from "@/components/BackgroundSlider";
 
 const SurveyHeader = () => {
   const { step } = useSurvey();
   return (
-    <header className="p-4 flex justify-between items-center border-b border-border">
+    <header className="p-4 flex justify-between items-center border-b border-border bg-background/70 backdrop-blur-md z-10 relative">
       <Logo />
       <div className="text-sm text-muted-foreground flex items-center">
         <span className="mr-2">Стъпка: {step}</span>
@@ -28,12 +29,6 @@ const SurveyHeader = () => {
   );
 };
 
-const SurveyFooter = () => (
-  <footer className="p-4 text-center text-sm text-muted-foreground border-t border-border">
-    <p>Препоръчваме Ви да се консултирате с Вашия лекар преди да започнете каквато и да е тренировъчна програма</p>
-  </footer>
-);
-
 const SurveyContent = () => {
   const { 
     appState, 
@@ -51,7 +46,7 @@ const SurveyContent = () => {
   } = useSurvey();
 
   return (
-    <main className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 relative overflow-hidden">
+    <main className="flex-1 overflow-x-hidden relative z-[1] pb-20">
       {appState === "form" && (
         <FormState
           step={step}
@@ -89,10 +84,18 @@ const Index = () => {
   
   return (
     <SurveyProvider initialStep={initialStep}>
-      <div className="min-h-screen bg-background text-foreground flex flex-col">
+      <div className="min-h-screen bg-background text-foreground flex flex-col relative">
+        {/* Using the new BackgroundSlider component */}
+        <BackgroundSlider 
+          interval={8000}          // 8 seconds between transitions
+          transitionDuration={1200} // 1.2 seconds for transitions
+          maxBackgrounds={40}
+          initialLoadCount={4}
+          batchSize={4}
+        />
+        
         <SurveyHeader />
         <SurveyContent />
-        <SurveyFooter />
       </div>
     </SurveyProvider>
   );

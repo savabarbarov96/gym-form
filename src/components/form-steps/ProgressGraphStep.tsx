@@ -353,30 +353,36 @@ const ProgressGraphStep = ({ goalValue, currentBodyFat = 25 }: ProgressGraphStep
 
   return (
     <div className="text-center">
-      <h1 className="text-4xl sm:text-5xl font-bold mb-12">Вашето фитнес пътуване</h1>
+      <h1 className="text-4xl sm:text-5xl font-bold mb-6 bg-gradient-to-r from-orange to-primary bg-clip-text text-transparent">Вашият път към успеха</h1>
+      <p className="text-lg text-muted-foreground mb-6">Примерна визуализация на Вашия прогрес</p>
       
       <div className="max-w-4xl mx-auto">
         <div className="flex flex-col">
-          {/* Legend positioned at the top for better visibility */}
-          <div className="flex justify-center items-center gap-6 mb-4">
+          {/* Legend positioned at the top with improved styling */}
+          <div className="flex justify-center items-center gap-8 mb-6 p-3 bg-background/50 rounded-lg max-w-md mx-auto">
             <div className="flex items-center">
-              <div className="w-4 h-4 bg-[#FF6B35] rounded-sm mr-2"></div>
-              <span className="text-sm">Телесни мазнини %</span>
+              <div className="w-5 h-5 bg-[#FF6B35] rounded-md mr-2 shadow-sm"></div>
+              <span className="text-sm font-medium">Телесни мазнини %</span>
             </div>
             <div className="flex items-center">
-              <div className="w-4 h-4 bg-[#54D62C] rounded-sm mr-2"></div>
-              <span className="text-sm">Мускулна маса %</span>
+              <div className="w-5 h-5 bg-[#54D62C] rounded-md mr-2 shadow-sm"></div>
+              <span className="text-sm font-medium">Мускулна маса %</span>
             </div>
           </div>
           
           <div 
             ref={chartRef} 
-            className="w-full h-[450px] bg-card rounded-lg p-4 shadow-md mb-8 overflow-hidden"
+            className="w-full h-[450px] bg-card rounded-lg p-4 shadow-lg hover:shadow-xl transition-all duration-300 mb-8 overflow-hidden border border-border"
           ></div>
         </div>
         
-        <div className="text-center mt-4 text-orange font-medium text-xl">
-          Можете да постигнете значителен прогрес само за 2 месеца!
+        <div className="text-center mt-6 max-w-xl mx-auto p-4 bg-background/50 border border-orange/20 rounded-lg">
+          <p className="text-orange font-medium text-xl">
+            Можете да постигнете значителен прогрес само за 2 месеца!
+          </p>
+          <p className="text-muted-foreground text-sm mt-2">
+            *Тази графика е примерна и показва потенциалния прогрес при следване на програмата
+          </p>
         </div>
       </div>
     </div>

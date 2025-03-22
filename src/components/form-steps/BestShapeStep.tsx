@@ -58,7 +58,7 @@ const BestShapeStep = ({
       // Short delay to allow the user to see their selection
       const timer = setTimeout(() => {
         console.log('BestShapeStep: Auto-advancing to next step');
-        handleNext();
+        handleNext(true);
       }, 1200); // Slightly longer delay for better UX
       
       return () => {

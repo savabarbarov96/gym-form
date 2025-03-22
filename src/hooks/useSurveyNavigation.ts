@@ -21,12 +21,13 @@ export const useSurveyNavigation = (
     };
   }, [step]);
 
-  const handleNext = () => {
+  const handleNext = (isAutoNext = false) => {
     // Dismiss any existing toasts when attempting to navigate
     dismiss();
     
     // Validate the current step using our unified validation system
-    if (!validateStep(step, formData, toast)) {
+    // Only show errors for auto-next, not for manual clicks
+    if (!validateStep(step, formData, toast, isAutoNext)) {
       console.log(`Validation failed for step ${step}`);
       return;
     }

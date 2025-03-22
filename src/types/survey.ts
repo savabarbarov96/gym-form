@@ -62,7 +62,7 @@ export interface SurveyContextType {
   setAnimationDirection: React.Dispatch<React.SetStateAction<string>>;
   loadingProgress: number;
   setLoadingProgress: React.Dispatch<React.SetStateAction<number>>;
-  handleNext: () => void;
+  handleNext: (isAutoNext?: boolean) => void;
   handleBack: () => void;
   handleGetPlan: () => void;
   handleGetMealPlan: () => void;

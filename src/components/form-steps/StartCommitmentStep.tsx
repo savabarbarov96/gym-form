@@ -48,7 +48,7 @@ const StartCommitmentStep: React.FC<StartCommitmentStepProps> = ({
       // Short delay to allow the user to see their selection
       timerRef.current = setTimeout(() => {
         console.log('StartCommitmentStep: Auto-advancing to next step');
-        handleNext();
+        handleNext(true);
       }, 1200);
       
       return () => {
