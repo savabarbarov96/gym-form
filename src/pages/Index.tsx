@@ -5,7 +5,7 @@ import { SurveyProvider, useSurvey } from "@/contexts/SurveyContext";
 import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { MessageSquareQuote } from "lucide-react";
-import { preloadImages, getBackgroundPaths, detectBackgroundCount, FALLBACK_BACKGROUND } from "@/utils/imagePreloader";
+import { preloadImages, getBackgroundPaths, detectBackgroundCount, getSafeBackgroundPath } from "@/utils/imagePreloader";
 import LogoPlaceholder from "@/components/LogoPlaceholder";
 
 // Custom hook for background rotation
@@ -33,9 +33,20 @@ const useBackgroundRotation = (maxBackgrounds = 40, intervalMs = 10000) => {
         await preloadImages(paths);
         console.log('Background images preloaded successfully:', paths);
         
-        // Set initial random indexes
-        setCurrentBgIndex(Math.floor(Math.random() * count));
-        setNextBgIndex(Math.floor(Math.random() * count));
+        // Set initial random indexes (make sure they're different)
+        if (count > 1) {
+          let leftIndex = Math.floor(Math.random() * count);
+          let rightIndex;
+          do {
+            rightIndex = Math.floor(Math.random() * count);
+          } while (rightIndex === leftIndex);
+          
+          setCurrentBgIndex(leftIndex);
+          setNextBgIndex(rightIndex);
+        } else {
+          setCurrentBgIndex(0);
+          setNextBgIndex(0);
+        }
       } catch (error) {
         console.error("Failed during background detection or preloading:", error);
       } finally {
@@ -50,24 +61,31 @@ const useBackgroundRotation = (maxBackgrounds = 40, intervalMs = 10000) => {
     if (isLoading || backgroundPaths.length === 0) return; // Don't start rotation until images are loaded
     
     const rotateBackground = () => {
-      // Save the current index as the previous
-      setCurrentBgIndex(nextBgIndex);
-      
-      // Select a new random index different from the current one
-      let newIndex;
-      do {
-        newIndex = Math.floor(Math.random() * totalBackgrounds);
-      } while (newIndex === nextBgIndex && totalBackgrounds > 1);
-      
-      setNextBgIndex(newIndex);
-      console.log(`Rotating to random background index: ${newIndex} of ${totalBackgrounds} total`);
+      // Generate two new different random indexes
+      if (totalBackgrounds > 1) {
+        let newLeftIndex, newRightIndex;
+        
+        // Select a new left index different from both current ones
+        do {
+          newLeftIndex = Math.floor(Math.random() * totalBackgrounds);
+        } while ((newLeftIndex === currentBgIndex || newLeftIndex === nextBgIndex) && totalBackgrounds > 2);
+        
+        // Select a new right index different from the new left one and current ones if possible
+        do {
+          newRightIndex = Math.floor(Math.random() * totalBackgrounds);
+        } while (newRightIndex === newLeftIndex && totalBackgrounds > 1);
+        
+        setCurrentBgIndex(newLeftIndex);
+        setNextBgIndex(newRightIndex);
+        console.log(`Rotating to random backgrounds: left=${newLeftIndex}, right=${newRightIndex} of ${totalBackgrounds} total`);
+      }
     };
     
     const intervalId = setInterval(rotateBackground, intervalMs);
     
     // Clean up on unmount
     return () => clearInterval(intervalId);
-  }, [totalBackgrounds, intervalMs, isLoading, nextBgIndex, backgroundPaths]);
+  }, [totalBackgrounds, intervalMs, isLoading, currentBgIndex, nextBgIndex, backgroundPaths]);
   
   return { currentBgIndex, nextBgIndex, isLoading, totalBackgrounds, backgroundPaths };
 };
@@ -156,21 +174,60 @@ const Index = () => {
   // Use the background rotation hook with dynamic background detection
   const { currentBgIndex, nextBgIndex, isLoading, totalBackgrounds, backgroundPaths } = useBackgroundRotation(40, 10000);
   
+  // Track transitions for animation effects
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [opacity, setOpacity] = useState(isLoading ? 0 : 1);
+  
+  // Handle initial loading state
+  useEffect(() => {
+    if (!isLoading && backgroundPaths.length > 0) {
+      // Fade in the backgrounds when they're ready
+      setTimeout(() => setOpacity(1), 300);
+    }
+  }, [isLoading, backgroundPaths]);
+  
   // Log the current background image path whenever it changes
   useEffect(() => {
-    if (backgroundPaths.length > 0) {
-      const imagePath = backgroundPaths[currentBgIndex];
-      console.log(`Current background image: ${imagePath} (${currentBgIndex + 1} of ${totalBackgrounds})`);
+    if (backgroundPaths.length > 0 && !isLoading) {
+      const leftImagePath = backgroundPaths[currentBgIndex];
+      const rightImagePath = backgroundPaths[nextBgIndex];
+      console.log(`Current backgrounds: left=${leftImagePath}, right=${rightImagePath}`);
+      
+      // Sophisticated transition animation sequence
+      const fadeOut = async () => {
+        // Begin transition
+        setIsTransitioning(true);
+        
+        // First fade out slightly
+        setOpacity(0.6);
+        
+        // Wait for fade out
+        await new Promise(resolve => setTimeout(resolve, 700));
+        
+        // Fade back in
+        setOpacity(1);
+        
+        // Complete transition after fade in
+        setTimeout(() => setIsTransitioning(false), 700);
+      };
+      
+      fadeOut();
+      
+      // Clean up any pending timeouts
+      return () => {
+        setIsTransitioning(false);
+        setOpacity(1);
+      };
     }
-  }, [currentBgIndex, totalBackgrounds, backgroundPaths]);
+  }, [currentBgIndex, nextBgIndex, totalBackgrounds, backgroundPaths, isLoading]);
   
-  // Get current image path safely with fallback
+  // Get current image path safely with fallback to a known good background
   const getCurrentImagePath = (index: number) => {
-    if (backgroundPaths.length === 0) return FALLBACK_BACKGROUND;
+    if (backgroundPaths.length === 0) return getSafeBackgroundPath();
     
     const path = backgroundPaths[index % backgroundPaths.length];
     // Return fallback if path is undefined or empty
-    return path && path.trim() !== '' ? path : FALLBACK_BACKGROUND;
+    return path && path.trim() !== '' ? path : getSafeBackgroundPath();
   };
   
   return (
@@ -178,6 +235,16 @@ const Index = () => {
       <div className="min-h-screen bg-background text-foreground flex flex-col relative">
         {/* Background images with overlay */}
         <div className="absolute inset-0 w-full h-full overflow-hidden z-0">
+          {/* Loading overlay - visible only during initial load */}
+          {isLoading && (
+            <div className="absolute inset-0 bg-black z-30 flex items-center justify-center">
+              <div className="flex flex-col items-center">
+                <div className="w-16 h-16 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+                <p className="mt-4 text-white text-lg">Зареждане на фона...</p>
+              </div>
+            </div>
+          )}
+        
           {/* Background images container - responsive for mobile/desktop */}
           <div className="flex h-full w-full">
             {/* Left image - full width on mobile, half width on desktop */}
@@ -185,10 +252,12 @@ const Index = () => {
               <img 
                 src={getCurrentImagePath(currentBgIndex)}
                 alt="Background" 
-                className={`w-full h-full object-cover transition-transform transition-opacity ease-in-out duration-1000 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+                className="w-full h-full object-cover"
                 style={{ 
-                  transform: 'scale(1)',  // Start at normal scale
-                  filter: 'brightness(1.2)' // Make image lighter
+                  transform: isTransitioning ? 'scale(1.02)' : 'scale(1)',
+                  opacity: opacity,
+                  filter: isTransitioning ? 'brightness(1.1)' : 'brightness(1.2)',
+                  transition: 'transform 1.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 1.4s cubic-bezier(0.22, 1, 0.36, 1), filter 1.4s cubic-bezier(0.22, 1, 0.36, 1)'
                 }}
               />
             </div>
@@ -198,10 +267,12 @@ const Index = () => {
               <img 
                 src={getCurrentImagePath(nextBgIndex)}
                 alt="Background Right" 
-                className={`w-full h-full object-cover transition-transform transition-opacity ease-in-out duration-1000 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+                className="w-full h-full object-cover"
                 style={{ 
-                  transform: 'scale(1)', // Start at normal scale 
-                  filter: 'brightness(1.2) hue-rotate(15deg)' // Lighter + hue
+                  transform: isTransitioning ? 'scale(1.02)' : 'scale(1)', 
+                  opacity: opacity,
+                  filter: isTransitioning ? 'brightness(1.1) hue-rotate(10deg)' : 'brightness(1.2) hue-rotate(15deg)',
+                  transition: 'transform 1.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 1.4s cubic-bezier(0.22, 1, 0.36, 1), filter 1.4s cubic-bezier(0.22, 1, 0.36, 1)'
                 }}
               />
             </div>
@@ -214,11 +285,11 @@ const Index = () => {
           <motion.div 
             className="absolute inset-0 bg-gradient-to-tr from-orange-600/10 to-blue-900/20 mix-blend-overlay"
             animate={{ 
-              opacity: [0.4, 0.7, 0.4],
+              opacity: [0.4, 0.6, 0.4],
               backgroundPosition: ['0% 0%', '100% 100%', '0% 0%'] 
             }}
             transition={{ 
-              duration: 20, // Slower transition for smoother effect
+              duration: 25, // Even slower for smoother effect
               ease: "easeInOut", 
               repeat: Infinity,
               repeatType: "mirror" // Smoother repeat type
@@ -229,18 +300,18 @@ const Index = () => {
           <motion.div 
             className="absolute inset-0 overflow-hidden"
             initial={{ opacity: 0 }}
-            animate={{ opacity: 0.8 }} // Increased opacity
+            animate={{ opacity: 0.6 }} // Lower opacity for subtlety
             transition={{ duration: 2, ease: "easeOut" }}
           >
             <motion.div 
-              className="absolute -inset-full h-[500%] w-[500%] bg-gradient-radial from-white/5 to-transparent opacity-30"
+              className="absolute -inset-full h-[500%] w-[500%] bg-gradient-radial from-white/5 to-transparent opacity-20"
               animate={{ 
                 rotate: 360,
-                scale: [1, 1.05, 1]
+                scale: [1, 1.03, 1] // Reduced scale for subtler effect
               }}
               transition={{ 
-                rotate: { duration: 30, repeat: Infinity, ease: "linear" }, // Slower rotation
-                scale: { duration: 12, repeat: Infinity, ease: "easeInOut", repeatType: "mirror" } // Smoother scaling
+                rotate: { duration: 40, repeat: Infinity, ease: "linear" }, // Even slower rotation
+                scale: { duration: 15, repeat: Infinity, ease: "easeInOut", repeatType: "mirror" } // Smoother scaling
               }}
               style={{ transformOrigin: "60% 30%" }}
             ></motion.div>
