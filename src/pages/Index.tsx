@@ -175,29 +175,29 @@ const Index = () => {
       <div className="min-h-screen bg-background text-foreground flex flex-col relative">
         {/* Background images with overlay */}
         <div className="absolute inset-0 w-full h-full overflow-hidden z-0">
-          {/* Side-by-side portrait background images */}
+          {/* Background images container - responsive for mobile/desktop */}
           <div className="flex h-full w-full">
-            {/* Left image - with zoom out effect */}
-            <div className="w-1/2 h-full relative overflow-hidden">
+            {/* Left image - full width on mobile, half width on desktop */}
+            <div className="w-full md:w-1/2 h-full relative overflow-hidden">
               <img 
                 src={getCurrentImagePath(currentBgIndex)}
-                alt="Background Left" 
-                className={`w-full h-full object-cover transition-all duration-2500 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+                alt="Background" 
+                className={`w-full h-full object-cover transition-transform transition-opacity ease-in-out duration-1000 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
                 style={{ 
-                  transform: 'scale(0.8)', // Increased zoom out
+                  transform: 'scale(1)',  // Start at normal scale
                   filter: 'brightness(1.2)' // Make image lighter
                 }}
               />
             </div>
             
-            {/* Right image - using next random background */}
-            <div className="w-1/2 h-full relative overflow-hidden">
+            {/* Right image - hidden on mobile, visible on desktop */}
+            <div className="hidden md:block md:w-1/2 h-full relative overflow-hidden">
               <img 
                 src={getCurrentImagePath(nextBgIndex)}
                 alt="Background Right" 
-                className={`w-full h-full object-cover transition-all duration-2500 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+                className={`w-full h-full object-cover transition-transform transition-opacity ease-in-out duration-1000 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
                 style={{ 
-                  transform: 'scale(0.8)', // Increased zoom out
+                  transform: 'scale(1)', // Start at normal scale 
                   filter: 'brightness(1.2) hue-rotate(15deg)' // Lighter + hue
                 }}
               />
@@ -207,7 +207,7 @@ const Index = () => {
           {/* Lighter dark overlay with gradients - slightly lighter */}
           <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/50 to-slate-900/65 mix-blend-multiply z-[2]"></div>
           
-          {/* Animated gradient overlay */}
+          {/* Animated gradient overlay - smoother transition */}
           <motion.div 
             className="absolute inset-0 bg-gradient-to-tr from-orange-600/10 to-blue-900/20 mix-blend-overlay"
             animate={{ 
@@ -215,19 +215,19 @@ const Index = () => {
               backgroundPosition: ['0% 0%', '100% 100%', '0% 0%'] 
             }}
             transition={{ 
-              duration: 15, 
+              duration: 20, // Slower transition for smoother effect
               ease: "easeInOut", 
               repeat: Infinity,
-              repeatType: "reverse" 
+              repeatType: "mirror" // Smoother repeat type
             }}
           ></motion.div>
           
-          {/* Light beams effect */}
+          {/* Light beams effect - improved smoothness */}
           <motion.div 
             className="absolute inset-0 overflow-hidden"
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 2 }}
+            animate={{ opacity: 0.8 }} // Increased opacity
+            transition={{ duration: 2, ease: "easeOut" }}
           >
             <motion.div 
               className="absolute -inset-full h-[500%] w-[500%] bg-gradient-radial from-white/5 to-transparent opacity-30"
@@ -236,8 +236,8 @@ const Index = () => {
                 scale: [1, 1.05, 1]
               }}
               transition={{ 
-                rotate: { duration: 25, repeat: Infinity, ease: "linear" },
-                scale: { duration: 8, repeat: Infinity, ease: "easeInOut", repeatType: "reverse" }
+                rotate: { duration: 30, repeat: Infinity, ease: "linear" }, // Slower rotation
+                scale: { duration: 12, repeat: Infinity, ease: "easeInOut", repeatType: "mirror" } // Smoother scaling
               }}
               style={{ transformOrigin: "60% 30%" }}
             ></motion.div>

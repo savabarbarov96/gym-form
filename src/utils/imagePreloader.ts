@@ -4,7 +4,15 @@
  * @returns Promise that resolves when all images are loaded
  */
 export const preloadImages = (imagePaths: string[]): Promise<void[]> => {
-  const loadPromises = imagePaths.map(path => {
+  // Filter out the known failing images
+  const filteredPaths = imagePaths.filter(path => 
+    !['/backgrounds/background-4.jpg', 
+      '/backgrounds/background-17.jpg', 
+      '/backgrounds/background-20.jpg', 
+      '/backgrounds/background-21.jpg'].includes(path)
+  );
+  
+  const loadPromises = filteredPaths.map(path => {
     return new Promise<void>((resolve, reject) => {
       const img = new Image();
       img.onload = () => resolve();
