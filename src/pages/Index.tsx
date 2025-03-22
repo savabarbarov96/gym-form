@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import Logo from "@/components/Logo";
+import TestimonialSlider from "@/components/TestimonialSlider";
 import { FormState, LoadingState, ResultsState, SuccessState } from "@/components/app-states";
 import { SurveyProvider, useSurvey } from "@/contexts/SurveyContext";
 import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
+import { MessageSquareQuote } from "lucide-react";
 import { preloadImages, getBackgroundPaths, detectBackgroundCount } from "@/utils/imagePreloader";
+import LogoPlaceholder from "@/components/LogoPlaceholder";
 
 // Custom hook for background rotation
 const useBackgroundRotation = (maxBackgrounds = 40, intervalMs = 10000) => {
@@ -71,25 +73,29 @@ const useBackgroundRotation = (maxBackgrounds = 40, intervalMs = 10000) => {
 };
 
 const SurveyHeader = () => {
-  const { step } = useSurvey();
+  const [isTestimonialsOpen, setIsTestimonialsOpen] = useState(false);
+
   return (
-    <header className="p-4 flex justify-between items-center border-b border-border bg-background/70 backdrop-blur-md z-10 relative">
-      <Logo />
-      <div className="text-sm text-muted-foreground flex items-center">
-        <span className="mr-2">Стъпка: {step}</span>
-        <a
-          href={`/${step}`}
-          className="bg-muted px-2 py-1 rounded-md hover:bg-muted/80"
-          title="Копирай директен URL към тази стъпка"
-          onClick={(e) => {
-            e.preventDefault();
-            navigator.clipboard.writeText(`${window.location.origin}/${step}`);
-            alert('URL копиран в клипборда!');
-          }}
-        >
-          Копирай URL
-        </a>
+    <header className="py-3 px-4 sm:px-6 md:px-8 border-b border-border/50 bg-zinc-900 z-10 relative shadow-md flex justify-between items-center">
+      {/* Logo container */}
+      <div className="flex items-start">
+        <LogoPlaceholder className="h-14 w-auto" />
       </div>
+      
+      {/* Testimonials button */}
+      <button
+        onClick={() => setIsTestimonialsOpen(true)}
+        className="flex items-center bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-medium py-2 px-4 rounded-lg shadow transition-all duration-200 transform hover:scale-105"
+      >
+        <MessageSquareQuote size={20} className="mr-2" />
+        Мнения на клиенти
+      </button>
+      
+      <TestimonialSlider 
+        isOpen={isTestimonialsOpen} 
+        onClose={() => setIsTestimonialsOpen(false)}
+        autoScrollInterval={10000}
+      />
     </header>
   );
 };
