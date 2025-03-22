@@ -1,9 +1,74 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Logo from "@/components/Logo";
 import { FormState, LoadingState, ResultsState, SuccessState } from "@/components/app-states";
 import { SurveyProvider, useSurvey } from "@/contexts/SurveyContext";
 import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
+import { preloadImages, getBackgroundPaths, detectBackgroundCount } from "@/utils/imagePreloader";
+
+// Custom hook for background rotation
+const useBackgroundRotation = (maxBackgrounds = 40, intervalMs = 10000) => {
+  const [currentBgIndex, setCurrentBgIndex] = useState(0);
+  const [nextBgIndex, setNextBgIndex] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
+  const [totalBackgrounds, setTotalBackgrounds] = useState(5); // Default to 5 until detection completes
+  const [backgroundPaths, setBackgroundPaths] = useState<string[]>([]);
+  
+  // First, detect how many background images are available
+  useEffect(() => {
+    const detectBackgrounds = async () => {
+      setIsLoading(true);
+      try {
+        const result = await detectBackgroundCount(maxBackgrounds);
+        const { count, extensions } = result;
+        console.log(`Detected ${count} background images with various extensions`);
+        setTotalBackgrounds(count);
+        
+        // Now preload the detected images with their correct extensions
+        const paths = getBackgroundPaths(count, extensions);
+        setBackgroundPaths(paths);
+        
+        await preloadImages(paths);
+        console.log('Background images preloaded successfully:', paths);
+        
+        // Set initial random indexes
+        setCurrentBgIndex(Math.floor(Math.random() * count));
+        setNextBgIndex(Math.floor(Math.random() * count));
+      } catch (error) {
+        console.error("Failed during background detection or preloading:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    detectBackgrounds();
+  }, [maxBackgrounds]);
+  
+  useEffect(() => {
+    if (isLoading || backgroundPaths.length === 0) return; // Don't start rotation until images are loaded
+    
+    const rotateBackground = () => {
+      // Save the current index as the previous
+      setCurrentBgIndex(nextBgIndex);
+      
+      // Select a new random index different from the current one
+      let newIndex;
+      do {
+        newIndex = Math.floor(Math.random() * totalBackgrounds);
+      } while (newIndex === nextBgIndex && totalBackgrounds > 1);
+      
+      setNextBgIndex(newIndex);
+      console.log(`Rotating to random background index: ${newIndex} of ${totalBackgrounds} total`);
+    };
+    
+    const intervalId = setInterval(rotateBackground, intervalMs);
+    
+    // Clean up on unmount
+    return () => clearInterval(intervalId);
+  }, [totalBackgrounds, intervalMs, isLoading, nextBgIndex, backgroundPaths]);
+  
+  return { currentBgIndex, nextBgIndex, isLoading, totalBackgrounds, backgroundPaths };
+};
 
 const SurveyHeader = () => {
   const { step } = useSurvey();
@@ -82,20 +147,59 @@ const Index = () => {
   const { stepNumber } = useParams<{ stepNumber?: string }>();
   const initialStep = stepNumber ? parseInt(stepNumber, 10) : undefined;
   
+  // Use the background rotation hook with dynamic background detection
+  const { currentBgIndex, nextBgIndex, isLoading, totalBackgrounds, backgroundPaths } = useBackgroundRotation(40, 10000);
+  
+  // Log the current background image path whenever it changes
+  useEffect(() => {
+    if (backgroundPaths.length > 0) {
+      const imagePath = backgroundPaths[currentBgIndex];
+      console.log(`Current background image: ${imagePath} (${currentBgIndex + 1} of ${totalBackgrounds})`);
+    }
+  }, [currentBgIndex, totalBackgrounds, backgroundPaths]);
+  
+  // Get current image path safely
+  const getCurrentImagePath = (index: number) => {
+    if (backgroundPaths.length === 0) return '';
+    return backgroundPaths[index % backgroundPaths.length];
+  };
+  
   return (
     <SurveyProvider initialStep={initialStep}>
       <div className="min-h-screen bg-background text-foreground flex flex-col relative">
-        {/* Background bodybuilder image with overlay */}
+        {/* Background images with overlay */}
         <div className="absolute inset-0 w-full h-full overflow-hidden z-0">
-          {/* Static bodybuilder image */}
-          <img 
-            src="https://images.unsplash.com/photo-1571019613914-85f342c6a11e?q=80&w=1974&auto=format&fit=crop" 
-            alt="Bodybuilder" 
-            className="w-full h-full object-cover object-center"
-          />
+          {/* Side-by-side portrait background images */}
+          <div className="flex h-full w-full">
+            {/* Left image - with zoom out effect */}
+            <div className="w-1/2 h-full relative overflow-hidden">
+              <img 
+                src={getCurrentImagePath(currentBgIndex)}
+                alt="Background Left" 
+                className={`w-full h-full object-cover transition-all duration-2500 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+                style={{ 
+                  transform: 'scale(0.8)', // Increased zoom out
+                  filter: 'brightness(1.2)' // Make image lighter
+                }}
+              />
+            </div>
+            
+            {/* Right image - using next random background */}
+            <div className="w-1/2 h-full relative overflow-hidden">
+              <img 
+                src={getCurrentImagePath(nextBgIndex)}
+                alt="Background Right" 
+                className={`w-full h-full object-cover transition-all duration-2500 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+                style={{ 
+                  transform: 'scale(0.8)', // Increased zoom out
+                  filter: 'brightness(1.2) hue-rotate(15deg)' // Lighter + hue
+                }}
+              />
+            </div>
+          </div>
           
-          {/* Dark overlay with gradients */}
-          <div className="absolute inset-0 bg-gradient-to-br from-black/85 via-black/75 to-slate-900/90 mix-blend-multiply"></div>
+          {/* Lighter dark overlay with gradients - slightly lighter */}
+          <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/50 to-slate-900/65 mix-blend-multiply z-[2]"></div>
           
           {/* Animated gradient overlay */}
           <motion.div 
