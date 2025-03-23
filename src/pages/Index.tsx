@@ -27,7 +27,7 @@ const useBackgroundRotation = (maxBackgrounds = 40, intervalMs = 10000) => {
         setTotalBackgrounds(count);
         
         // Now preload the detected images with their correct extensions
-        const paths = getBackgroundPaths(count, extensions);
+        const paths = getBackgroundPaths();
         setBackgroundPaths(paths);
         
         await preloadImages(paths);
@@ -35,7 +35,7 @@ const useBackgroundRotation = (maxBackgrounds = 40, intervalMs = 10000) => {
         
         // Set initial random indexes (make sure they're different)
         if (count > 1) {
-          let leftIndex = Math.floor(Math.random() * count);
+          const leftIndex = Math.floor(Math.random() * count);
           let rightIndex;
           do {
             rightIndex = Math.floor(Math.random() * count);
