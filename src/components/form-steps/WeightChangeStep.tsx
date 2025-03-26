@@ -21,38 +21,17 @@ const WeightChangeStep = ({
     { 
       label: "Бързо качвам тегло, но трудно отслабвам", 
       id: "gain-fast-lose-slow",
-      description: "Вашият метаболизъм задържа калории ефективно, което може да е индикация за ендоморфен тип тяло",
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-amber-500">
-          <circle cx="12" cy="12" r="10"></circle>
-          <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
-          <line x1="9" y1="9" x2="9.01" y2="9"></line>
-          <line x1="15" y1="9" x2="15.01" y2="9"></line>
-        </svg>
-      )
+      description: "Вашият метаболизъм задържа калории ефективно, което може да е индикация за ендоморфен тип тяло"
     },
     { 
       label: "Теглото ми се променя сравнително лесно", 
       id: "gain-lose-easily",
-      description: "Вашият метаболизъм е балансиран - имате характеристики на мезоморфен тип тяло",
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-500">
-          <path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Z" />
-          <path d="M8 9h8" />
-          <path d="M8 15h8" />
-          <path d="M12 6v12" />
-        </svg>
-      )
+      description: "Вашият метаболизъм е балансиран - имате характеристики на мезоморфен тип тяло"
     },
     { 
       label: "Трудно качвам тегло или мускулна маса", 
       id: "struggle-gain",
-      description: "Висок метаболизъм - типично за ектоморфен тип тяло, изразходващо калории бързо",
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-indigo-500">
-          <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-        </svg>
-      )
+      description: "Висок метаболизъм - типично за ектоморфен тип тяло, изразходващо калории бързо"
     },
   ];
   
@@ -137,13 +116,6 @@ const WeightChangeStep = ({
                 }`}
                 onClick={() => handleSelectOption(option.id)}
               >
-                <div className={`flex items-center justify-center w-14 h-14 rounded-full shadow-sm mr-5 ${
-                  selected === option.id 
-                    ? 'bg-white' 
-                    : 'bg-gray-50'
-                }`}>
-                  {option.icon}
-                </div>
                 <div className="flex-1">
                   <label htmlFor={option.id} className="text-xl font-medium cursor-pointer block text-foreground">{option.label}</label>
                   <p className="text-muted-foreground text-sm mt-1">{option.description}</p>
