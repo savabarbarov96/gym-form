@@ -130,11 +130,11 @@ export function GoalStep({ value, currentBodyFat, onChange, onCurrentBodyFatChan
                 key={option.range}
                 onClick={() => handleCurrentSelection(option)}
                 className={cn(
-                  "flex flex-col items-center justify-center p-4 rounded-lg border-2 transition-all",
-                  "hover:border-blue-500 hover:bg-blue-50",
+                  "flex flex-col items-center justify-center p-4 rounded-lg border-2 transition-all backdrop-blur-sm",
+                  "hover:border-blue-500 hover:bg-blue-50/30",
                   selectedCurrent?.range === option.range
-                    ? "border-blue-500 bg-blue-50"
-                    : "border-gray-200 bg-gray-50/80"
+                    ? "border-blue-500 bg-blue-50/30"
+                    : "border-gray-200 bg-transparent shadow-lg"
                 )}
               >
                 <div className="relative w-full aspect-square mb-2 overflow-hidden rounded-lg">
@@ -151,8 +151,8 @@ export function GoalStep({ value, currentBodyFat, onChange, onCurrentBodyFatChan
                     {option.icon}
                   </div>
                 </div>
-                <span className="font-medium text-gray-900">{option.percentage}</span>
-                <span className="text-sm text-gray-600 text-center mt-1">
+                <span className="font-medium text-white">{option.percentage}</span>
+                <span className="text-sm text-white text-center mt-1">
                   {option.description}
                 </span>
               </button>
@@ -185,6 +185,12 @@ export function GoalStep({ value, currentBodyFat, onChange, onCurrentBodyFatChan
               </button>
             </div>
 
+            <div className="mb-6 text-center">
+              <p className="text-lg font-medium text-white">
+                Сега изберете вашето желано ниво на телесни мазнини
+              </p>
+            </div>
+
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {availableTargets.map((option) => (
                 option.numericPercentage < (selectedCurrent?.numericPercentage || 100) && (
@@ -192,11 +198,11 @@ export function GoalStep({ value, currentBodyFat, onChange, onCurrentBodyFatChan
                     key={option.range}
                     onClick={() => handleTargetSelection(option)}
                     className={cn(
-                      "flex flex-col items-center justify-center p-4 rounded-lg border-2 transition-all",
-                      "hover:border-blue-500 hover:bg-blue-50",
+                      "flex flex-col items-center justify-center p-4 rounded-lg border-2 transition-all backdrop-blur-sm",
+                      "hover:border-blue-500 hover:bg-blue-50/30",
                       selectedTarget?.range === option.range
-                        ? "border-blue-500 bg-blue-50"
-                        : "border-gray-200 bg-gray-100"
+                        ? "border-blue-500 bg-blue-50/30"
+                        : "border-gray-200 bg-transparent shadow-lg"
                     )}
                   >
                     <div className="relative w-full aspect-square mb-2 overflow-hidden rounded-lg">
@@ -213,8 +219,8 @@ export function GoalStep({ value, currentBodyFat, onChange, onCurrentBodyFatChan
                         {option.icon}
                       </div>
                     </div>
-                    <span className="font-medium text-gray-900">{option.percentage}</span>
-                    <span className="text-sm text-gray-600 text-center mt-1">
+                    <span className="font-medium text-white">{option.percentage}</span>
+                    <span className="text-sm text-white text-center mt-1">
                       {option.description}
                     </span>
                   </button>
@@ -227,33 +233,33 @@ export function GoalStep({ value, currentBodyFat, onChange, onCurrentBodyFatChan
 
       {/* Goal Summary */}
       {step === 'target' && selectedCurrent && selectedTarget && (
-        <div className="mt-8 p-6 bg-white rounded-xl border-2 border-gray-200">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">
+        <div className="mt-8 p-6 rounded-xl border-2 border-gray-200 backdrop-blur-sm bg-transparent shadow-lg">
+          <h3 className="text-xl font-bold text-white mb-4">
             Детайли за Трансформацията
           </h3>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Текущо ниво</p>
-                <p className="font-medium text-gray-900">{selectedCurrent.percentage}</p>
-                <p className="text-sm text-gray-600">{selectedCurrent.description}</p>
+                <p className="text-sm text-white/80">Текущо ниво</p>
+                <p className="font-medium text-white">{selectedCurrent.percentage}</p>
+                <p className="text-sm text-white/80">{selectedCurrent.description}</p>
               </div>
               <span className="text-4xl">{selectedCurrent.icon}</span>
             </div>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Целево ниво</p>
-                <p className="font-medium text-gray-900">{selectedTarget.percentage}</p>
-                <p className="text-sm text-gray-600">{selectedTarget.description}</p>
+                <p className="text-sm text-white/80">Целево ниво</p>
+                <p className="font-medium text-white">{selectedTarget.percentage}</p>
+                <p className="text-sm text-white/80">{selectedTarget.description}</p>
               </div>
               <span className="text-4xl">{selectedTarget.icon}</span>
             </div>
-            <div className="pt-4 border-t border-gray-200">
+            <div className="pt-4 border-t border-white/20">
               <div className="text-center">
-                <p className="text-3xl font-bold text-blue-600">
+                <p className="text-3xl font-bold text-blue-400">
                   {(selectedCurrent.numericPercentage - selectedTarget.numericPercentage).toFixed(1)}%
                 </p>
-                <p className="text-sm text-gray-600">намаляване</p>
+                <p className="text-sm text-white/80">намаляване</p>
               </div>
             </div>
           </div>
