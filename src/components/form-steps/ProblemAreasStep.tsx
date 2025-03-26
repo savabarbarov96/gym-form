@@ -17,7 +17,8 @@ const ProblemAreasStep = ({ selectedAreas, onSelectArea, onStepComplete }: Probl
     { label: "Гръб", id: "back" },
     { label: "Корем", id: "belly" },
     { label: "Седалище", id: "glutes" },
-    { label: "Крака", id: "legs" },
+    { label: "Предно Бедро", id: "frontThigh" },
+    { label: "Задно Бедро", id: "backThigh" },
     { label: "Прасци", id: "calves" },
     { label: "Предмишници", id: "forearms" },
   ];
@@ -30,6 +31,19 @@ const ProblemAreasStep = ({ selectedAreas, onSelectArea, onStepComplete }: Probl
     
     if (selectedAreas.includes("none")) {
       onSelectArea([id]);
+      return;
+    }
+
+    if ((id === "frontThigh" || id === "backThigh")) {
+      const otherThighId = id === "frontThigh" ? "backThigh" : "frontThigh";
+      const isSelected = selectedAreas.includes(id);
+      
+      if (isSelected) {
+        onSelectArea(selectedAreas.filter(area => area !== id && area !== otherThighId));
+      } else {
+        const newAreas = [...selectedAreas.filter(area => area !== id && area !== otherThighId), id, otherThighId];
+        onSelectArea(newAreas);
+      }
       return;
     }
 
