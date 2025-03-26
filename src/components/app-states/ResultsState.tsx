@@ -11,7 +11,8 @@ import {
   Mail, 
   FileText,
   Sparkles,
-  LucideHeartPulse
+  LucideHeartPulse,
+  Gift
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -161,11 +162,11 @@ const ResultsState: React.FC<ResultsStateProps> = ({
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
-            className="p-8 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950 rounded-xl shadow-xl mb-8 max-w-2xl mx-auto border border-gray-200 dark:border-gray-800"
+            className="p-8 bg-transparent rounded-xl shadow-xl mb-8 max-w-3xl mx-auto border border-gray-200 dark:border-gray-800"
           >
             <h2 className="text-2xl font-bold mb-8 text-center bg-gradient-to-r from-orange to-orange-600 bg-clip-text text-transparent">Изберете своя план</h2>
             
-            <div className="text-center mb-6 text-sm text-muted-foreground">
+            <div className="text-center mb-6 text-sm text-white dark:text-white">
               <p>След избор на план, ще изпратим вашата поръчка и ще създадем персонализирана програма, 
               която ще бъде изпратена на вашия имейл адрес.</p>
             </div>
@@ -173,7 +174,7 @@ const ResultsState: React.FC<ResultsStateProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Meal Plan Option */}
               <motion.div 
-                className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border-2 border-orange/20 hover:border-orange transition-all overflow-hidden relative"
+                className="bg-white/90 dark:bg-gray-800 p-6 rounded-xl shadow-lg border-2 border-orange/20 hover:border-orange transition-all overflow-hidden relative"
                 whileHover={{ y: -5, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
               >
                 <div className="absolute top-0 right-0 w-24 h-24 bg-orange/10 rounded-full -mr-8 -mt-8"></div>
@@ -185,7 +186,7 @@ const ResultsState: React.FC<ResultsStateProps> = ({
                   <div className="text-3xl font-bold text-orange mt-3 mb-1">60 лева</div>
                 </div>
                 
-                <ul className="space-y-3 mb-5 text-sm text-gray-700 dark:text-gray-300">
+                <ul className="space-y-3 mb-5 text-sm text-gray-700 dark:text-white">
                   <li className="flex items-start gap-2">
                     <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
                     <span>Седмично меню</span>
@@ -210,7 +211,7 @@ const ResultsState: React.FC<ResultsStateProps> = ({
               
               {/* Combined Plan Option - Highlighted as best value */}
               <motion.div 
-                className="bg-white dark:bg-gray-800 p-7 rounded-xl shadow-xl border-2 border-orange relative transform scale-105 md:scale-110 z-10 overflow-visible mt-6 md:mt-8"
+                className="bg-white/90 dark:bg-gray-800 p-7 rounded-xl shadow-xl border-2 border-orange relative transform scale-105 md:scale-110 z-10 overflow-visible mt-6 md:mt-8"
                 whileHover={{ y: -5, boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)" }}
               >
                 <div className="absolute -top-14 -right-14 w-28 h-28 bg-orange/20 rounded-full transform rotate-12"></div>
@@ -240,7 +241,7 @@ const ResultsState: React.FC<ResultsStateProps> = ({
                   </span>
                 </div>
                 
-                <ul className="space-y-3 mb-6 text-sm text-gray-700 dark:text-gray-300">
+                <ul className="space-y-3 mb-6 text-sm text-gray-700 dark:text-white">
                   <li className="flex items-start gap-2">
                     <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
                     <span>Пълен хранителен режим</span>
@@ -252,6 +253,14 @@ const ResultsState: React.FC<ResultsStateProps> = ({
                   <li className="flex items-start gap-2">
                     <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
                     <span>Интегрирана програма</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <span className="font-medium">Максимално бърз резултат</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Gift className="w-5 h-5 text-orange flex-shrink-0 mt-0.5" />
+                    <span className="font-medium text-orange">Подарък: Брошура с рецепти</span>
                   </li>
                 </ul>
                 
@@ -266,7 +275,7 @@ const ResultsState: React.FC<ResultsStateProps> = ({
               
               {/* Workout Plan Option */}
               <motion.div 
-                className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border-2 border-orange/20 hover:border-orange transition-all overflow-hidden relative"
+                className="bg-white/90 dark:bg-gray-800 p-6 rounded-xl shadow-lg border-2 border-orange/20 hover:border-orange transition-all overflow-hidden relative"
                 whileHover={{ y: -5, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
               >
                 <div className="absolute top-0 right-0 w-24 h-24 bg-orange/10 rounded-full -mr-8 -mt-8"></div>
@@ -278,7 +287,7 @@ const ResultsState: React.FC<ResultsStateProps> = ({
                   <div className="text-3xl font-bold text-orange mt-3 mb-1">60 лева</div>
                 </div>
                 
-                <ul className="space-y-3 mb-5 text-sm text-gray-700 dark:text-gray-300">
+                <ul className="space-y-3 mb-5 text-sm text-gray-700 dark:text-white">
                   <li className="flex items-start gap-2">
                     <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
                     <span>Персонализирани тренировки</span>
@@ -302,7 +311,7 @@ const ResultsState: React.FC<ResultsStateProps> = ({
               </motion.div>
             </div>
             
-            <p className="text-muted-foreground text-center mt-8 text-sm">
+            <p className="text-white dark:text-white text-center mt-8 text-sm">
               Цените са за еднократно генериране на персонализиран план.
             </p>
           </motion.div>
@@ -328,11 +337,11 @@ const ResultsState: React.FC<ResultsStateProps> = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}
-          className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 p-4 rounded-lg mb-8 flex items-start gap-3 max-w-2xl mx-auto"
+          className="bg-white dark:bg-gray-800 border border-amber-200 dark:border-amber-800 p-5 rounded-lg mb-8 flex items-start gap-3 max-w-3xl mx-auto shadow-md"
         >
           <LucideHeartPulse className="text-amber-600 dark:text-amber-500 h-6 w-6 flex-shrink-0 mt-1" />
-          <div className="text-sm text-amber-800 dark:text-amber-300 text-left">
-            <p className="font-semibold mb-1">Здравен съвет:</p>
+          <div className="text-sm text-gray-800 dark:text-gray-200 text-left">
+            <p className="font-semibold mb-1 text-amber-800 dark:text-amber-400">Здравен съвет:</p>
             <p>Препоръчваме Ви да се консултирате с Вашия лекар преди да започнете каквато и да е тренировъчна програма, особено ако имате здравословни проблеми или дълъг период на неактивност.</p>
           </div>
         </motion.div>

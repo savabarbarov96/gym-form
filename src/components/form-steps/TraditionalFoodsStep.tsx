@@ -8,7 +8,8 @@ import {
   Plus,
   ChevronRight,
   Tag,
-  AlertCircle
+  AlertCircle,
+  ChevronDown
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
@@ -35,6 +36,7 @@ const TraditionalFoodsStep = ({
   const [category, setCategory] = useState<string | null>(null);
   const [customFoods, setCustomFoods] = useState<string[]>(customFood ? [customFood] : []);
   const [notification, setNotification] = useState<{message: string, visible: boolean}>({message: "", visible: false});
+  const [displayLimit, setDisplayLimit] = useState(12); // Initial number of items to display
 
   // Log props for debugging
   useEffect(() => {
@@ -750,6 +752,27 @@ const TraditionalFoodsStep = ({
     return filteredItems;
   };
 
+  // Get items to display with limit
+  const getDisplayedItems = () => {
+    const filteredItems = getFilteredItems();
+    return filteredItems.slice(0, displayLimit);
+  };
+
+  // Check if there are more items to load
+  const hasMoreItems = () => {
+    return getFilteredItems().length > displayLimit;
+  };
+
+  // Load more items
+  const loadMoreItems = () => {
+    setDisplayLimit(prev => prev + 12); // Load 12 more items
+  };
+
+  // Reset display limit when category or search changes
+  useEffect(() => {
+    setDisplayLimit(12);
+  }, [category, searchTerm]);
+
   const toggleFood = (id: string) => {
     console.log("Toggle food:", id, "Current selectedFoods:", selectedFoods);
     if (selectedFoods.includes(id)) {
@@ -962,8 +985,8 @@ const TraditionalFoodsStep = ({
       </motion.div>
       
       {/* Food items grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-8">
-        {getFilteredItems().map((item, index) => {
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-4">
+        {getDisplayedItems().map((item, index) => {
           const isSelected = selectedFoods.includes(item.id);
           
           return (
@@ -998,6 +1021,25 @@ const TraditionalFoodsStep = ({
           );
         })}
       </div>
+      
+      {/* Load more button */}
+      {hasMoreItems() && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="flex justify-center mb-8"
+        >
+          <Button 
+            type="button" 
+            variant="outline" 
+            onClick={loadMoreItems}
+            className="gap-2"
+          >
+            <ChevronDown className="h-4 w-4" />
+            Покажи още ({getFilteredItems().length - displayLimit})
+          </Button>
+        </motion.div>
+      )}
       
       {/* Custom food item input */}
       {!showCustomInput ? (
