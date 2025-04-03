@@ -18,14 +18,14 @@ const HormoneGraphStep: React.FC<HormoneGraphStepProps> = ({ onNext, gender }) =
     
     // Data for the chart - now showing happiness and stress levels
     const data = [
-      { week: 'Седмица 1', happiness: 50, stress: 70 },
-      { week: 'Седмица 2', happiness: 55, stress: 65 },
-      { week: 'Седмица 3', happiness: 60, stress: 60 },
-      { week: 'Седмица 4', happiness: 65, stress: 55 },
-      { week: 'Седмица 5', happiness: 70, stress: 50 },
-      { week: 'Седмица 6', happiness: 75, stress: 45 },
-      { week: 'Седмица 7', happiness: 80, stress: 40 },
-      { week: 'Седмица 8', happiness: 85, stress: 35 },
+      { week: 'Седмица 1', happiness: 40, stress: 85 },
+      { week: 'Седмица 2', happiness: 50, stress: 65 },
+      { week: 'Седмица 3', happiness: 70, stress: 30 },
+      { week: 'Седмица 4', happiness: 75, stress: 25 },
+      { week: 'Седмица 5', happiness: 80, stress: 20 },
+      { week: 'Седмица 6', happiness: 90, stress: 15 },
+      { week: 'Седмица 7', happiness: 95, stress: 7 },
+      { week: 'Седмица 8', happiness: 100, stress: 0 },
     ];
     
     // Set up dimensions

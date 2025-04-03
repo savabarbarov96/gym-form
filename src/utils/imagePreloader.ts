@@ -1,10 +1,71 @@
 /**
+ * Default safe background numbers to use as fallbacks
+ * These are known to exist in the backgrounds folder
+ */
+export const SAFE_BACKGROUND_NUMBERS = [1, 2, 3, 5, 7, 9, 18, 22, 23, 24, 25, 26, 28, 29];
+
+/**
+ * Map of background numbers to their exact file extensions
+ * Based on the actual files in the backgrounds folder
+ */
+export const BACKGROUND_FILE_MAP: Record<number, string> = {
+  1: '-min.jpg',
+  2: '-min.jpg',
+  3: '-min.jpg',
+  5: '-min.jpg',
+  7: '-min.JPG',
+  9: '-min.JPG',
+  10: '-min.JPG',
+  11: '-min.JPG',
+  12: '-min.JPG',
+  13: '-min.JPG',
+  14: '-min.JPG',
+  15: '-min.JPG',
+  16: '-min.JPG',
+  18: '-min.JPG',
+  19: '-min.JPG',
+  22: '.jpeg',
+  23: '.jpeg',
+  24: '.jpeg',
+  25: '.jpeg',
+  26: '.jpeg',
+  28: '.jpeg',
+  29: '.jpeg'
+};
+
+/**
+ * Get a safe fallback background path
+ * @returns A background image path known to exist
+ */
+export const getSafeBackgroundPath = (): string => {
+  // Pick a random background from the safe list
+  const randomIndex = Math.floor(Math.random() * SAFE_BACKGROUND_NUMBERS.length);
+  const safeNumber = SAFE_BACKGROUND_NUMBERS[randomIndex];
+  
+  // Get the correct extension from the mapping
+  const extension = BACKGROUND_FILE_MAP[safeNumber] || '-min.jpg';
+  
+  return `/backgrounds/background-${safeNumber}${extension}`;
+};
+
+/**
  * Utility to preload images
  * @param imagePaths Array of image paths to preload
  * @returns Promise that resolves when all images are loaded
  */
 export const preloadImages = (imagePaths: string[]): Promise<void[]> => {
-  const loadPromises = imagePaths.map(path => {
+  // Filter out any images that aren't in our safe list
+  const filteredPaths = imagePaths.filter(path => {
+    const match = path.match(/background-(\d+)/);
+    if (!match) return false;
+    
+    const number = parseInt(match[1], 10);
+    return SAFE_BACKGROUND_NUMBERS.includes(number);
+  });
+  
+  // No need to add a fallback since we'll use getSafeBackgroundPath() when needed
+  
+  const loadPromises = filteredPaths.map(path => {
     return new Promise<void>((resolve, reject) => {
       const img = new Image();
       img.onload = () => resolve();
@@ -20,88 +81,69 @@ export const preloadImages = (imagePaths: string[]): Promise<void[]> => {
 };
 
 /**
- * List of possible extensions to try for each background
- */
-const POSSIBLE_EXTENSIONS = ['.jpg', '.JPG', '.jpeg', '.JPEG'];
-
-/**
- * Generate background image paths with multiple possible extensions
- * @param count Number of backgrounds
- * @returns Array of arrays containing possible paths for each background
- */
-export const getAllPossiblePaths = (count: number): string[][] => {
-  return Array.from({ length: count }, (_, i) => {
-    const basePathWithoutExtension = `/backgrounds/background-${i + 1}`;
-    return POSSIBLE_EXTENSIONS.map(ext => `${basePathWithoutExtension}${ext}`);
-  });
-};
-
-/**
- * Generate background image paths with first found extension
- * @param count Number of backgrounds
- * @param foundExtensions Array of found extensions for each background
+ * Generate correct background image paths based on our file mapping
+ * @param count Maximum number of backgrounds to include
  * @returns Array of background image paths
  */
-export const getBackgroundPaths = (count: number, foundExtensions: string[]): string[] => {
-  return Array.from({ length: count }, (_, i) => {
-    const ext = foundExtensions[i] || '.jpg'; // Default to .jpg if no extension found
-    return `/backgrounds/background-${i + 1}${ext}`;
+export const getBackgroundPaths = (): string[] => {
+  return SAFE_BACKGROUND_NUMBERS.map(num => {
+    const extension = BACKGROUND_FILE_MAP[num] || '-min.jpg';
+    return `/backgrounds/background-${num}${extension}`;
   });
 };
 
 /**
- * Dynamically detect available background images
- * @param maxImagesToCheck Maximum number of images to check for
- * @returns Promise that resolves with the object containing count and found extensions
+ * Dynamically detect available background images and their correct extensions
+ * @returns Promise that resolves with the object containing count and paths
  */
-export const detectBackgroundCount = async (maxImagesToCheck: number = 40): Promise<{count: number, extensions: string[]}> => {
+export const detectBackgroundImages = async (): Promise<{count: number, paths: string[]}> => {
+  const paths = getBackgroundPaths();
   let availableCount = 0;
-  const foundExtensions: string[] = Array(maxImagesToCheck).fill('');
   
-  // Get all possible path combinations
-  const allPossiblePaths = getAllPossiblePaths(maxImagesToCheck);
-  
-  // For each background index, try all possible extensions
-  const checkPromises = allPossiblePaths.map((pathOptions, idx) => {
+  // Check each path to confirm it's loadable
+  const checkPromises = paths.map(path => {
     return new Promise<boolean>(resolve => {
-      // Try each extension one by one
-      const tryNextExtension = (extIndex: number) => {
-        if (extIndex >= pathOptions.length) {
-          // No valid extension found for this background
-          resolve(false);
-          return;
-        }
-        
-        const path = pathOptions[extIndex];
-        const img = new Image();
-        
-        img.onload = () => {
-          availableCount++;
-          foundExtensions[idx] = POSSIBLE_EXTENSIONS[extIndex];
-          resolve(true);
-        };
-        
-        img.onerror = () => {
-          // Try the next extension
-          tryNextExtension(extIndex + 1);
-        };
-        
-        img.src = path;
+      const img = new Image();
+      
+      img.onload = () => {
+        availableCount++;
+        resolve(true);
       };
       
-      // Start trying with the first extension
-      tryNextExtension(0);
+      img.onerror = () => {
+        console.warn(`Failed to load image: ${path}`);
+        resolve(false);
+      };
+      
+      img.src = path;
     });
   });
   
   await Promise.all(checkPromises);
   
-  // Clean up the extensions array to match the actual count
-  const finalExtensions = foundExtensions.slice(0, Math.max(availableCount, 1));
+  console.log(`Detected ${availableCount} confirmed background images`);
   
   // Ensure we return at least 1 if no images are found
   return {
     count: Math.max(availableCount, 1),
-    extensions: finalExtensions
+    paths: paths.slice(0, Math.max(availableCount, 1))
+  };
+};
+
+/**
+ * BACKWARD COMPATIBILITY function for detectBackgroundCount
+ * @param maxImagesToCheck Maximum number of images to check for
+ * @returns Promise that resolves with count and extensions to maintain old interface
+ */
+export const detectBackgroundCount = async (maxImagesToCheck: number = 40): Promise<{count: number, extensions: string[]}> => {
+  // Use the new function but convert the result format
+  const result = await detectBackgroundImages();
+  
+  // Create a simplified extensions array for backward compatibility
+  const extensions = SAFE_BACKGROUND_NUMBERS.map(num => BACKGROUND_FILE_MAP[num] || '-min.jpg');
+  
+  return {
+    count: result.count,
+    extensions: extensions
   };
 }; 

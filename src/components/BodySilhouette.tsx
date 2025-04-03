@@ -10,6 +10,17 @@ export const BodySilhouette: React.FC<BodySilhouetteProps> = ({
   selectedAreas, 
   onAreaClick 
 }) => {
+  // Helper function to handle synchronized thigh selection
+  const handleThighClick = (clickedThigh: string) => {
+    const otherThigh = clickedThigh === "frontThigh" ? "backThigh" : "frontThigh";
+    // Just toggle the clicked thigh and let the parent component handle the synchronization
+    onAreaClick(clickedThigh);
+    // If the parent doesn't handle synchronization, we'll do it here too
+    if (!selectedAreas.includes(clickedThigh) && !selectedAreas.includes(otherThigh)) {
+      onAreaClick(otherThigh);
+    }
+  };
+
   return (
     <div className="relative w-64 h-[450px]">
       <svg viewBox="0 0 240 450" className="w-full h-full">
@@ -47,20 +58,30 @@ export const BodySilhouette: React.FC<BodySilhouetteProps> = ({
         <path 
           d="M80,150 Q120,170 160,150 L160,230 Q120,250 80,230 Z" 
           className={cn(
-            "cursor-pointer transition-colors hover:fill-orange/50 stroke-muted-foreground stroke-[1.5]",
+            "cursor-pointer transition-colors hover:fill-orange/50 stroke-muted-foreground stroke-[1.5] z-20",
             selectedAreas.includes("belly") ? "fill-orange/60 filter-glow" : "fill-muted-foreground/20"
           )}
-          onClick={() => onAreaClick("belly")}
+          style={{ pointerEvents: "auto" }}
+          onClick={(e) => {
+            e.stopPropagation();
+            onAreaClick("belly");
+          }}
         />
         
         {/* Back (behind chest and belly) */}
         <path 
           d="M80,90 L80,230 Q120,250 160,230 L160,90 Q120,70 80,90 Z" 
           className={cn(
-            "cursor-pointer transition-colors hover:fill-orange/50 stroke-muted-foreground stroke-[1.5] opacity-0",
+            "cursor-pointer transition-colors hover:fill-orange/50 stroke-muted-foreground stroke-[1.5] z-10",
             selectedAreas.includes("back") ? "fill-orange/60 filter-glow opacity-60" : "fill-muted-foreground/20 opacity-0"
           )}
-          onClick={() => onAreaClick("back")}
+          style={{ 
+            pointerEvents: selectedAreas.includes("back") ? "auto" : "none"
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            onAreaClick("back");
+          }}
         />
         
         {/* Glutes */}
@@ -109,22 +130,43 @@ export const BodySilhouette: React.FC<BodySilhouetteProps> = ({
           onClick={() => onAreaClick("forearms")}
         />
         
-        {/* Legs (both) */}
+        {/* Front Thigh (left leg) */}
         <path 
           d="M80,270 Q90,280 100,350 L120,350 Q110,280 120,270 Z" 
           className={cn(
             "cursor-pointer transition-colors hover:fill-orange/50 stroke-muted-foreground stroke-[1.5]",
-            selectedAreas.includes("legs") ? "fill-orange/60 filter-glow" : "fill-muted-foreground/20"
+            selectedAreas.includes("frontThigh") ? "fill-orange/60 filter-glow" : "fill-muted-foreground/20"
           )}
-          onClick={() => onAreaClick("legs")}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleThighClick("frontThigh");
+          }}
         />
+        
+        {/* Front Thigh (right leg) */}
         <path 
           d="M160,270 Q150,280 140,350 L120,350 Q130,280 120,270 Z" 
           className={cn(
             "cursor-pointer transition-colors hover:fill-orange/50 stroke-muted-foreground stroke-[1.5]",
-            selectedAreas.includes("legs") ? "fill-orange/60 filter-glow" : "fill-muted-foreground/20"
+            selectedAreas.includes("frontThigh") ? "fill-orange/60 filter-glow" : "fill-muted-foreground/20"
           )}
-          onClick={() => onAreaClick("legs")}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleThighClick("frontThigh");
+          }}
+        />
+        
+        {/* Back Thigh (both legs, behind but visible when selected) */}
+        <path 
+          d="M80,270 Q90,300 100,350 L140,350 Q150,300 160,270 Q120,290 80,270 Z" 
+          className={cn(
+            "cursor-pointer transition-colors hover:fill-orange/50 stroke-muted-foreground stroke-[1.5] opacity-0",
+            selectedAreas.includes("backThigh") ? "fill-orange/60 filter-glow opacity-60" : "fill-muted-foreground/20 opacity-0"
+          )}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleThighClick("backThigh");
+          }}
         />
         
         {/* Calves (both) */}
