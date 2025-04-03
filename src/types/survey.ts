@@ -23,6 +23,10 @@ export interface FormData {
   workoutIntensity: string | null;
   workoutFrequency: string | null;
   workoutDuration: string | null;
+  equipmentAccess?: {
+    type: string;
+    items: string[];
+  };
   height: string | null;
   currentWeight: string | null;
   targetWeight: string | null;

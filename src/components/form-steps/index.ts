@@ -14,7 +14,7 @@ export { default as AllergiesStep } from './AllergiesStep';
 export { default as TraditionalFoodsStep } from './TraditionalFoodsStep';
 export { default as WorkoutLocationStep } from './WorkoutLocationStep';
 export { default as WorkoutIntensityStep } from './WorkoutIntensityStep';
-export { default as WorkoutFrequencyStep } from './WorkoutFrequencyStep';
+export { default as EquipmentAccessStep } from './EquipmentAccessStep';
 export { default as WorkoutDurationStep } from './WorkoutDurationStep';
 export { default as HormoneGraphStep } from './HormoneGraphStep';
 export { default as HeightInputStep } from './HeightInputStep';

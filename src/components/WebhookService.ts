@@ -307,7 +307,15 @@ const createAIOptimizedPayload = (formData: FormData): Record<string, any> => {
         exercisePreferences: Object.entries(formData.exercisePreferences || {}).map(([exercise, preference]) => ({
           exerciseName: exercise,
           preference: preference
-        })).filter(item => item.preference !== null)
+        })).filter(item => item.preference !== null),
+        equipment: formData.equipmentAccess ? {
+          type: formData.equipmentAccess.type,
+          hasGymAccess: formData.equipmentAccess.type === 'gym',
+          hasHomeEquipment: ['home-basic', 'home-advanced'].includes(formData.equipmentAccess.type),
+          hasAdvancedEquipment: formData.equipmentAccess.type === 'home-advanced',
+          noEquipment: formData.equipmentAccess.type === 'none',
+          availableItems: formData.equipmentAccess.items || []
+        } : null
       }
     },
     

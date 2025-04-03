@@ -5,7 +5,7 @@ import {
   ActivitiesStep,
   WorkoutLocationStep,
   WorkoutIntensityStep,
-  WorkoutFrequencyStep,
+  EquipmentAccessStep,
   WorkoutDurationStep,
   ExercisePreferencesStep,
   DesiredBodyStep
@@ -70,9 +70,24 @@ const WorkoutPreferencesStepRenderer: React.FC<WorkoutPreferencesStepRendererPro
     
     case 4: // Step 19
       return (
-        <WorkoutFrequencyStep
-          selected={formData.workoutFrequency}
-          onSelect={(workoutFrequency) => setFormData(prev => ({ ...prev, workoutFrequency }))}
+        <EquipmentAccessStep
+          selected={formData.equipmentAccess?.type || null}
+          onSelect={(type) => {
+            const currentItems = formData.equipmentAccess?.items || [];
+            setFormData(prev => ({ 
+              ...prev, 
+              equipmentAccess: { type, items: currentItems },
+              // Keep workoutFrequency for backward compatibility
+              workoutFrequency: type
+            }));
+          }}
+          equipmentData={formData.equipmentAccess}
+          onEquipmentDataChange={(equipmentData) => {
+            setFormData(prev => ({ 
+              ...prev, 
+              equipmentAccess: equipmentData 
+            }));
+          }}
         />
       );
     
