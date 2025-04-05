@@ -21,6 +21,12 @@ const BestShapeStep = ({
 
   const options = [
     { 
+      label: "В момента спортувам", 
+      id: "currently-active", 
+      icon: Activity,
+      description: "Активно се занимавате със спорт в момента"
+    },
+    { 
       label: "По-малко от година", 
       id: "less-than-year", 
       icon: BadgeCheck,
@@ -86,7 +92,7 @@ const BestShapeStep = ({
     <div className="text-center max-w-3xl mx-auto">
       <div className="mb-20 relative pt-10">
         <motion.div 
-          className="absolute -top-5 left-1/2 transform -translate-x-1/2 w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center shadow-lg ring-4 ring-orange-500/10"
+          className="absolute -top-5 left-1/2 transform -translate-x-1/2 w-16 h-16 bg-orange rounded-full flex items-center justify-center shadow-lg ring-4 ring-orange/10"
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.1 }}
@@ -95,7 +101,7 @@ const BestShapeStep = ({
         </motion.div>
         
         <motion.h1 
-          className="text-4xl sm:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-orange-600 to-orange-500"
+          className="text-4xl sm:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-orange to-orange"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -135,10 +141,10 @@ const BestShapeStep = ({
                 <motion.div 
                   key={option.id} 
                   className={cn(
-                    "flex items-center space-x-4 p-5 rounded-xl cursor-pointer transition-all duration-300 border relative overflow-hidden",
+                    "option-card backdrop-blur-sm p-5 transition-all duration-300 rounded-xl cursor-pointer border relative overflow-hidden",
                     isSelected 
-                      ? "border-orange-500 shadow-lg bg-gradient-to-r from-slate-800/90 to-slate-900/90 dark:from-slate-800/90 dark:to-slate-900/90" 
-                      : "border-transparent bg-slate-900/80 dark:bg-slate-900/80 hover:bg-slate-800/80 dark:hover:bg-slate-800/80 hover:shadow-md"
+                      ? "border-orange bg-orange/5 transform scale-[1.02] shadow-lg" 
+                      : "border-transparent hover:border-orange/30 bg-background/30 hover:bg-background/40"
                   )}
                   onClick={() => handleSelectOption(option.id)}
                   initial={{ opacity: 0, y: 20 }}
@@ -150,13 +156,13 @@ const BestShapeStep = ({
                   {isSelected && (
                     <>
                       <motion.div 
-                        className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-orange-600/10 z-0 pointer-events-none"
+                        className="absolute inset-0 bg-gradient-to-r from-orange/20 to-orange/10 z-0 pointer-events-none"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.4 }}
                       />
                       <motion.div 
-                        className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-orange-500 to-orange-600"
+                        className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-orange to-orange"
                         initial={{ scaleY: 0 }}
                         animate={{ scaleY: 1 }}
                         transition={{ duration: 0.3 }}
@@ -177,8 +183,8 @@ const BestShapeStep = ({
                     <div className={cn(
                       "w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 shadow-sm",
                       isSelected 
-                        ? "bg-gradient-to-br from-orange-500 to-orange-600 text-white ring-4 ring-orange-500/20" 
-                        : "bg-orange-900/50 dark:bg-orange-900/50 text-orange-400 dark:text-orange-400"
+                        ? "bg-orange text-white ring-4 ring-orange/20" 
+                        : "bg-orange/10 text-orange"
                     )}>
                       <Icon className="w-6 h-6" />
                     </div>
@@ -186,13 +192,13 @@ const BestShapeStep = ({
                     <div className="flex-1">
                       <label htmlFor={option.id} className={cn(
                         "text-xl cursor-pointer font-medium transition-colors duration-300",
-                        isSelected ? "text-orange-300 dark:text-orange-300" : "text-white dark:text-white"
+                        isSelected ? "text-orange" : "text-foreground"
                       )}>
                         {option.label}
                       </label>
                       <p className={cn(
                         "text-sm transition-colors duration-300",
-                        isSelected ? "text-orange-200/90 dark:text-orange-200/90" : "text-gray-300 dark:text-gray-300"
+                        isSelected ? "text-orange/80" : "text-muted-foreground"
                       )}>
                         {option.description}
                       </p>
@@ -203,9 +209,9 @@ const BestShapeStep = ({
                         initial={{ scale: 0, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                        className="w-8 h-8 bg-orange-500/10 rounded-full flex items-center justify-center mr-2 shadow-sm"
+                        className="w-8 h-8 bg-orange/10 rounded-full flex items-center justify-center mr-2 shadow-sm"
                       >
-                        <BadgeCheck className="w-5 h-5 text-orange-500" />
+                        <BadgeCheck className="w-5 h-5 text-orange" />
                       </motion.div>
                     )}
                   </div>
@@ -222,8 +228,8 @@ const BestShapeStep = ({
           animate={{ opacity: 1 }}
           className="mt-8 flex justify-center"
         >
-          <div className="px-6 py-2.5 bg-gradient-to-r from-orange-950/40 to-orange-900/40 dark:from-orange-950/40 dark:to-orange-900/40 text-orange-400 dark:text-orange-400 text-sm font-medium inline-flex items-center shadow-sm rounded-full border border-orange-800/20">
-            <svg className="animate-spin -ml-1 mr-3 h-4 w-4 text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <div className="px-6 py-2.5 bg-orange/10 text-orange text-sm font-medium inline-flex items-center shadow-sm rounded-full border border-orange/20">
+            <svg className="animate-spin -ml-1 mr-3 h-4 w-4 text-orange" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>

@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Clock, Activity, Dumbbell, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { useSurvey } from "@/contexts/SurveyContext";
 
 interface FitnessGoalStepProps {
   selectedGoal: string | null;
@@ -9,6 +10,27 @@ interface FitnessGoalStepProps {
 }
 
 const FitnessGoalStep = ({ selectedGoal, onSelect }: FitnessGoalStepProps) => {
+  const { handleNext } = useSurvey();
+  const initialValueRef = useRef<string | null>(selectedGoal);
+  
+  // Auto-advance effect
+  useEffect(() => {
+    if (selectedGoal !== null && initialValueRef.current === null) {
+      console.log('FitnessGoalStep: Selection made, preparing to auto-advance', selectedGoal);
+      
+      // Short delay to allow the user to see their selection
+      const timer = setTimeout(() => {
+        console.log('FitnessGoalStep: Auto-advancing to next step');
+        handleNext(true);
+      }, 1000);
+      
+      return () => {
+        console.log('FitnessGoalStep: Cleaning up timer');
+        clearTimeout(timer);
+      };
+    }
+  }, [selectedGoal, handleNext]);
+
   const goals = [
     { 
       label: "Релефно тяло",
