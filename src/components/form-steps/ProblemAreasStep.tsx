@@ -23,6 +23,9 @@ const ProblemAreasStep = ({ selectedAreas, onSelectArea, onStepComplete }: Probl
     { label: "Предмишници", id: "forearms" },
   ];
 
+  // Track whether selection is coming from the silhouette
+  const [isFromSilhouette, setIsFromSilhouette] = React.useState(false);
+
   const toggleArea = (id: string) => {
     if (id === "none") {
       onSelectArea(["none"]);
@@ -34,7 +37,8 @@ const ProblemAreasStep = ({ selectedAreas, onSelectArea, onStepComplete }: Probl
       return;
     }
 
-    if ((id === "frontThigh" || id === "backThigh")) {
+    // For BodySilhouette component clicks, select both thigh areas together
+    if ((id === "frontThigh" || id === "backThigh") && isFromSilhouette) {
       const otherThighId = id === "frontThigh" ? "backThigh" : "frontThigh";
       const isSelected = selectedAreas.includes(id);
       
@@ -54,6 +58,12 @@ const ProblemAreasStep = ({ selectedAreas, onSelectArea, onStepComplete }: Probl
     }
   };
 
+  const handleSilhouetteClick = (id: string) => {
+    setIsFromSilhouette(true);
+    toggleArea(id);
+    setIsFromSilhouette(false);
+  };
+
   return (
     <div className="text-center">
       <h1 className="text-4xl sm:text-5xl font-bold mb-6">Изберете проблемни зони</h1>
@@ -61,7 +71,7 @@ const ProblemAreasStep = ({ selectedAreas, onSelectArea, onStepComplete }: Probl
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-4xl mx-auto">
         <div className="flex justify-center items-center">
-          <BodySilhouette selectedAreas={selectedAreas} onAreaClick={toggleArea} />
+          <BodySilhouette selectedAreas={selectedAreas} onAreaClick={handleSilhouetteClick} />
         </div>
         
         <div className="flex flex-col gap-4">

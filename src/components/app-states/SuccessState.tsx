@@ -110,7 +110,7 @@ const SuccessState: React.FC = () => {
                 <div className="flex items-center mb-4 text-left">
                   <Users className="text-orange h-7 w-7 mr-3 flex-shrink-0" />
                   <p className="text-gray-200">
-                    Присъединете се към <span className="font-bold text-orange">над 10,000</span> души, които вече трансформираха своя живот с нашата програма!
+                    Присъединете се към <span className="font-bold text-orange">над 1850</span> души, които вече трансформираха своя живот с нашата програма!
                   </p>
                 </div>
                 <div className="flex items-center mb-4 text-left">
