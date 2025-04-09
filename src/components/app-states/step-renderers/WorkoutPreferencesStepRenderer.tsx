@@ -31,7 +31,8 @@ const WorkoutPreferencesStepRenderer: React.FC<WorkoutPreferencesStepRendererPro
   // Adjusted for the Traditional Foods step (step 14)
   const localStep = step - 15;
   
-  console.log(`WorkoutPreferencesStepRenderer: Global Step ${step}, Local Step ${localStep}`);
+  // Reduce excessive logging
+  // console.log(`WorkoutPreferencesStepRenderer: Global Step ${step}, Local Step ${localStep}`);
   
   switch (localStep) {
     case 0: // Step 15

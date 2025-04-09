@@ -22,7 +22,7 @@ const SelfAssessmentStep: React.FC<SelfAssessmentStepProps> = ({
   onChange,
   type,
   onValidate,
-  autoAdvance = true
+  autoAdvance = false
 }) => {
   const { handleNext } = useSurvey();
   const { toast, dismiss } = useToast();

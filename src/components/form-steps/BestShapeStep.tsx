@@ -14,7 +14,7 @@ interface BestShapeStepProps {
 const BestShapeStep = ({ 
   selected, 
   onSelect, 
-  autoAdvance = true 
+  autoAdvance = false 
 }: BestShapeStepProps) => {
   const { handleNext } = useSurvey();
   const initialValueRef = useRef<string | null>(selected);

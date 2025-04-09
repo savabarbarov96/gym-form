@@ -93,28 +93,29 @@ export const validateWorkoutPreferencesStep = (
   formData: FormData,
   toast: (props: ToastParams) => void
 ): boolean => {
-  console.log(`Validating workout preferences step ${step}`);
+  // Only log if debugging
+  // console.log(`Validating workout preferences step ${step}`);
   
   // Map the global step numbers to the specific validation functions
   switch (step) {
-    case 14:
-      return validateProblemAreasStep(formData, toast);
     case 15:
-      return validateActivitiesStep(formData, toast);
+      return validateProblemAreasStep(formData, toast);
     case 16:
-      return validateWorkoutLocationStep(formData, toast);
+      return validateActivitiesStep(formData, toast);
     case 17:
-      return validateWorkoutIntensityStep(formData, toast);
+      return validateWorkoutLocationStep(formData, toast);
     case 18:
-      return validateEquipmentAccessStep(formData, toast);
+      return validateWorkoutIntensityStep(formData, toast);
     case 19:
-      return validateWorkoutFrequencyStep(formData, toast);
+      return validateEquipmentAccessStep(formData, toast);
     case 20:
-      return validateExercisePreferencesStep(formData, toast);
+      return validateWorkoutFrequencyStep(formData, toast);
     case 21:
+      return validateExercisePreferencesStep(formData, toast);
+    case 22:
       return validateDesiredBodyStep(formData, toast);
     default:
-      console.log(`No specific validation for workout preferences step ${step}`);
+      // console.log(`No specific validation for workout preferences step ${step}`);
       return true;
   }
 }; 

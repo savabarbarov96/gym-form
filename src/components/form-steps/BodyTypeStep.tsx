@@ -12,7 +12,7 @@ interface BodyTypeStepProps {
 const BodyTypeStep = ({ 
   selectedType, 
   onSelect, 
-  autoAdvance = true 
+  autoAdvance = false 
 }: BodyTypeStepProps) => {
   const { handleNext } = useSurvey();
   const initialValueRef = useRef<string | null>(selectedType);

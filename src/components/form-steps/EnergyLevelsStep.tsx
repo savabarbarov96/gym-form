@@ -21,7 +21,7 @@ interface EnergyLevelsStepProps {
 const EnergyLevelsStep: React.FC<EnergyLevelsStepProps> = ({ 
   value, 
   onChange,
-  autoAdvance = true
+  autoAdvance = false
 }) => {
   const { handleNext } = useSurvey();
   const initialValueRef = useRef<number | null>(value);

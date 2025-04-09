@@ -12,9 +12,226 @@ import {
   FileText,
   Sparkles,
   LucideHeartPulse,
-  Gift
+  Gift,
+  ClipboardList,
+  X,
+  Eye
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useSurvey } from "@/contexts/SurveyContext";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogClose
+} from "@/components/ui/dialog";
+
+// Translation helpers for Bulgarian display
+const translateGender = (gender: string | null): string => {
+  if (!gender) return 'Не е посочено';
+  const genderMap: Record<string, string> = {
+    'male': 'Мъж',
+    'female': 'Жена',
+    'other': 'Друго'
+  };
+  return genderMap[gender] || gender;
+};
+
+const translateAge = (age: string | null): string => {
+  if (!age) return 'Не е посочено';
+  const ageMap: Record<string, string> = {
+    '18-24': '18-24 години',
+    '25-34': '25-34 години',
+    '35-44': '35-44 години',
+    '45-54': '45-54 години',
+    '55-64': '55-64 години',
+    '65+': '65+ години'
+  };
+  return ageMap[age] || age;
+};
+
+const translateBodyType = (bodyType: string | null): string => {
+  if (!bodyType) return 'Не е посочено';
+  const bodyTypeMap: Record<string, string> = {
+    'ectomorph': 'Ектоморф (слаб)',
+    'mesomorph': 'Мезоморф (атлетичен)',
+    'endomorph': 'Ендоморф (по-едър)',
+    'not-sure': 'Не съм сигурен/а'
+  };
+  return bodyTypeMap[bodyType] || bodyType;
+};
+
+const translateFitnessGoal = (goal: string | null): string => {
+  if (!goal) return 'Не е посочено';
+  const goalMap: Record<string, string> = {
+    'lose-weight': 'Отслабване',
+    'build-muscle': 'Натрупване на мускули',
+    'increase-endurance': 'Повишаване на издръжливостта',
+    'improve-health': 'Подобряване на здравето',
+    'tone-body': 'Тонизиране на тялото',
+    'maintain-fitness': 'Поддържане на формата'
+  };
+  return goalMap[goal] || goal;
+};
+
+const translateDesiredBody = (body: string | null): string => {
+  if (!body) return 'Не е посочено';
+  const bodyMap: Record<string, string> = {
+    'slim': 'Слабо тяло',
+    'toned': 'Тонизирано тяло',
+    'athletic': 'Атлетично тяло',
+    'muscular': 'Мускулесто тяло',
+    'balanced': 'Балансирано тяло'
+  };
+  return bodyMap[body] || body;
+};
+
+const translateProblemAreas = (areas: string[]): string[] => {
+  if (!areas.length) return [];
+  const areaMap: Record<string, string> = {
+    'belly': 'Корем',
+    'arms': 'Ръце',
+    'thighs': 'Бедра',
+    'back': 'Гръб',
+    'chest': 'Гърди',
+    'shoulders': 'Рамене'
+  };
+  return areas.map(area => areaMap[area] || area);
+};
+
+const translateBestShapeTime = (time: string | null): string => {
+  if (!time) return 'Не е посочено';
+  const timeMap: Record<string, string> = {
+    'never': 'Никога не съм бил/а в добра форма',
+    'long-ago': 'Преди много време',
+    'recent-years': 'В последните няколко години',
+    'current': 'В момента съм в добра форма'
+  };
+  return timeMap[time] || time;
+};
+
+const translateWeightChange = (change: string | null): string => {
+  if (!change) return 'Не е посочено';
+  const changeMap: Record<string, string> = {
+    'gained': 'Качил/а съм килограми',
+    'lost': 'Свалил/а съм килограми',
+    'fluctuating': 'Теглото ми се променя често',
+    'stable': 'Теглото ми е стабилно'
+  };
+  return changeMap[change] || change;
+};
+
+const translateActivities = (activities: string[]): string[] => {
+  if (!activities.length) return [];
+  const activityMap: Record<string, string> = {
+    'walking': 'Ходене',
+    'running': 'Бягане',
+    'cycling': 'Колоездене',
+    'swimming': 'Плуване',
+    'yoga': 'Йога',
+    'pilates': 'Пилатес',
+    'weightlifting': 'Вдигане на тежести',
+    'team-sports': 'Отборни спортове',
+    'dancing': 'Танци',
+    'hiking': 'Туризъм',
+    'none': 'Никакви'
+  };
+  return activities.map(activity => activityMap[activity] || activity);
+};
+
+const translateHealthConcerns = (concerns: string[]): string[] => {
+  if (!concerns.length) return [];
+  const concernMap: Record<string, string> = {
+    'heart': 'Сърдечни проблеми',
+    'diabetes': 'Диабет',
+    'joint-pain': 'Болки в ставите',
+    'high-blood-pressure': 'Високо кръвно налягане',
+    'back-pain': 'Болки в гърба',
+    'obesity': 'Затлъстяване',
+    'respiratory': 'Дихателни проблеми',
+    'thyroid': 'Проблеми с щитовидната жлеза',
+    'none': 'Нямам здравословни проблеми'
+  };
+  return concerns.map(concern => concernMap[concern] || concern);
+};
+
+const translateWorkoutLocation = (location: string | null): string => {
+  if (!location) return 'Не е посочено';
+  const locationMap: Record<string, string> = {
+    'gym': 'Фитнес зала',
+    'home': 'Вкъщи',
+    'outdoors': 'На открито',
+    'mixed': 'Комбинирано'
+  };
+  return locationMap[location] || location;
+};
+
+const translateWorkoutIntensity = (intensity: string | null): string => {
+  if (!intensity) return 'Не е посочено';
+  const intensityMap: Record<string, string> = {
+    'light': 'Лека',
+    'moderate': 'Умерена',
+    'high': 'Висока',
+    'variable': 'Променлива'
+  };
+  return intensityMap[intensity] || intensity;
+};
+
+const translateWorkoutFrequency = (frequency: string | null): string => {
+  if (!frequency) return 'Не е посочено';
+  const frequencyMap: Record<string, string> = {
+    '1-2': '1-2 пъти седмично',
+    '3-4': '3-4 пъти седмично',
+    '5-6': '5-6 пъти седмично',
+    'daily': 'Всеки ден'
+  };
+  return frequencyMap[frequency] || frequency;
+};
+
+const translateWorkoutDuration = (duration: string | null): string => {
+  if (!duration) return 'Не е посочено';
+  const durationMap: Record<string, string> = {
+    'under-30': 'Под 30 минути',
+    '30-45': '30-45 минути',
+    '45-60': '45-60 минути',
+    'over-60': 'Над 60 минути'
+  };
+  return durationMap[duration] || duration;
+};
+
+const translateSugaryFoods = (sugary: string | null): string => {
+  if (!sugary) return 'Не е посочено';
+  const sugaryMap: Record<string, string> = {
+    'daily': 'Всеки ден',
+    'few-times-week': 'Няколко пъти седмично',
+    'occasionally': 'Рядко',
+    'avoid': 'Избягвам ги'
+  };
+  return sugaryMap[sugary] || sugary;
+};
+
+const translateTypicalDay = (day: string | null): string => {
+  if (!day) return 'Не е посочено';
+  const dayMap: Record<string, string> = {
+    'sedentary': 'Предимно седящ начин на живот',
+    'lightly-active': 'Леко активен',
+    'moderately-active': 'Умерено активен',
+    'very-active': 'Много активен'
+  };
+  return dayMap[day] || day;
+};
+
+const translateStartCommitment = (commitment: string | null): string => {
+  if (!commitment) return 'Не е посочено';
+  const commitmentMap: Record<string, string> = {
+    'now': 'Веднага',
+    'this-week': 'Тази седмица',
+    'this-month': 'Този месец',
+    'undecided': 'Все още не съм решил/а'
+  };
+  return commitmentMap[commitment] || commitment;
+};
 
 interface ResultsStateProps {
   handleGetPlan: () => void;
@@ -28,6 +245,8 @@ const ResultsState: React.FC<ResultsStateProps> = ({
   handleGetWorkoutPlan 
 }) => {
   const [showPricing, setShowPricing] = useState(false);
+  const [showSummary, setShowSummary] = useState(false);
+  const { formData } = useSurvey();
   
   const handleShowPricing = () => {
     setShowPricing(true);
@@ -53,10 +272,316 @@ const ResultsState: React.FC<ResultsStateProps> = ({
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="text-muted-foreground text-xl mb-16 max-w-2xl mx-auto"
+          className="text-muted-foreground text-xl mb-8 max-w-2xl mx-auto"
         >
           Благодарим за отделеното време. Ето какво можете да очаквате да получите:
         </motion.p>
+        
+        {/* Summary Dialog */}
+        <Dialog open={showSummary} onOpenChange={setShowSummary}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="bg-white dark:bg-gray-800 p-1 rounded-2xl shadow-md mb-12 max-w-md mx-auto overflow-hidden"
+          >
+            <motion.button
+              onClick={() => setShowSummary(true)}
+              className="w-full py-3 bg-gradient-to-r from-orange to-orange-600 hover:from-orange-600 hover:to-orange text-white rounded-xl font-medium transition-all flex items-center justify-center gap-2"
+              whileHover={{ y: -2 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <Eye size={20} />
+              Преглед на въведените данни
+              <ClipboardList size={20} />
+            </motion.button>
+          </motion.div>
+          
+          <DialogContent className="max-w-[95vw] md:max-w-3xl bg-white dark:bg-gray-900 border border-orange/30 overflow-y-auto max-h-[90vh]">
+            <DialogHeader className="flex justify-between items-start border-b border-orange/20 pb-4 mb-4">
+              <DialogTitle className="text-2xl font-bold text-orange-700 dark:text-orange-500">
+                Обобщение на Вашите данни
+              </DialogTitle>
+              <DialogClose className="rounded-full p-1.5 bg-orange-100 hover:bg-orange-200 text-orange-700">
+                <X className="h-5 w-5" />
+              </DialogClose>
+            </DialogHeader>
+            
+            <div className="space-y-6">
+              {/* Лична информация */}
+              <div className="rounded-lg border border-orange/20 overflow-hidden">
+                <div className="bg-gradient-to-r from-orange-500/10 to-orange-600/10 px-4 py-2 border-b border-orange/20">
+                  <h3 className="font-bold text-lg text-orange-800 dark:text-orange-400 flex items-center gap-2">
+                    <Heart className="h-5 w-5" />
+                    Лична информация
+                  </h3>
+                </div>
+                <div className="p-4 bg-white dark:bg-gray-800">
+                  <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 text-gray-700 dark:text-gray-200">
+                    <div>
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Име:</dt>
+                      <dd>{formData.personalInfo.name || 'Не е посочено'}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Имейл:</dt>
+                      <dd>{formData.personalInfo.email || 'Не е посочено'}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Пол:</dt>
+                      <dd>{translateGender(formData.gender)}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Възраст:</dt>
+                      <dd>{translateAge(formData.age)}</dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+              
+              {/* Физически данни */}
+              <div className="rounded-lg border border-orange/20 overflow-hidden">
+                <div className="bg-gradient-to-r from-orange-500/10 to-orange-600/10 px-4 py-2 border-b border-orange/20">
+                  <h3 className="font-bold text-lg text-orange-800 dark:text-orange-400 flex items-center gap-2">
+                    <Dumbbell className="h-5 w-5" />
+                    Физически данни
+                  </h3>
+                </div>
+                <div className="p-4 bg-white dark:bg-gray-800">
+                  <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 text-gray-700 dark:text-gray-200">
+                    <div>
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Височина:</dt>
+                      <dd>{formData.height || 'Не е посочено'}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Текущо тегло:</dt>
+                      <dd>{formData.currentWeight ? `${formData.currentWeight} ${formData.weightUnit}` : 'Не е посочено'}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Целево тегло:</dt>
+                      <dd>{formData.targetWeight ? `${formData.targetWeight} ${formData.weightUnit}` : 'Не е посочено'}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Тип телосложение:</dt>
+                      <dd>{translateBodyType(formData.bodyType)}</dd>
+                    </div>
+                    <div className="md:col-span-2">
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Текущ процент телесни мазнини:</dt>
+                      <dd>{formData.currentBodyFat ? `${formData.currentBodyFat}%` : 'Не е посочено'}</dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+              
+              {/* Цели */}
+              <div className="rounded-lg border border-orange/20 overflow-hidden">
+                <div className="bg-gradient-to-r from-orange-500/10 to-orange-600/10 px-4 py-2 border-b border-orange/20">
+                  <h3 className="font-bold text-lg text-orange-800 dark:text-orange-400 flex items-center gap-2">
+                    <Award className="h-5 w-5" />
+                    Цели и история
+                  </h3>
+                </div>
+                <div className="p-4 bg-white dark:bg-gray-800">
+                  <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 text-gray-700 dark:text-gray-200">
+                    <div>
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Фитнес цел:</dt>
+                      <dd>{translateFitnessGoal(formData.fitnessGoal)}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Желано тяло:</dt>
+                      <dd>{translateDesiredBody(formData.desiredBody)}</dd>
+                    </div>
+                    <div className="md:col-span-2">
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Проблемни зони:</dt>
+                      <dd>{formData.problemAreas.length ? translateProblemAreas(formData.problemAreas).join(', ') : 'Не е посочено'}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Кога сте били в най-добра форма:</dt>
+                      <dd>{translateBestShapeTime(formData.bestShapeTime)}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Промяна в теглото:</dt>
+                      <dd>{translateWeightChange(formData.weightChange)}</dd>
+                    </div>
+                    <div className="md:col-span-2">
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Готовност за започване:</dt>
+                      <dd>{translateStartCommitment(formData.startCommitment)}</dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+              
+              {/* Тренировъчни предпочитания */}
+              <div className="rounded-lg border border-orange/20 overflow-hidden">
+                <div className="bg-gradient-to-r from-orange-500/10 to-orange-600/10 px-4 py-2 border-b border-orange/20">
+                  <h3 className="font-bold text-lg text-orange-800 dark:text-orange-400 flex items-center gap-2">
+                    <Calendar className="h-5 w-5" />
+                    Тренировъчни предпочитания
+                  </h3>
+                </div>
+                <div className="p-4 bg-white dark:bg-gray-800">
+                  <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 text-gray-700 dark:text-gray-200">
+                    <div>
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Място за тренировка:</dt>
+                      <dd>{translateWorkoutLocation(formData.workoutLocation)}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Интензивност:</dt>
+                      <dd>{translateWorkoutIntensity(formData.workoutIntensity)}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Честота:</dt>
+                      <dd>{translateWorkoutFrequency(formData.workoutFrequency)}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Продължителност:</dt>
+                      <dd>{translateWorkoutDuration(formData.workoutDuration)}</dd>
+                    </div>
+                    <div className="md:col-span-2">
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Достъпно оборудване:</dt>
+                      <dd>
+                        {formData.equipmentAccess ? (
+                          <span>{formData.equipmentAccess.type === 'home' ? 'Вкъщи' : formData.equipmentAccess.type === 'gym' ? 'Фитнес зала' : formData.equipmentAccess.type}: {formData.equipmentAccess.items.join(', ')}</span>
+                        ) : 'Не е посочено'}
+                      </dd>
+                    </div>
+                    <div className="md:col-span-2">
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Физически активности:</dt>
+                      <dd>
+                        {formData.activities.length ? (
+                          <span>
+                            {translateActivities(formData.activities).join(', ')}
+                            {formData.customActivity ? `, ${formData.customActivity}` : ''}
+                          </span>
+                        ) : 'Не е посочено'}
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+              
+              {/* Здраве и начин на живот */}
+              <div className="rounded-lg border border-orange/20 overflow-hidden">
+                <div className="bg-gradient-to-r from-orange-500/10 to-orange-600/10 px-4 py-2 border-b border-orange/20">
+                  <h3 className="font-bold text-lg text-orange-800 dark:text-orange-400 flex items-center gap-2">
+                    <LucideHeartPulse className="h-5 w-5" />
+                    Здраве и начин на живот
+                  </h3>
+                </div>
+                <div className="p-4 bg-white dark:bg-gray-800">
+                  <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 text-gray-700 dark:text-gray-200">
+                    <div className="md:col-span-2">
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Здравословни проблеми:</dt>
+                      <dd>
+                        {formData.healthConcerns.length ? (
+                          <span>
+                            {translateHealthConcerns(formData.healthConcerns).join(', ')}
+                            {formData.customHealthConcern ? `, ${formData.customHealthConcern}` : ''}
+                          </span>
+                        ) : 'Няма посочени'}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Типичен ден:</dt>
+                      <dd>{translateTypicalDay(formData.typicalDay)}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Количество сън:</dt>
+                      <dd>{formData.sleepAmount !== null ? `${formData.sleepAmount} часа` : 'Не е посочено'}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Енергийни нива:</dt>
+                      <dd>{formData.energyLevels !== null ? `${formData.energyLevels}/10` : 'Не е посочено'}</dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+              
+              {/* Самооценки */}
+              <div className="rounded-lg border border-orange/20 overflow-hidden">
+                <div className="bg-gradient-to-r from-orange-500/10 to-orange-600/10 px-4 py-2 border-b border-orange/20">
+                  <h3 className="font-bold text-lg text-orange-800 dark:text-orange-400 flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5" />
+                    Самооценки
+                  </h3>
+                </div>
+                <div className="p-4 bg-white dark:bg-gray-800">
+                  <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 text-gray-700 dark:text-gray-200">
+                    <div>
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Задъхване при физически дейности:</dt>
+                      <dd>{formData.selfAssessments.outOfBreath !== null ? `${formData.selfAssessments.outOfBreath}/10` : 'Не е оценено'}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Връщане към стари навици:</dt>
+                      <dd>{formData.selfAssessments.fallingBack !== null ? `${formData.selfAssessments.fallingBack}/10` : 'Не е оценено'}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Подходящи тренировки:</dt>
+                      <dd>{formData.selfAssessments.suitableWorkouts !== null ? `${formData.selfAssessments.suitableWorkouts}/10` : 'Не е оценено'}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Ниво на мотивация:</dt>
+                      <dd>{formData.selfAssessments.motivationLevel !== null ? `${formData.selfAssessments.motivationLevel}/10` : 'Не е оценено'}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Постоянство на диетата:</dt>
+                      <dd>{formData.selfAssessments.dietConsistency !== null ? `${formData.selfAssessments.dietConsistency}/10` : 'Не е оценено'}</dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+              
+              {/* Хранителни навици */}
+              <div className="rounded-lg border border-orange/20 overflow-hidden">
+                <div className="bg-gradient-to-r from-orange-500/10 to-orange-600/10 px-4 py-2 border-b border-orange/20">
+                  <h3 className="font-bold text-lg text-orange-800 dark:text-orange-400 flex items-center gap-2">
+                    <ChefHat className="h-5 w-5" />
+                    Хранителни навици
+                  </h3>
+                </div>
+                <div className="p-4 bg-white dark:bg-gray-800">
+                  <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 text-gray-700 dark:text-gray-200">
+                    <div className="md:col-span-2">
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Алергии:</dt>
+                      <dd>
+                        {formData.allergies.length ? (
+                          <span>
+                            {formData.allergies.join(', ')}
+                            {formData.customAllergy ? `, ${formData.customAllergy}` : ''}
+                          </span>
+                        ) : 'Няма посочени'}
+                      </dd>
+                    </div>
+                    <div className="md:col-span-2">
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Традиционни храни:</dt>
+                      <dd>
+                        {formData.traditionalFoods.length ? (
+                          <span>
+                            {formData.traditionalFoods.join(', ')}
+                            {formData.customTraditionalFood ? `, ${formData.customTraditionalFood}` : ''}
+                          </span>
+                        ) : 'Не е посочено'}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Консумация на сладки:</dt>
+                      <dd>{translateSugaryFoods(formData.sugaryFoods)}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Прием на вода:</dt>
+                      <dd>{formData.waterIntake ? `${formData.waterIntake} мл` : 'Не е посочено'}</dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-6 pt-4 text-center border-t border-orange/20">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Тази информация ще бъде използвана за създаване на вашия персонализиран план.
+              </p>
+            </div>
+          </DialogContent>
+        </Dialog>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
           <motion.div 

@@ -13,7 +13,7 @@ interface DesiredBodyStepProps {
 const DesiredBodyStep = ({ 
   selectedBody, 
   onSelect,
-  autoAdvance = true
+  autoAdvance = false
 }: DesiredBodyStepProps) => {
   const { handleNext } = useSurvey();
   const initialValueRef = useRef<string | null>(selectedBody);

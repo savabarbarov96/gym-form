@@ -302,18 +302,18 @@ const createAIOptimizedPayload = (formData: FormData): Record<string, any> => {
         preferredIntensity: formData.workoutIntensity,
         weeklyFrequency: formData.workoutFrequency,
         frequencyValue: getWorkoutFrequencyValue(formData.workoutFrequency),
-        sessionDuration: formData.workoutDuration,
         durationInMinutes: getWorkoutDurationValue(formData.workoutDuration),
-        exercisePreferences: Object.entries(formData.exercisePreferences || {}).map(([exercise, preference]) => ({
-          exerciseName: exercise,
-          preference: preference
-        })).filter(item => item.preference !== null),
+        exercisePreferences: Object.entries(formData.exercisePreferences || {})
+          .filter(([_, preference]) => preference !== null)
+          .reduce((acc, [exercise, preference]) => {
+            acc[exercise] = preference;
+            return acc;
+          }, {} as Record<string, string>),
         equipment: formData.equipmentAccess ? {
           type: formData.equipmentAccess.type,
-          hasGymAccess: formData.equipmentAccess.type === 'gym',
-          hasHomeEquipment: ['home-basic', 'home-advanced'].includes(formData.equipmentAccess.type),
-          hasAdvancedEquipment: formData.equipmentAccess.type === 'home-advanced',
-          noEquipment: formData.equipmentAccess.type === 'none',
+          equipmentLevel: formData.equipmentAccess.type === 'gym' ? 'full_gym' :
+                         formData.equipmentAccess.type === 'home-advanced' ? 'advanced_home' :
+                         formData.equipmentAccess.type === 'home-basic' ? 'basic_home' : 'none',
           availableItems: formData.equipmentAccess.items || []
         } : null
       }

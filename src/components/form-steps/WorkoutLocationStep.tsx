@@ -13,7 +13,7 @@ interface WorkoutLocationStepProps {
 const WorkoutLocationStep = ({ 
   selectedLocation, 
   onSelect, 
-  autoAdvance = true 
+  autoAdvance = false 
 }: WorkoutLocationStepProps) => {
   const { handleNext } = useSurvey();
   const initialValueRef = useRef<string | null>(selectedLocation);
