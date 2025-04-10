@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { CheckCircle, Instagram, Award, ArrowRight, Share2, Users, MessageCircle } from "lucide-react";
 
 // Custom YouTube icon since Lucide doesn't have one
@@ -47,6 +48,8 @@ const TikTokIcon = () => (
 );
 
 const SuccessState: React.FC = () => {
+  const navigate = useNavigate();
+  
   return (
     <div className="w-full max-w-4xl mx-auto">
       <motion.div
@@ -184,6 +187,10 @@ const SuccessState: React.FC = () => {
             >
               <a 
                 href="#" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate('/');
+                }}
                 className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-orange to-orange-600 text-white font-semibold rounded-full hover:shadow-lg hover:from-orange-600 hover:to-orange transition-all duration-300"
               >
                 Към началната страница

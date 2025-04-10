@@ -1,7 +1,7 @@
 import { FormData } from "@/types/survey";
 
 // Define the webhook URL as a constant
-const WEBHOOK_URL = "https://sava.automationaid.eu/webhook/9de1dab9-8128-4b4a-9445-b2272727343b";
+const WEBHOOK_URL = "https://sava.automationaid.eu/webhook/meal-plan-bg";
 const MEAL_PLAN_WEBHOOK_URL = "https://sava.automationaid.eu/webhook/meal-plan-bg";
 const WORKOUT_PLAN_WEBHOOK_URL = "https://sava.automationaid.eu/webhook/workout-plan-bg";
 
@@ -376,6 +376,8 @@ export const submitToWebhook = async (formData: FormData): Promise<boolean> => {
     // Create the AI-optimized payload
     const aiOptimizedPayload = createAIOptimizedPayload(formData);
     
+    console.log('Submitting combined webhooks with payload:', JSON.stringify(aiOptimizedPayload).substring(0, 100) + '...');
+    
     // Post the optimized payload to both webhooks
     try {
       const [mealPlanResponse, workoutPlanResponse] = await Promise.all([
@@ -425,6 +427,8 @@ export const submitToMealPlanWebhook = async (formData: FormData): Promise<boole
     // Create the AI-optimized payload
     const aiOptimizedPayload = createAIOptimizedPayload(formData);
     
+    console.log('Submitting meal plan webhook with payload:', JSON.stringify(aiOptimizedPayload).substring(0, 100) + '...');
+    
     // Post the optimized payload to the meal plan webhook
     try {
       const response = await fetch(MEAL_PLAN_WEBHOOK_URL, {
@@ -464,6 +468,8 @@ export const submitToWorkoutPlanWebhook = async (formData: FormData): Promise<bo
   try {
     // Create the AI-optimized payload
     const aiOptimizedPayload = createAIOptimizedPayload(formData);
+    
+    console.log('Submitting workout plan webhook with payload:', JSON.stringify(aiOptimizedPayload).substring(0, 100) + '...');
     
     // Post the optimized payload to the workout plan webhook
     try {
