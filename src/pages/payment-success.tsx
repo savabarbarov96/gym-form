@@ -1,13 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { loadStripe } from '@stripe/stripe-js';
-import { SuccessState } from '@/components/app-states';
+import { SuccessWithLoading } from '@/components/app-states';
 import { 
   submitToWebhook, 
   submitToMealPlanWebhook, 
   submitToWorkoutPlanWebhook 
 } from '@/components/WebhookService';
 import { FormData } from '@/types/survey';
+import { saveUserData } from '@/lib/supabase';
 
 // Initialize Stripe outside of the component render cycle
 // Use the same key as in ResultsState.tsx
@@ -143,6 +144,39 @@ const PaymentSuccess = () => {
     console.log(`Triggering webhooks for plan type: ${planType}`);
 
     try {
+      // First, save the form data to Supabase if we have a name and email
+      if (formData.personalInfo?.name && formData.personalInfo?.email) {
+        console.log('Saving form data to Supabase...');
+        
+        // Add selected plan type to the form data before saving
+        const formDataWithPlan = {
+          ...formData,
+          selectedPlan: planType,
+          paymentStatus: 'completed',
+          paymentDate: new Date().toISOString()
+        };
+        
+        try {
+          const result = await saveUserData(
+            formData.personalInfo.name,
+            formData.personalInfo.email,
+            formDataWithPlan
+          );
+          
+          if (result.success) {
+            console.log("Form data saved to Supabase successfully");
+          } else {
+            console.error("Failed to save form data to Supabase:", result.message);
+            // Continue with webhook submission even if Supabase save fails
+          }
+        } catch (error) {
+          console.error("Error saving form data to Supabase:", error);
+          // Continue with webhook submission even if Supabase save fails
+        }
+      } else {
+        console.warn("Missing name or email, skipping Supabase save");
+      }
+
       // Only trigger the specific webhooks needed for the plan type
       if (planType === 'combined') {
         console.log('Triggering combined webhooks (both meal and workout plans)');
@@ -193,7 +227,7 @@ const PaymentSuccess = () => {
   }
 
   // Payment verified, show the success state
-  return <SuccessState />;
+  return <SuccessWithLoading />;
 };
 
 export default PaymentSuccess; 

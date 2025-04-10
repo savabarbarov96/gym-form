@@ -72,6 +72,9 @@ export const useSurveySubmit = (
     simulateProgressFor120Seconds();
     
     // Save user data to Supabase
+    // Note: This is a preliminary save to capture form data
+    // The complete form data with selected plan will be saved again
+    // when the user selects and pays for a plan in payment-success.tsx
     if (formData.personalInfo?.name && formData.personalInfo?.email) {
       try {
         const result = await saveUserData(

@@ -59,6 +59,28 @@ This project is built with .
 - React
 - shadcn-ui
 - Tailwind CSS
+- Supabase (for backend/database)
+
+## Supabase Integration
+
+This project uses Supabase to store form submission data. The integration works as follows:
+
+1. User fills out the multi-step form (personal details, fitness goals, etc.)
+2. Data is temporarily stored in localStorage as the user progresses through the form
+3. When the user reaches the plan selection page and selects a plan, the data is saved to Supabase:
+   - Complete form data is stored in the `form_submissions` table
+   - The selected plan type (workout, meal, or combined) is recorded
+   - Payment status is tracked
+
+### Data Storage Flow
+
+- **Initial form submission**: Basic form data is saved to Supabase when the user first submits the form
+- **Plan selection**: When a user selects and pays for a plan, complete form data including plan selection is saved to Supabase
+- **Webhook integration**: After saving data to Supabase, the selected webhooks are triggered to generate the appropriate plan(s)
+
+### Supabase Tables
+
+- `form_submissions`: Stores complete form data in JSON format, along with user details and submission metadata
 
 ## How can I deploy this project?
 
