@@ -5,6 +5,9 @@ const WEBHOOK_URL = "https://sava.automationaid.eu/webhook/meal-plan-bg";
 const MEAL_PLAN_WEBHOOK_URL = "https://sava.automationaid.eu/webhook/meal-plan-bg";
 const WORKOUT_PLAN_WEBHOOK_URL = "https://sava.automationaid.eu/webhook/workout-plan-bg";
 
+// Define the authorization token from environment variables
+const WEBHOOK_AUTH_TOKEN = import.meta.env.VITE_WEBHOOK_AUTH_TOKEN;
+
 // Format date to ISO string with readable format for AI
 const formatDate = (dateString: string | null): string | null => {
   if (!dateString) return null;
@@ -385,6 +388,7 @@ export const submitToWebhook = async (formData: FormData): Promise<boolean> => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${WEBHOOK_AUTH_TOKEN}`
           },
           body: JSON.stringify(aiOptimizedPayload),
         }),
@@ -392,6 +396,7 @@ export const submitToWebhook = async (formData: FormData): Promise<boolean> => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `${WEBHOOK_AUTH_TOKEN}`
           },
           body: JSON.stringify(aiOptimizedPayload),
         })
@@ -435,6 +440,7 @@ export const submitToMealPlanWebhook = async (formData: FormData): Promise<boole
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${WEBHOOK_AUTH_TOKEN}`
         },
         body: JSON.stringify(aiOptimizedPayload),
       });
@@ -477,6 +483,7 @@ export const submitToWorkoutPlanWebhook = async (formData: FormData): Promise<bo
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `${WEBHOOK_AUTH_TOKEN}`
         },
         body: JSON.stringify(aiOptimizedPayload),
       });
