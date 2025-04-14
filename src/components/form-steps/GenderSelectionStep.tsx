@@ -13,7 +13,7 @@ interface GenderSelectionStepProps {
 const GenderSelectionStep: React.FC<GenderSelectionStepProps> = ({ 
   selectedGender, 
   onSelect,
-  autoAdvance = true
+  autoAdvance = false
 }) => {
   const { handleNext } = useSurvey();
   const [isAdvancing, setIsAdvancing] = useState(false);
@@ -72,6 +72,7 @@ const GenderSelectionStep: React.FC<GenderSelectionStepProps> = ({
       // Set a timeout to advance after a delay
       timerRef.current = window.setTimeout(() => {
         console.log('GenderSelectionStep: Auto-advancing to next step');
+        // Pass true to handleNext to indicate this is an auto-advance
         handleNext(true);
         timerRef.current = null;
       }, 1500);

@@ -1,9 +1,12 @@
 import { FormData } from "@/types/survey";
 
 // Define the webhook URL as a constant
-const WEBHOOK_URL = "https://sava.automationaid.eu/webhook/9de1dab9-8128-4b4a-9445-b2272727343b";
+const WEBHOOK_URL = "https://sava.automationaid.eu/webhook/meal-plan-bg";
 const MEAL_PLAN_WEBHOOK_URL = "https://sava.automationaid.eu/webhook/meal-plan-bg";
 const WORKOUT_PLAN_WEBHOOK_URL = "https://sava.automationaid.eu/webhook/workout-plan-bg";
+
+// Define the authorization token from environment variables
+const WEBHOOK_AUTH_TOKEN = import.meta.env.VITE_WEBHOOK_AUTH_TOKEN;
 
 // Format date to ISO string with readable format for AI
 const formatDate = (dateString: string | null): string | null => {
@@ -302,18 +305,18 @@ const createAIOptimizedPayload = (formData: FormData): Record<string, any> => {
         preferredIntensity: formData.workoutIntensity,
         weeklyFrequency: formData.workoutFrequency,
         frequencyValue: getWorkoutFrequencyValue(formData.workoutFrequency),
-        sessionDuration: formData.workoutDuration,
         durationInMinutes: getWorkoutDurationValue(formData.workoutDuration),
-        exercisePreferences: Object.entries(formData.exercisePreferences || {}).map(([exercise, preference]) => ({
-          exerciseName: exercise,
-          preference: preference
-        })).filter(item => item.preference !== null),
+        exercisePreferences: Object.entries(formData.exercisePreferences || {})
+          .filter(([_, preference]) => preference !== null)
+          .reduce((acc, [exercise, preference]) => {
+            acc[exercise] = preference;
+            return acc;
+          }, {} as Record<string, string>),
         equipment: formData.equipmentAccess ? {
           type: formData.equipmentAccess.type,
-          hasGymAccess: formData.equipmentAccess.type === 'gym',
-          hasHomeEquipment: ['home-basic', 'home-advanced'].includes(formData.equipmentAccess.type),
-          hasAdvancedEquipment: formData.equipmentAccess.type === 'home-advanced',
-          noEquipment: formData.equipmentAccess.type === 'none',
+          equipmentLevel: formData.equipmentAccess.type === 'gym' ? 'full_gym' :
+                         formData.equipmentAccess.type === 'home-advanced' ? 'advanced_home' :
+                         formData.equipmentAccess.type === 'home-basic' ? 'basic_home' : 'none',
           availableItems: formData.equipmentAccess.items || []
         } : null
       }
@@ -376,6 +379,8 @@ export const submitToWebhook = async (formData: FormData): Promise<boolean> => {
     // Create the AI-optimized payload
     const aiOptimizedPayload = createAIOptimizedPayload(formData);
     
+    console.log('Submitting combined webhooks with payload:', JSON.stringify(aiOptimizedPayload).substring(0, 100) + '...');
+    
     // Post the optimized payload to both webhooks
     try {
       const [mealPlanResponse, workoutPlanResponse] = await Promise.all([
@@ -383,6 +388,7 @@ export const submitToWebhook = async (formData: FormData): Promise<boolean> => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${WEBHOOK_AUTH_TOKEN}`
           },
           body: JSON.stringify(aiOptimizedPayload),
         }),
@@ -390,6 +396,7 @@ export const submitToWebhook = async (formData: FormData): Promise<boolean> => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `${WEBHOOK_AUTH_TOKEN}`
           },
           body: JSON.stringify(aiOptimizedPayload),
         })
@@ -425,12 +432,15 @@ export const submitToMealPlanWebhook = async (formData: FormData): Promise<boole
     // Create the AI-optimized payload
     const aiOptimizedPayload = createAIOptimizedPayload(formData);
     
+    console.log('Submitting meal plan webhook with payload:', JSON.stringify(aiOptimizedPayload).substring(0, 100) + '...');
+    
     // Post the optimized payload to the meal plan webhook
     try {
       const response = await fetch(MEAL_PLAN_WEBHOOK_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${WEBHOOK_AUTH_TOKEN}`
         },
         body: JSON.stringify(aiOptimizedPayload),
       });
@@ -465,12 +475,15 @@ export const submitToWorkoutPlanWebhook = async (formData: FormData): Promise<bo
     // Create the AI-optimized payload
     const aiOptimizedPayload = createAIOptimizedPayload(formData);
     
+    console.log('Submitting workout plan webhook with payload:', JSON.stringify(aiOptimizedPayload).substring(0, 100) + '...');
+    
     // Post the optimized payload to the workout plan webhook
     try {
       const response = await fetch(WORKOUT_PLAN_WEBHOOK_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `${WEBHOOK_AUTH_TOKEN}`
         },
         body: JSON.stringify(aiOptimizedPayload),
       });

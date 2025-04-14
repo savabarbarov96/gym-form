@@ -12,7 +12,7 @@ interface AgeSelectionStepProps {
 const AgeSelectionStep: React.FC<AgeSelectionStepProps> = ({ 
   selectedAge, 
   onSelect, 
-  autoAdvance = true 
+  autoAdvance = false 
 }) => {
   const { handleNext } = useSurvey();
   const [isAdvancing, setIsAdvancing] = useState(false);
