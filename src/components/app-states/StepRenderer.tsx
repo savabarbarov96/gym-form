@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { FormData } from '@/types/survey';
@@ -97,7 +96,8 @@ const StepRenderer: React.FC<StepRendererProps> = ({
   handleNext,
   animationDirection
 }) => {
-  console.log("StepRenderer rendering step:", step);
+  // Remove excessive logging
+  // console.log("StepRenderer rendering step:", step);
 
   return (
     <motion.div

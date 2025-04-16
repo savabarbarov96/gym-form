@@ -73,7 +73,6 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
           value={formData.selfAssessments.outOfBreath}
           onChange={(value) => handleSelfAssessmentChange('outOfBreath', value)}
           onValidate={validateOutOfBreath}
-          autoAdvance={true}
         />
       );
     
@@ -84,7 +83,6 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
           value={formData.selfAssessments.fallingBack}
           onChange={(value) => handleSelfAssessmentChange('fallingBack', value)}
           onValidate={validateFallingBack}
-          autoAdvance={true}
         />
       );
     
@@ -95,7 +93,6 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
           value={formData.selfAssessments.motivationLevel}
           onChange={(value) => handleSelfAssessmentChange('motivationLevel', value)}
           onValidate={validateMotivation}
-          autoAdvance={true}
         />
       );
     
@@ -106,7 +103,6 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
           value={formData.selfAssessments.dietConsistency}
           onChange={(value) => handleSelfAssessmentChange('dietConsistency', value)}
           onValidate={validateDietConsistency}
-          autoAdvance={true}
         />
       );
     
@@ -123,7 +119,6 @@ const FinalStepsRenderer: React.FC<FinalStepsRendererProps> = ({ step, formData,
         <StartCommitmentStep
           selected={formData.startCommitment}
           onSelect={handleStartCommitmentChange}
-          autoAdvance={true}
         />
       );
       

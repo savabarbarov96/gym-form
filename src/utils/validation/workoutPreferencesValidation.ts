@@ -39,7 +39,7 @@ export const validateWorkoutFrequencyStep = (formData: FormData, toast: (props: 
   if (!formData.workoutFrequency) {
     toast({
       title: "Необходим е избор",
-      description: "Моля, изберете колко често можете да тренирате",
+      description: "Моля, изберете колко дни седмично можете да тренирате",
       variant: "default",
     });
     return false;
@@ -76,33 +76,46 @@ export const validateDesiredBodyStep = (formData: FormData, toast: (props: Toast
   return true;
 };
 
+export const validateEquipmentAccessStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
+  if (!formData.equipmentAccess?.type) {
+    toast({
+      title: "Необходим е избор",
+      description: "Моля, изберете каква екипировка имате на разположение",
+      variant: "default",
+    });
+    return false;
+  }
+  return true;
+};
+
 export const validateWorkoutPreferencesStep = (
   step: number,
   formData: FormData,
   toast: (props: ToastParams) => void
 ): boolean => {
-  console.log(`Validating workout preferences step ${step}`);
+  // Only log if debugging
+  // console.log(`Validating workout preferences step ${step}`);
   
   // Map the global step numbers to the specific validation functions
   switch (step) {
-    case 14:
-      return validateProblemAreasStep(formData, toast);
     case 15:
-      return validateActivitiesStep(formData, toast);
+      return validateProblemAreasStep(formData, toast);
     case 16:
-      return validateWorkoutLocationStep(formData, toast);
+      return validateActivitiesStep(formData, toast);
     case 17:
-      return validateWorkoutIntensityStep(formData, toast);
+      return validateWorkoutLocationStep(formData, toast);
     case 18:
-      return validateWorkoutFrequencyStep(formData, toast);
+      return validateWorkoutIntensityStep(formData, toast);
     case 19:
-      return validateWorkoutDurationStep(formData, toast);
+      return validateEquipmentAccessStep(formData, toast);
     case 20:
-      return validateExercisePreferencesStep(formData, toast);
+      return validateWorkoutFrequencyStep(formData, toast);
     case 21:
+      return validateExercisePreferencesStep(formData, toast);
+    case 22:
       return validateDesiredBodyStep(formData, toast);
     default:
-      console.log(`No specific validation for workout preferences step ${step}`);
+      // console.log(`No specific validation for workout preferences step ${step}`);
       return true;
   }
 }; 

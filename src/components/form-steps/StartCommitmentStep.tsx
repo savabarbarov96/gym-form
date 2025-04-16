@@ -12,13 +12,13 @@ interface StartCommitmentStepProps {
   autoAdvance?: boolean;
 }
 
-const StartCommitmentStep: React.FC<StartCommitmentStepProps> = ({ 
-  value, 
-  onChange, 
-  selected, 
+const StartCommitmentStep = ({ 
+  value,
+  onChange,
+  selected,
   onSelect,
-  autoAdvance = true
-}) => {
+  autoAdvance = false
+}: StartCommitmentStepProps) => {
   const { handleNext } = useSurvey();
   
   // Use either value/onChange or selected/onSelect props

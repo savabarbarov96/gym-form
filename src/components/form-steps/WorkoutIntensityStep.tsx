@@ -14,7 +14,7 @@ interface WorkoutIntensityStepProps {
 const WorkoutIntensityStep = ({ 
   selectedIntensity, 
   onSelect, 
-  autoAdvance = true 
+  autoAdvance = false 
 }: WorkoutIntensityStepProps) => {
   const { handleNext } = useSurvey();
   const initialValueRef = useRef<string | null>(selectedIntensity);

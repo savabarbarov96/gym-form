@@ -13,7 +13,7 @@ interface WorkoutDurationStepProps {
 const WorkoutDurationStep: React.FC<WorkoutDurationStepProps> = ({ 
   selected, 
   onSelect,
-  autoAdvance = true
+  autoAdvance = false
 }) => {
   const { handleNext } = useSurvey();
   const initialValueRef = useRef<string | null>(selected);

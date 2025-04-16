@@ -70,35 +70,34 @@ export const validateSelfAssessmentDietConsistencyStep = (formData: FormData, to
 export const validatePersonalInfoStep = (formData: FormData, toast: (props: ToastParams) => void): boolean => {
   const { name, email } = formData.personalInfo || { name: null, email: null };
   
-  // If both fields are empty, consider it valid in non-strict mode
-  // This allows users to proceed without filling in personal info
-  if (!name && !email) {
-    console.log("Personal info is empty, but allowing in non-strict mode");
-    return true;
-  }
-  
-  // If one field is filled but not the other, show validation error
-  if ((name && !email) || (!name && email)) {
+  // Require both name and email to be filled
+  if (!name) {
     toast({
-      title: "Непълна информация",
-      description: "Моля, попълнете и двете полета или оставете и двете празни",
+      title: "Необходима информация",
+      description: "Моля, въведете Вашето име",
       variant: "default",
     });
     return false;
   }
   
-  // If both fields are filled, validate email format
-  if (name && email) {
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      toast({
-        title: "Невалиден имейл",
-        description: "Моля, въведете валиден имейл адрес",
-        variant: "default",
-      });
-      return false;
-    }
+  if (!email) {
+    toast({
+      title: "Необходима информация",
+      description: "Моля, въведете имейл адрес",
+      variant: "default",
+    });
+    return false;
+  }
+  
+  // Validate email format
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    toast({
+      title: "Невалиден имейл",
+      description: "Моля, въведете валиден имейл адрес",
+      variant: "default",
+    });
+    return false;
   }
   
   return true;

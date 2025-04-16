@@ -12,7 +12,7 @@ interface WeightChangeStepProps {
 const WeightChangeStep = ({ 
   selected, 
   onSelect, 
-  autoAdvance = true 
+  autoAdvance = false 
 }: WeightChangeStepProps) => {
   const { handleNext } = useSurvey();
   const initialValueRef = useRef<string | null>(selected);

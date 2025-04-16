@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { RadioGroup } from "@/components/ui/radio-group";
 import { motion } from "framer-motion";
 import { Check, Plus, X, Award, Dumbbell, Home } from "lucide-react";
@@ -18,16 +18,63 @@ const EquipmentAccessStep: React.FC<EquipmentAccessStepProps> = ({
 }) => {
   const [customEquipment, setCustomEquipment] = useState<string[]>(equipmentData?.items || []);
   const [newEquipment, setNewEquipment] = useState("");
+  const isFirstRender = useRef(true);
   
   useEffect(() => {
+    if (equipmentData?.items && (isFirstRender.current || JSON.stringify(equipmentData.items) !== JSON.stringify(customEquipment))) {
+      setCustomEquipment(equipmentData.items);
+    }
+    isFirstRender.current = false;
+  }, [equipmentData]);
+  
+  const syncEquipmentData = (items: string[]) => {
     if (selected && onEquipmentDataChange) {
       onEquipmentDataChange({
         type: selected,
-        items: customEquipment
+        items: items
       });
     }
-  }, [selected, customEquipment, onEquipmentDataChange]);
-  
+  };
+
+  const handleChange = (value: string) => {
+    onSelect(value);
+    if (value !== selected && onEquipmentDataChange) {
+      syncEquipmentData(customEquipment);
+    }
+  };
+
+  const handleAddEquipment = () => {
+    if (newEquipment.trim() && !customEquipment.includes(newEquipment.trim())) {
+      const updatedEquipment = [...customEquipment, newEquipment.trim()];
+      setCustomEquipment(updatedEquipment);
+      setNewEquipment("");
+      syncEquipmentData(updatedEquipment);
+    }
+  };
+
+  const handleRemoveEquipment = (item: string) => {
+    const updatedEquipment = customEquipment.filter(equipment => equipment !== item);
+    setCustomEquipment(updatedEquipment);
+    syncEquipmentData(updatedEquipment);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAddEquipment();
+    }
+  };
+
+  const toggleEquipment = (item: string) => {
+    if (customEquipment.includes(item)) {
+      handleRemoveEquipment(item);
+    } else {
+      const updatedEquipment = [...customEquipment, item];
+      setCustomEquipment(updatedEquipment);
+      syncEquipmentData(updatedEquipment);
+    }
+  };
+
   // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -82,36 +129,6 @@ const EquipmentAccessStep: React.FC<EquipmentAccessStepProps> = ({
     { id: "treadmill", name: "Бягаща пътека" },
     { id: "exercise-bike", name: "Велоергометър" },
   ];
-
-  const handleChange = (value: string) => {
-    onSelect(value);
-  };
-
-  const handleAddEquipment = () => {
-    if (newEquipment.trim() && !customEquipment.includes(newEquipment.trim())) {
-      setCustomEquipment([...customEquipment, newEquipment.trim()]);
-      setNewEquipment("");
-    }
-  };
-
-  const handleRemoveEquipment = (item: string) => {
-    setCustomEquipment(customEquipment.filter(equipment => equipment !== item));
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      handleAddEquipment();
-    }
-  };
-
-  const toggleEquipment = (item: string) => {
-    if (customEquipment.includes(item)) {
-      handleRemoveEquipment(item);
-    } else {
-      setCustomEquipment([...customEquipment, item]);
-    }
-  };
 
   return (
     <div className="text-center max-w-3xl mx-auto">

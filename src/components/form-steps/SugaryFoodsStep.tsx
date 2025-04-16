@@ -13,7 +13,7 @@ interface SugaryFoodsStepProps {
 const SugaryFoodsStep: React.FC<SugaryFoodsStepProps> = ({ 
   selected, 
   onSelect,
-  autoAdvance = true
+  autoAdvance = false
 }) => {
   const { handleNext } = useSurvey();
   const initialValueRef = useRef<string | null>(selected);

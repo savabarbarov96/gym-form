@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { CheckCircle, Instagram, Award, ArrowRight, Share2, Users, MessageCircle } from "lucide-react";
 
 // Custom YouTube icon since Lucide doesn't have one
@@ -47,6 +48,8 @@ const TikTokIcon = () => (
 );
 
 const SuccessState: React.FC = () => {
+  const navigate = useNavigate();
+  
   return (
     <div className="w-full max-w-4xl mx-auto">
       <motion.div
@@ -95,6 +98,9 @@ const SuccessState: React.FC = () => {
               <p className="text-xl text-gray-300 max-w-2xl mx-auto">
                 Вашият персонализиран план е готов и скоро ще бъде изпратен на посочения от Вас имейл адрес.
               </p>
+              <p className="text-xl text-gray-300 max-w-2xl mx-auto mt-4">
+                Ако имате въпроси относно вашият план или не сте го получил, можете да ни потърсите в социалните мрежи отдолу.
+              </p>
             </motion.div>
             
             {/* Social Media - Featured prominently */}
@@ -110,7 +116,7 @@ const SuccessState: React.FC = () => {
                 <div className="flex items-center mb-4 text-left">
                   <Users className="text-orange h-7 w-7 mr-3 flex-shrink-0" />
                   <p className="text-gray-200">
-                    Присъединете се към <span className="font-bold text-orange">над 10,000</span> души, които вече трансформираха своя живот с нашата програма!
+                    Присъединете се към <span className="font-bold text-orange">над 853</span> души, които вече трансформираха своя живот с нашата програма!
                   </p>
                 </div>
                 <div className="flex items-center mb-4 text-left">
@@ -139,19 +145,6 @@ const SuccessState: React.FC = () => {
                     <Instagram size={32} className="text-white" />
                   </div>
                   <span className="text-white font-medium">Instagram</span>
-                </motion.a>
-                
-                <motion.a 
-                  href="#" 
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="flex flex-col items-center"
-                >
-                  <div className="w-20 h-20 flex items-center justify-center rounded-full bg-gradient-to-br from-red-600 to-red-700 hover:shadow-lg hover:shadow-red-500/20 transition-all duration-300 mb-2">
-                    <YouTubeIcon />
-                    <span className="text-white ml-1.5">  </span>
-                  </div>
-                  <span className="text-white font-medium">YouTube</span>
                 </motion.a>
                 
                 <motion.a 
@@ -184,6 +177,10 @@ const SuccessState: React.FC = () => {
             >
               <a 
                 href="#" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate('/');
+                }}
                 className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-orange to-orange-600 text-white font-semibold rounded-full hover:shadow-lg hover:from-orange-600 hover:to-orange transition-all duration-300"
               >
                 Към началната страница

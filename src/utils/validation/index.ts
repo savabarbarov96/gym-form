@@ -11,7 +11,7 @@ const activeValidationErrors = new Map<number, string>();
 
 // Flag to enable/disable strict validation
 // When false, validation will show warnings but allow users to proceed
-const STRICT_VALIDATION = false;
+const STRICT_VALIDATION = true;
 
 /**
  * Common validation function that delegates to the correct validation module
@@ -28,8 +28,8 @@ export const validateStep = (
     activeValidationErrors.delete(step);
   }
 
-  // Debug validation
-  console.log(`Validating step ${step}`);
+  // Only log for debugging
+  // console.log(`Validating step ${step}`);
   
   // Initialize validation result
   let isValid = true;
@@ -38,27 +38,27 @@ export const validateStep = (
     // Determine which validation module to use based on the step range
     if (step >= 1 && step <= 5) {
       isValid = validateBasicInfoStep(step, formData, showErrors ? toast : () => {});
-      console.log(`Basic info validation result: ${isValid}`);
+      // console.log(`Basic info validation result: ${isValid}`);
     }
     
     else if (step >= 6 && step <= 13) {
       isValid = validateBodyAssessmentStep(step, formData, showErrors ? toast : () => {});
-      console.log(`Body assessment validation result: ${isValid}`);
+      // console.log(`Body assessment validation result: ${isValid}`);
     }
     
-    else if (step >= 14 && step <= 21) {
+    else if (step >= 14 && step <= 22) {
       isValid = validateWorkoutPreferencesStep(step, formData, showErrors ? toast : () => {});
-      console.log(`Workout preferences validation result: ${isValid}`);
+      // console.log(`Workout preferences validation result: ${isValid}`);
     }
     
-    else if (step >= 22 && step <= 26) {
+    else if (step >= 23 && step <= 27) {
       isValid = validateLifestyleStep(step, formData, showErrors ? toast : () => {});
-      console.log(`Lifestyle validation result: ${isValid}`);
+      // console.log(`Lifestyle validation result: ${isValid}`);
     }
     
-    else if (step >= 27 && step <= 32) {
+    else if (step >= 28 && step <= 33) {
       isValid = validateFinalStepsStep(step, formData, showErrors ? toast : () => {});
-      console.log(`Final steps validation result: ${isValid}`);
+      // console.log(`Final steps validation result: ${isValid}`);
     }
     
     if (!isValid) {
@@ -67,7 +67,7 @@ export const validateStep = (
       
       // If not in strict mode, allow users to proceed despite validation errors
       if (!STRICT_VALIDATION) {
-        console.log(`Validation failed for step ${step}, but proceeding due to non-strict mode`);
+        // console.log(`Validation failed for step ${step}, but proceeding due to non-strict mode`);
         return true;
       }
     }

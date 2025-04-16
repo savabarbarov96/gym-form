@@ -6,7 +6,7 @@ import {
   WorkoutLocationStep,
   WorkoutIntensityStep,
   EquipmentAccessStep,
-  WorkoutDurationStep,
+  WorkoutFrequencyStep,
   ExercisePreferencesStep,
   DesiredBodyStep
 } from '@/components/form-steps';
@@ -31,7 +31,8 @@ const WorkoutPreferencesStepRenderer: React.FC<WorkoutPreferencesStepRendererPro
   // Adjusted for the Traditional Foods step (step 14)
   const localStep = step - 15;
   
-  console.log(`WorkoutPreferencesStepRenderer: Global Step ${step}, Local Step ${localStep}`);
+  // Reduce excessive logging
+  // console.log(`WorkoutPreferencesStepRenderer: Global Step ${step}, Local Step ${localStep}`);
   
   switch (localStep) {
     case 0: // Step 15
@@ -76,26 +77,35 @@ const WorkoutPreferencesStepRenderer: React.FC<WorkoutPreferencesStepRendererPro
             const currentItems = formData.equipmentAccess?.items || [];
             setFormData(prev => ({ 
               ...prev, 
-              equipmentAccess: { type, items: currentItems },
-              // Keep workoutFrequency for backward compatibility
-              workoutFrequency: type
+              equipmentAccess: { type, items: currentItems }
+              // Keep workoutFrequency for backward compatibility but set it in a separate update
             }));
+            
+            // Set workoutFrequency in a separate update to avoid sync issues
+            setTimeout(() => {
+              setFormData(prev => ({ 
+                ...prev, 
+                workoutFrequency: type 
+              }));
+            }, 0);
           }}
           equipmentData={formData.equipmentAccess}
           onEquipmentDataChange={(equipmentData) => {
-            setFormData(prev => ({ 
-              ...prev, 
-              equipmentAccess: equipmentData 
-            }));
+            if (JSON.stringify(formData.equipmentAccess) !== JSON.stringify(equipmentData)) {
+              setFormData(prev => ({ 
+                ...prev, 
+                equipmentAccess: equipmentData 
+              }));
+            }
           }}
         />
       );
     
     case 5: // Step 20
       return (
-        <WorkoutDurationStep
-          selected={formData.workoutDuration}
-          onSelect={(workoutDuration) => setFormData(prev => ({ ...prev, workoutDuration }))}
+        <WorkoutFrequencyStep
+          selected={formData.workoutFrequency}
+          onSelect={(workoutFrequency) => setFormData(prev => ({ ...prev, workoutFrequency }))}
         />
       );
     
