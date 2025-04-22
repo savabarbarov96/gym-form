@@ -22,7 +22,7 @@ const SelfAssessmentStep: React.FC<SelfAssessmentStepProps> = ({
   onChange,
   type,
   onValidate,
-  autoAdvance = true
+  autoAdvance = false
 }) => {
   const { handleNext } = useSurvey();
   const { toast, dismiss } = useToast();
@@ -124,35 +124,40 @@ const SelfAssessmentStep: React.FC<SelfAssessmentStepProps> = ({
       value: 1, 
       label: 'Изобщо не съм съгласен', 
       shortLabel: 'Изобщо не', 
-      color: 'bg-green-500',
+      color: 'bg-green-500/90 backdrop-blur-sm border border-green-400/30',
+      hoverColor: 'hover:bg-green-400/20 hover:border-green-400/50',
       description: 'Не се отнася за мен изобщо'
     },
     { 
       value: 2, 
       label: 'По-скоро не съм съгласен', 
       shortLabel: 'Леко', 
-      color: 'bg-teal-500',
+      color: 'bg-teal-500/90 backdrop-blur-sm border border-teal-400/30',
+      hoverColor: 'hover:bg-teal-400/20 hover:border-teal-400/50',
       description: 'Отнася се за мен в много редки случаи'
     },
     { 
       value: 3, 
       label: 'Нито съгласен, нито несъгласен', 
       shortLabel: 'Умерено', 
-      color: 'bg-blue-500',
+      color: 'bg-blue-500/90 backdrop-blur-sm border border-blue-400/30',
+      hoverColor: 'hover:bg-blue-400/20 hover:border-blue-400/50',
       description: 'Отнася се за мен в някои случаи'
     },
     { 
       value: 4, 
       label: 'По-скоро съм съгласен', 
       shortLabel: 'Много', 
-      color: 'bg-purple-500',
+      color: 'bg-purple-500/90 backdrop-blur-sm border border-purple-400/30',
+      hoverColor: 'hover:bg-purple-400/20 hover:border-purple-400/50',
       description: 'Отнася се за мен в повечето случаи'
     },
     { 
       value: 5, 
       label: 'Напълно съм съгласен', 
       shortLabel: 'Изключително', 
-      color: 'bg-orange',
+      color: 'bg-orange/90 backdrop-blur-sm border border-orange/30',
+      hoverColor: 'hover:bg-orange/20 hover:border-orange/50',
       description: 'Отнася се за мен напълно и постоянно'
     }
   ];
@@ -221,15 +226,15 @@ const SelfAssessmentStep: React.FC<SelfAssessmentStepProps> = ({
       </motion.h2>
       
       <motion.div 
-        className="text-lg text-center p-5 mb-6 bg-white rounded-xl shadow-md border border-gray-100 relative"
+        className="text-lg text-center p-5 mb-6 bg-card/30 backdrop-blur-md rounded-xl shadow-md border border-border/50 relative"
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.2 }}
       >
-        <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-xs font-medium">
+        <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-orange/80 text-white px-3 py-1 rounded-full text-xs font-medium backdrop-blur-sm">
           Твърдение
         </div>
-        <span className="text-gray-800 font-medium leading-relaxed">{getQuestionText()}</span>
+        <span className="text-foreground font-medium leading-relaxed">{getQuestionText()}</span>
       </motion.div>
 
       {/* Rating Scale Context - Small devices */}
@@ -256,10 +261,10 @@ const SelfAssessmentStep: React.FC<SelfAssessmentStepProps> = ({
                   onClick={() => handleOptionSelect(rating.value)}
                   disabled={isAdvancing}
                   className={cn(
-                    "w-12 h-12 rounded-full flex items-center justify-center transition-all focus:outline-none focus:ring-2 focus:ring-offset-2",
+                    "w-12 h-12 rounded-full flex items-center justify-center transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 backdrop-blur-sm shadow-sm",
                     value === rating.value
-                      ? `${rating.color} text-white shadow-md` 
-                      : "bg-white border-2 border-gray-200 text-gray-700 hover:border-gray-300"
+                      ? `${rating.color} text-white` 
+                      : "bg-card/30 border-2 border-border/50 text-foreground hover:border-border"
                   )}
                   aria-label={rating.label}
                 >
@@ -276,7 +281,7 @@ const SelfAssessmentStep: React.FC<SelfAssessmentStepProps> = ({
           
           {/* Mobile rating descriptions */}
           {value !== null && (
-            <div className="text-xs text-center text-gray-500 mt-2 p-2 bg-gray-50 rounded-lg">
+            <div className="text-xs text-center text-foreground mt-2 p-2 bg-background/70 backdrop-blur-sm rounded-lg border border-border/30">
               <p><strong>{ratings.find(r => r.value === value)?.label}:</strong> {ratings.find(r => r.value === value)?.description}</p>
             </div>
           )}
@@ -294,10 +299,10 @@ const SelfAssessmentStep: React.FC<SelfAssessmentStepProps> = ({
               whileHover={{ y: -5 }}
               whileTap={{ scale: 0.95 }}
               className={cn(
-                "relative p-5 rounded-xl transition-all flex flex-col items-center justify-center h-full",
+                "relative p-5 rounded-xl transition-all flex flex-col items-center justify-center h-full backdrop-blur-sm",
                 value === rating.value 
                   ? `${rating.color} text-white shadow-lg` 
-                  : "bg-white border border-gray-200 hover:border-orange-200 hover:bg-orange-50/30 shadow-sm"
+                  : `bg-card/30 border border-border/50 ${rating.hoverColor} shadow-sm`
               )}
               disabled={isAdvancing}
             >
@@ -314,28 +319,28 @@ const SelfAssessmentStep: React.FC<SelfAssessmentStepProps> = ({
               
               <span className={cn(
                 "text-3xl font-bold mb-1",
-                value === rating.value ? "text-white" : "text-gray-800"
+                value === rating.value ? "text-white" : "text-foreground"
               )}>
                 {rating.value}
               </span>
               
               <span className={cn(
                 "text-sm font-medium mb-1 text-center",
-                value === rating.value ? "text-white" : "text-gray-700"
+                value === rating.value ? "text-white" : "text-foreground"
               )}>
                 {rating.shortLabel}
               </span>
               
               <span className={cn(
                 "text-xs text-center",
-                value === rating.value ? "text-white/80" : "text-gray-500"
+                value === rating.value ? "text-white/80" : "text-foreground/80"
               )}>
                 {rating.label}
               </span>
               
               <span className={cn(
                 "text-[10px] text-center mt-1 max-w-[90%]",
-                value === rating.value ? "text-white/70" : "text-gray-400"
+                value === rating.value ? "text-white/70" : "text-foreground/70"
               )}>
                 {rating.description}
               </span>
@@ -351,8 +356,8 @@ const SelfAssessmentStep: React.FC<SelfAssessmentStepProps> = ({
               exit={{ opacity: 0, y: 10 }}
               className="mt-6 text-center"
             >
-              <div className="bg-orange-50 rounded-xl p-4 inline-block min-w-64 mx-auto">
-                <p className="text-base text-orange-800">
+              <div className="bg-orange/10 backdrop-blur-sm rounded-xl p-4 inline-block min-w-64 mx-auto border border-orange/20">
+                <p className="text-base text-foreground">
                   Избрахте: <span className="font-semibold">{ratings.find(r => r.value === value)?.label}</span>
                 </p>
                 {isAdvancing && (

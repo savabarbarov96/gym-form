@@ -26,9 +26,17 @@ export const useSurveyNavigation = (
     dismiss();
     
     // Validate the current step using our unified validation system
-    // Only show errors for auto-next, not for manual clicks
     if (!validateStep(step, formData, toast, isAutoNext)) {
       console.log(`Validation failed for step ${step}`);
+      
+      // Show a general error toast in Bulgarian for manual navigation attempts
+      if (!isAutoNext) {
+        toast({
+          title: "Непълна информация",
+          description: "Моля, попълнете всички задължителни полета преди да продължите.",
+          variant: "destructive",
+        });
+      }
       return;
     }
 
@@ -40,8 +48,8 @@ export const useSurveyNavigation = (
       setStep(prev => prev + 1);
     } else {
       toast({
-        title: "Processing your plan",
-        description: "We're creating your personalized fitness plan",
+        title: "Обработваме Вашия план",
+        description: "Създаваме Вашия персонализиран фитнес план",
       });
       
       onComplete();
