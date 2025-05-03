@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { X, ChefHat, Dumbbell, CheckCircle, Gift, Loader2 } from "lucide-react";
 import { motion } from 'framer-motion';
-import { handleCheckout, PlanType } from '@/lib/stripe';
+import { useStripe, PlanType, PRODUCT_PRICES } from '@/contexts/StripeContext';
 
 // Define animations in the global CSS file
 const fadeIn = "animate-in fade-in duration-200";
@@ -134,34 +134,38 @@ interface PricingModalProps {
 }
 
 export const PricingModal: React.FC<PricingModalProps> = ({ open, onOpenChange }) => {
+  const { handleCheckout, isStripeLoading, stripeError } = useStripe();
   const [loading, setLoading] = useState<PlanType | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleStripeCheckout = async (planType: PlanType) => {
+  const handlePlanSelection = async (selectedPlan: PlanType) => {
+    if (isStripeLoading) {
+      console.log("Payment processor is still initializing. Please try again in a moment.");
+      return;
+    }
+
+    if (stripeError) {
+      console.error("There was a problem loading the payment processor. Please try again later.");
+      return;
+    }
+
+    setIsProcessing(true);
+    setLoading(selectedPlan);
+
     try {
-      // Set loading state
-      setLoading(planType);
-      
-      // Initiate checkout directly using the handleCheckout function
-      // This now opens a new tab with the Stripe payment link
-      const success = await handleCheckout(planType);
-      
+      const success = await handleCheckout(selectedPlan);
       if (!success) {
-        // If checkout failed, reset loading state
-        setLoading(null);
-        console.error('Checkout failed');
-        // You could show a toast notification or error message here
-      } else {
-        // If successful, reset loading after a short delay
-        // This gives time for the new tab to open
-        setTimeout(() => {
-          setLoading(null);
-        }, 1000);
+        console.error("Checkout failed. Please try again.");
       }
+      // We don't close the modal here as the redirectToCheckout will navigate away
     } catch (error) {
-      // Reset loading state on error
-      setLoading(null);
-      console.error('Error during checkout:', error);
-      // Handle error, perhaps showing a message to the user
+      console.error("Error during checkout:", error);
+    } finally {
+      setIsProcessing(false);
+      // Set loading to null after a short delay
+      setTimeout(() => {
+        setLoading(null);
+      }, 1000);
     }
   };
 
@@ -186,20 +190,20 @@ export const PricingModal: React.FC<PricingModalProps> = ({ open, onOpenChange }
           <PricingCard
             icon={<ChefHat className="text-orange h-5 w-5" />}
             title="Хранителен режим"
-            price="60 лева"
+            price={PRODUCT_PRICES.meal}
             features={[
               { text: 'Седмично меню' },
               { text: 'Списък с покупки' },
               { text: 'Персонализиран режим' },
             ]}
-            onClick={() => handleStripeCheckout('meal')}
+            onClick={() => handlePlanSelection('meal')}
             isLoading={loading === 'meal'}
           />
           
           <PricingCard
             icon={<></>}
             title="Комбиниран план"
-            price="97 лева"
+            price={PRODUCT_PRICES.combined}
             originalPrice="120 лева"
             discount="Спестявате 19%"
             features={[
@@ -209,7 +213,7 @@ export const PricingModal: React.FC<PricingModalProps> = ({ open, onOpenChange }
               { text: 'Максимално бърз резултат', highlight: true },
               { text: 'Подарък: Брошура с рецепти', icon: <Gift className="w-4 h-4 text-orange flex-shrink-0 mt-0.5" />, highlight: true },
             ]}
-            onClick={() => handleStripeCheckout('combined')}
+            onClick={() => handlePlanSelection('combined')}
             isHighlighted={true}
             isLoading={loading === 'combined'}
           />
@@ -217,13 +221,13 @@ export const PricingModal: React.FC<PricingModalProps> = ({ open, onOpenChange }
           <PricingCard
             icon={<Dumbbell className="text-orange h-5 w-5" />}
             title="Тренировъчен план"
-            price="60 лева"
+            price={PRODUCT_PRICES.workout}
             features={[
               { text: 'Персонализирани тренировки' },
               { text: 'Инструкции за изпълнение' },
               { text: 'Прогресивна програма' },
             ]}
-            onClick={() => handleStripeCheckout('workout')}
+            onClick={() => handlePlanSelection('workout')}
             isLoading={loading === 'workout'}
           />
         </div>
@@ -231,6 +235,13 @@ export const PricingModal: React.FC<PricingModalProps> = ({ open, onOpenChange }
         <p className="text-center mt-6 text-xs text-gray-600 dark:text-gray-300">
           Цените са за еднократно генериране на персонализиран план.
         </p>
+
+        {stripeError && (
+          <div className="mt-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <strong className="font-bold">Грешка:</strong>
+            <span className="block sm:inline"> Възникна проблем при зареждането на платежния процесор. Моля, опитайте отново по-късно.</span>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );

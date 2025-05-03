@@ -12,6 +12,10 @@ This checklist covers everything needed to ensure the application is ready for p
   - [x] Meal plan: `price_1OVmKTP3RUANtq4L8QBqxBLi` (from product `prod_SFBGFsICFLW0zI`)
   - [x] Workout plan: `price_1OVmKnP3RUANtq4L1XH1kzDO` (from product `prod_SFBJvpUpVe0aYO`)
   - [x] Combined plan: `price_1OVmLNP3RUANtq4LjNDL2vWh` (from product `prod_SFBNKgtJz21qeo`)
+- [x] Updated Stripe payment links configured in StripeContext.tsx
+  - [x] Meal plan: `https://buy.stripe.com/6oE5o74IkeWN1zy5km`
+  - [x] Workout plan: `https://buy.stripe.com/8wMbMv5Mo3e50vu6oo`
+  - [x] Combined plan: `https://buy.stripe.com/fZeaIrdeQ9Ct2DC9AB`
 - [x] Stripe webhook configured in Stripe Dashboard (required for payment success/failure notifications)
   - [x] Verify webhook endpoint is pointing to your production server
 
@@ -28,6 +32,7 @@ This checklist covers everything needed to ensure the application is ready for p
 - [x] Payment canceled flow redirects back to plan selection
 - [x] Form data is preserved when returning from canceled payment
 - [x] Application successfully builds for production (`npm run build`)
+- [x] Payment flow only triggers webhooks after successful payment
 - [ ] Test all payment flows in a staging environment
 
 ## 📋 Final Production Deployment Steps

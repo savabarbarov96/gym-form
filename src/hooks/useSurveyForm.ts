@@ -70,6 +70,11 @@ export const useSurveyForm = () => {
   useEffect(() => {
     try {
       localStorage.setItem('surveyFormData', JSON.stringify(formData));
+      
+      // Extract and save email separately for Stripe checkout
+      if (formData.personalInfo?.email) {
+        localStorage.setItem('userEmail', formData.personalInfo.email);
+      }
     } catch (error) {
       console.error('Failed to save form data to localStorage:', error);
     }

@@ -11,7 +11,7 @@ import { HealthDisclaimer } from "@/components/results/HealthDisclaimer";
 import { Button } from "@/components/ui/button";
 
 // Initialize Stripe outside of the component render cycle
-const stripePromise = loadStripe('pk_test_51RBLsb09RSewZPYHj4dcfAEVrBAIffaPwo6AfJLbRl6rJOE8WpTMvoxMzCMmepUZEGzz5XV9ZInhjL5fYXA3wiar00iu9d2Elm');
+const stripePromise = loadStripe('pk_live_51RBLsSP3RUANtq4LgJlJgCZhnHBzLGOPCjc3yIo8Kl8Wh6mFog3jLTJCSmh8rO0oSTgIaYWvBatR4oHbnJ5ye5u5005KAvJkCM');
 
 interface ResultsStateProps {
   // handleGetPlan: () => void; // Removed

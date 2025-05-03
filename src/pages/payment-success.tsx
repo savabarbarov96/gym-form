@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { loadStripe } from '@stripe/stripe-js';
 import { SuccessWithLoading } from '@/components/app-states';
 import { 
   submitToWebhook, 
@@ -9,23 +8,28 @@ import {
 } from '@/components/WebhookService';
 import { FormData } from '@/types/survey';
 import { saveUserData } from '@/lib/supabase';
+import { PlanType, PRODUCT_MAPPING } from '@/contexts/StripeContext';
 
-// Initialize Stripe outside of the component render cycle
-// Use the same key as in ResultsState.tsx
-const stripePromise = loadStripe('pk_test_51RBLsb09RSewZPYHj4dcfAEVrBAIffaPwo6AfJLbRl6rJOE8WpTMvoxMzCMmepUZEGzz5XV9ZInhjL5fYXA3wiar00iu9d2Elm');
-
-// Price IDs to plan type mapping
-const PRICE_MAPPING = {
-  'price_1RBwo109RSewZPYHEBeKTIbm': 'workout', // Workout plan only
-  'price_1RBwp509RSewZPYHEKr9LQzp': 'meal', // Meal plan only
-  'price_1RBwqy09RSewZPYHofVF49Uy': 'combined' // Meal Plan and Workout plan product
+// Define mapping from URL param plan to actual plan type
+const PLAN_TYPE_MAPPING: Record<string, PlanType> = {
+  'workout': 'workout',
+  'meal': 'meal',
+  'combined': 'combined'
 };
-
-type PlanType = 'workout' | 'meal' | 'combined';
 
 const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
-  const sessionId = searchParams.get('session_id');
+  // Get plan from client_reference_id which is passed from Stripe
+  const clientReferenceId = searchParams.get('client_reference_id') || '';
+  const planParam = clientReferenceId in PLAN_TYPE_MAPPING ? clientReferenceId : searchParams.get('plan');
+  
+  // Log the redirect parameters for debugging
+  console.log('Payment Success: Redirect received with parameters', {
+    clientReferenceId,
+    planParam,
+    allParams: Object.fromEntries(searchParams.entries())
+  });
+  
   const navigate = useNavigate();
   const [formData, setFormData] = useState<FormData | null>(null);
   const [isVerifying, setIsVerifying] = useState(true);
@@ -38,7 +42,10 @@ const PaymentSuccess = () => {
     try {
       const savedFormData = localStorage.getItem('surveyFormData');
       if (savedFormData) {
+        console.log('Payment Success: Form data loaded from localStorage');
         setFormData(JSON.parse(savedFormData));
+      } else {
+        console.warn('Payment Success: No form data found in localStorage');
       }
     } catch (err) {
       console.error('Failed to load form data from localStorage:', err);
@@ -46,14 +53,16 @@ const PaymentSuccess = () => {
   }, []);
 
   useEffect(() => {
-    // If no session ID is provided, redirect to home
-    if (!sessionId) {
-      navigate('/');
+    // Validate that we have a plan type
+    if (!planParam) {
+      console.error('Missing required plan parameter');
+      setError('Payment verification failed. Missing plan information. Please contact support.');
+      setIsVerifying(false);
       return;
     }
 
-    // Function to verify the payment status and trigger webhooks
-    const verifyPayment = async () => {
+    // Function to process the order and trigger webhooks
+    const processOrder = async () => {
       // If webhooks have already been triggered, don't do it again
       if (webhooksTriggeredRef.current) {
         console.log('Webhooks already triggered, skipping');
@@ -62,19 +71,19 @@ const PaymentSuccess = () => {
       }
 
       try {
-        console.log('Starting payment verification for session:', sessionId);
+        console.log('Starting order processing for plan:', planParam);
         
-        // Create a server endpoint URL for verifying the session
-        // For now we'll use a mock verification since we don't have a server endpoint
-        const planType = await mockVerifyPayment(sessionId);
-        
-        console.log('Payment verification result:', planType ? 'Success' : 'Failed', 'Plan type:', planType);
+        // Determine the plan type from the URL parameter
+        const planType = PLAN_TYPE_MAPPING[planParam];
         
         if (!planType) {
-          setError('Unable to verify payment. Please contact support.');
+          console.error(`Invalid plan type: ${planParam}`);
+          setError('Invalid plan type. Please contact support.');
           setIsVerifying(false);
           return;
         }
+        
+        console.log('Determined plan type:', planType);
 
         // Only proceed if form data is available
         if (formData) {
@@ -91,53 +100,20 @@ const PaymentSuccess = () => {
         
         setIsVerifying(false);
       } catch (error) {
-        console.error('Error verifying payment:', error);
-        setError('An error occurred while verifying your payment. Please contact support.');
+        console.error('Error processing order:', error);
+        setError('An error occurred while processing your order. Please contact support.');
         setIsVerifying(false);
       }
     };
 
-    // Only verify payment if form data is loaded AND we haven't triggered webhooks yet
+    // Only process order if form data is loaded AND we haven't triggered webhooks yet
     if (formData !== null && !webhooksTriggeredRef.current) {
-      console.log('Initiating payment verification. Form data loaded:', formData !== null);
-      verifyPayment();
+      console.log('Initiating order processing. Form data loaded:', formData !== null);
+      processOrder();
     } else if (!formData) {
-      console.log('Waiting for form data to be loaded before verifying payment');
+      console.log('Waiting for form data to be loaded before processing order');
     }
-  }, [sessionId, navigate, formData]);
-
-  // Mock function to verify payment (replace with actual verification logic)
-  const mockVerifyPayment = async (sessionId: string): Promise<PlanType | null> => {
-    // In a real implementation, you would call your server to verify the session
-    console.log(`Verifying session: ${sessionId}`);
-    
-    // Mock verification - pretend we queried the session and got the line items
-    // In production, this should be a server-side call to Stripe's API
-
-    // For demo purposes, extract planType from sessionId if present
-    // Format: sess_xxx_planType or cs_xxx_planType
-    try {
-      const parts = sessionId.split('_');
-      console.log('Session ID parts:', parts);
-      
-      // Check if the last part is a valid plan type
-      if (parts.length >= 3) {
-        const potentialPlanType = parts[parts.length - 1];
-        if (['workout', 'meal', 'combined'].includes(potentialPlanType)) {
-          console.log(`Found valid plan type in session ID: ${potentialPlanType}`);
-          return potentialPlanType as PlanType;
-        }
-      }
-      
-      console.log('No valid plan type found in session ID, defaulting to combined');
-      // Default to combined if we can't determine the plan type
-      // In production, this should actually verify with Stripe's API
-      return 'combined';
-    } catch (error) {
-      console.error('Error parsing session ID:', error);
-      return 'combined';
-    }
-  };
+  }, [planParam, formData]);
 
   // Function to trigger the appropriate webhooks
   const triggerWebhooks = async (planType: PlanType, formData: FormData) => {
@@ -153,7 +129,12 @@ const PaymentSuccess = () => {
           ...formData,
           selectedPlan: planType,
           paymentStatus: 'completed',
-          paymentDate: new Date().toISOString()
+          paymentDate: new Date().toISOString(),
+          paymentDetails: {
+            productId: PRODUCT_MAPPING[planType]?.productId || '',
+            productName: PRODUCT_MAPPING[planType]?.name || '',
+            paymentLink: PRODUCT_MAPPING[planType]?.paymentLink || '',
+          }
         };
         
         try {
@@ -177,18 +158,22 @@ const PaymentSuccess = () => {
         console.warn("Missing name or email, skipping Supabase save");
       }
 
+      console.log(`Payment Success: Starting webhook submission to sava.automationaid.eu for plan type: ${planType}`);
+      
       // Only trigger the specific webhooks needed for the plan type
+      let webhookResult = false;
       if (planType === 'combined') {
         console.log('Triggering combined webhooks (both meal and workout plans)');
-        await submitToWebhook(formData);
+        webhookResult = await submitToWebhook(formData);
       } else if (planType === 'meal') {
         console.log('Triggering meal plan webhook only');
-        await submitToMealPlanWebhook(formData);
+        webhookResult = await submitToMealPlanWebhook(formData);
       } else if (planType === 'workout') {
         console.log('Triggering workout plan webhook only');
-        await submitToWorkoutPlanWebhook(formData);
+        webhookResult = await submitToWorkoutPlanWebhook(formData);
       }
-      console.log('Webhooks triggered successfully');
+      
+      console.log(`Payment Success: Webhook submission ${webhookResult ? 'succeeded' : 'failed'}`);
     } catch (error) {
       console.error('Error triggering webhooks:', error);
       // We don't set an error state here as we still want to show the success page
@@ -202,7 +187,7 @@ const PaymentSuccess = () => {
       <div className="w-full h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-orange border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-xl">Verifying your payment...</p>
+          <p className="text-xl">Обработване на поръчката...</p>
         </div>
       </div>
     );
@@ -213,13 +198,13 @@ const PaymentSuccess = () => {
     return (
       <div className="w-full h-screen flex items-center justify-center">
         <div className="text-center max-w-md p-6 bg-red-50 rounded-lg">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">Payment Verification Failed</h2>
+          <h2 className="text-2xl font-bold text-red-600 mb-4">Обработката на поръчката не успя</h2>
           <p className="mb-4">{error}</p>
           <button 
             onClick={() => navigate('/')}
             className="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
           >
-            Return Home
+            Върнете се към началото
           </button>
         </div>
       </div>
