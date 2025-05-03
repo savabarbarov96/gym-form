@@ -14,8 +14,8 @@ This checklist covers everything needed to ensure the application is ready for p
   - [x] Combined plan: `price_1OVmLNP3RUANtq4LjNDL2vWh` (from product `prod_SFBNKgtJz21qeo`)
 - [x] Updated Stripe payment links configured in StripeContext.tsx
   - [x] Meal plan: `https://buy.stripe.com/6oE5o74IkeWN1zy5km`
-  - [x] Workout plan: `https://buy.stripe.com/8wMbMv5Mo3e50vu6oo`
-  - [x] Combined plan: `https://buy.stripe.com/fZeaIrdeQ9Ct2DC9AB`
+  - [x] Workout plan: `https://buy.stripe.com/fZeaIrdeQ9Ct2DC9AB`
+  - [x] Combined plan: `https://buy.stripe.com/8wMbMv5Mo3e50vu6oo`
 - [x] Stripe webhook configured in Stripe Dashboard (required for payment success/failure notifications)
   - [x] Verify webhook endpoint is pointing to your production server
 
