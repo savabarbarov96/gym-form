@@ -1,11 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
-import { X, ChefHat, Dumbbell, CheckCircle, Gift } from "lucide-react";
+import { X, ChefHat, Dumbbell, CheckCircle, Gift, Loader2 } from "lucide-react";
 import { motion } from 'framer-motion';
-import { loadStripe } from '@stripe/stripe-js';
-
-// Initialize Stripe outside of the component render cycle
-const stripePromise = loadStripe('pk_test_51RBLsb09RSewZPYHj4dcfAEVrBAIffaPwo6AfJLbRl6rJOE8WpTMvoxMzCMmepUZEGzz5XV9ZInhjL5fYXA3wiar00iu9d2Elm');
+import { handleCheckout, PlanType } from '@/lib/stripe';
 
 // Define animations in the global CSS file
 const fadeIn = "animate-in fade-in duration-200";
@@ -25,6 +22,7 @@ interface PricingCardProps {
   highlightLabel?: string;
   className?: string;
   buttonText?: string;
+  isLoading?: boolean;
 }
 
 const PricingCard: React.FC<PricingCardProps> = ({
@@ -39,6 +37,7 @@ const PricingCard: React.FC<PricingCardProps> = ({
   highlightLabel = 'Най-популярен избор',
   className = '',
   buttonText = 'Поръчай сега',
+  isLoading = false,
 }) => {
   return (
     <motion.div
@@ -108,12 +107,21 @@ const PricingCard: React.FC<PricingCardProps> = ({
       <div className="px-5 pb-5">
         <button
           onClick={onClick}
+          disabled={isLoading}
           className={`w-full py-3 rounded-lg font-semibold transition-all text-white
           ${isHighlighted 
             ? 'bg-gradient-to-r from-orange to-orange-600 hover:brightness-105' 
-            : 'bg-orange hover:brightness-105'}`}
+            : 'bg-orange hover:brightness-105'}
+          ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
         >
-          {buttonText}
+          {isLoading ? (
+            <span className="flex items-center justify-center">
+              <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+              Зареждане...
+            </span>
+          ) : (
+            buttonText
+          )}
         </button>
       </div>
     </motion.div>
@@ -126,22 +134,34 @@ interface PricingModalProps {
 }
 
 export const PricingModal: React.FC<PricingModalProps> = ({ open, onOpenChange }) => {
-  const handleStripeCheckout = async (priceId: string, planType: 'workout' | 'meal' | 'combined') => {
-    const stripe = await stripePromise;
-    if (!stripe) {
-      console.error("Stripe.js has not loaded yet.");
-      return;
-    }
+  const [loading, setLoading] = useState<PlanType | null>(null);
 
-    const { error } = await stripe.redirectToCheckout({
-      lineItems: [{ price: priceId, quantity: 1 }],
-      mode: 'payment',
-      successUrl: `${window.location.origin}/payment-success?session_id={CHECKOUT_SESSION_ID}_${planType}`,
-      cancelUrl: `${window.location.origin}/payment-canceled`,
-    });
-
-    if (error) {
-      console.error("Stripe checkout error:", error.message);
+  const handleStripeCheckout = async (planType: PlanType) => {
+    try {
+      // Set loading state
+      setLoading(planType);
+      
+      // Initiate checkout directly using the handleCheckout function
+      // This now opens a new tab with the Stripe payment link
+      const success = await handleCheckout(planType);
+      
+      if (!success) {
+        // If checkout failed, reset loading state
+        setLoading(null);
+        console.error('Checkout failed');
+        // You could show a toast notification or error message here
+      } else {
+        // If successful, reset loading after a short delay
+        // This gives time for the new tab to open
+        setTimeout(() => {
+          setLoading(null);
+        }, 1000);
+      }
+    } catch (error) {
+      // Reset loading state on error
+      setLoading(null);
+      console.error('Error during checkout:', error);
+      // Handle error, perhaps showing a message to the user
     }
   };
 
@@ -172,7 +192,8 @@ export const PricingModal: React.FC<PricingModalProps> = ({ open, onOpenChange }
               { text: 'Списък с покупки' },
               { text: 'Персонализиран режим' },
             ]}
-            onClick={() => handleStripeCheckout('price_1RBwp509RSewZPYHEKr9LQzp', 'meal')}
+            onClick={() => handleStripeCheckout('meal')}
+            isLoading={loading === 'meal'}
           />
           
           <PricingCard
@@ -188,8 +209,9 @@ export const PricingModal: React.FC<PricingModalProps> = ({ open, onOpenChange }
               { text: 'Максимално бърз резултат', highlight: true },
               { text: 'Подарък: Брошура с рецепти', icon: <Gift className="w-4 h-4 text-orange flex-shrink-0 mt-0.5" />, highlight: true },
             ]}
-            onClick={() => handleStripeCheckout('price_1RBwqy09RSewZPYHofVF49Uy', 'combined')}
+            onClick={() => handleStripeCheckout('combined')}
             isHighlighted={true}
+            isLoading={loading === 'combined'}
           />
           
           <PricingCard
@@ -201,7 +223,8 @@ export const PricingModal: React.FC<PricingModalProps> = ({ open, onOpenChange }
               { text: 'Инструкции за изпълнение' },
               { text: 'Прогресивна програма' },
             ]}
-            onClick={() => handleStripeCheckout('price_1RBwo109RSewZPYHEBeKTIbm', 'workout')}
+            onClick={() => handleStripeCheckout('workout')}
+            isLoading={loading === 'workout'}
           />
         </div>
         

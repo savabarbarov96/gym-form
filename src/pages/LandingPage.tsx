@@ -184,7 +184,7 @@ const LandingPage = () => {
             <img 
               src={getCurrentImagePath()} 
               alt="Background" 
-              className="absolute inset-0 w-full h-full object-cover"
+              className="absolute inset-0 w-full h-full object-cover object-center"
             />
           </div>
         </div>
@@ -205,13 +205,14 @@ const LandingPage = () => {
           <span className="hidden sm:inline">Мнения на клиенти</span>
           <span className="sm:hidden">Мнения</span>
         </button>
-        
-        <TestimonialSlider 
-          isOpen={isTestimonialsOpen} 
-          onClose={() => setIsTestimonialsOpen(false)}
-          autoScrollInterval={10000}
-        />
       </header>
+
+      {/* Render testimonial slider at the root level */}
+      <TestimonialSlider 
+        isOpen={isTestimonialsOpen} 
+        onClose={() => setIsTestimonialsOpen(false)}
+        autoScrollInterval={10000}
+      />
 
       {/* Hero Section with Prominent CTA */}
       <section 
@@ -238,23 +239,30 @@ const LandingPage = () => {
             animate="visible"
           >
             <motion.h1 
-              className="text-4xl md:text-6xl font-bold mb-6 text-white"
+              className="text-[2.5rem] sm:text-5xl lg:text-6xl font-bold mb-8 md:mb-10 text-white leading-[1.1] tracking-tight"
               variants={fadeInUp}
             >
-              Трансформирайте<br />
-              <span className="text-orange">Тялото Си</span><br />
-              С Изкуствен Интелект
+              <span className="block mb-3">Свали 5 до 20 кг</span>
+              <span className="text-orange block mb-3">с Персонален Режим,</span>
+              <span className="block">Създаден Специално за Теб</span>
             </motion.h1>
             
             <motion.p 
-              className="text-xl text-gray-200 max-w-xl mb-8"
+              className="text-lg md:text-xl text-gray-200 max-w-xl mb-8 leading-relaxed"
               variants={fadeInUp}
             >
-              Персонализирана програма за хранене и тренировки, създадена специално за Вас от напреднал ИИ
+              Свали излишните килограми и изгради тялото, което винаги си искал – с персонален план за хранене и тренировки, направен според твоите цели, начин на живот и време.
+            </motion.p>
+
+            <motion.p 
+              className="text-base md:text-lg text-gray-200 max-w-xl mb-8 leading-relaxed"
+              variants={fadeInUp}
+            >
+              Тялото, за което мечтаеш, е само на 2 минути разстояние. Попълни въпросите и започни сега.
             </motion.p>
 
             <motion.div 
-              className="flex flex-col sm:flex-row gap-4"
+              className="flex flex-col gap-4 mt-2 md:mt-4"
               variants={fadeInUp}
             >
               <motion.div
@@ -263,16 +271,19 @@ const LandingPage = () => {
                 animate="animate"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="w-full flex justify-center"
+                className="w-full sm:w-auto flex justify-center"
               >
                 <Link 
                   to="/form" 
-                  className="inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-gradient-to-r from-orange to-orange-600 hover:from-orange-600 hover:to-orange rounded-lg shadow-lg transition-all duration-300"
+                  className="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 text-base md:text-lg font-medium text-white bg-gradient-to-r from-orange to-orange-600 hover:from-orange-600 hover:to-orange rounded-lg shadow-lg transition-all duration-300 w-full sm:w-auto"
                 >
-                  Започнете Сега
+                  Попълни въпросите
                   <ArrowRight className="ml-2" size={20} />
                 </Link>
               </motion.div>
+              <div className="text-center text-gray-300 text-xs sm:text-sm italic">
+                Отнема под 2 минути, а режимът ти ще е готов веднага след това.
+              </div>
             </motion.div>
           </motion.div>
 
@@ -437,7 +448,7 @@ const LandingPage = () => {
                           repeatType: "reverse"
                         }}
                       >
-                        Започнете сега
+                        Вземи своя план
                       </motion.span>
                       <motion.div
                         animate={{ 
@@ -524,7 +535,7 @@ const LandingPage = () => {
                   whileHover={{ opacity: 1, scale: 1.03 }}
                   transition={{ duration: 0.2 }}
                 >
-                  Напреднал ИИ
+                  Научно обосновани тренировки
                 </motion.h3>
               </div>
               
@@ -534,7 +545,7 @@ const LandingPage = () => {
                 whileHover={{ opacity: 1 }}
                 transition={{ duration: 0.2 }}
               >
-                Нашата система използва последните постижения в изкуствения интелект за създаване на програми, адаптирани към вашите специфични нужди.
+                Постигай реални и устойчиви резултати с програми, изградени върху научно доказани принципи. Всеки план е персонално съобразен с твоите цели, физическо състояние и начин на живот, за да осигури най-ефективния път към промяната.
               </motion.p>
             </div>
           </motion.div>
@@ -606,7 +617,7 @@ const LandingPage = () => {
                 whileHover={{ opacity: 1 }}
                 transition={{ duration: 0.2 }}
               >
-                Персонализирано хранене, съобразено с вашите предпочитания и наличните за вас храни. Оптимизирано за вашите цели и дневен режим.
+                Персонализиран хранителен план, съобразен с целта ти и начина ти на живот – за да постигаш резултати без крайни лишения, без безкрайни часове в кухнята и без да се чудиш какво можеш да ядеш.
               </motion.p>
             </div>
           </motion.div>
@@ -677,7 +688,7 @@ const LandingPage = () => {
                 whileHover={{ opacity: 1 }}
                 transition={{ duration: 0.2 }}
               >
-                Научно обосновани тренировки без необходимо оборудване. Програмата ще използва всички фитнес уреди, до които имате достъп, за максимални резултати.
+                Тренировъчна програма, изградена според твоята цел, ежедневие и налично оборудване – за да постигаш резултати, независимо дали тренираш вкъщи или във фитнеса. Без излишни усложнения. Само ясен път към промяната.
               </motion.p>
             </div>
           </motion.div>
@@ -771,6 +782,16 @@ const LandingPage = () => {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, amount: 0.3 }}
         >
+          <motion.h2 
+            className="text-2xl sm:text-3xl font-bold text-center mb-4 text-orange-400"
+            initial={{ opacity: 0, y: -10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+          >
+            Над 180 човека ни се довериха, виж какво казват те
+          </motion.h2>
+          
           <motion.h3 
             className="text-xl font-bold text-center mb-8 relative"
             initial={{ opacity: 0, y: -10 }}
@@ -856,322 +877,6 @@ const LandingPage = () => {
               </motion.div>
             </div>
           </div>
-        </motion.div>
-
-        {/* Plan Benefits Section - New Section */}
-        <motion.div 
-          className="w-full max-w-5xl mb-12"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, amount: 0.3 }}
-        >
-          <motion.h3 
-            className="text-xl font-bold text-center mb-6 relative"
-            initial={{ opacity: 0, y: -10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-          >
-            <motion.span
-              initial={{ backgroundSize: "0% 2px" }}
-              whileInView={{ backgroundSize: "100% 2px" }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.5, duration: 1 }}
-              className="bg-gradient-to-r from-orange to-orange-600 bg-no-repeat bg-bottom pb-1"
-              style={{ backgroundPosition: "0 100%" }}
-            >
-              Защо Да Изберете Нашия План
-            </motion.span>
-          </motion.h3>
-          
-          <motion.div 
-            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4"
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
-            {/* Benefit 1 */}
-            <motion.div 
-              className="bg-card/80 backdrop-blur-sm p-5 rounded-lg border border-orange/20 overflow-hidden relative group"
-              variants={fadeInUp}
-              whileHover={{ 
-                y: -8, 
-                boxShadow: "0 10px 25px -5px rgba(255, 115, 0, 0.2)",
-                transition: { duration: 0.3, ease: "easeOut" } 
-              }}
-            >
-              <motion.div 
-                className="absolute -top-8 -right-8 w-32 h-32 bg-orange/10 rounded-full blur-2xl z-0 opacity-0 group-hover:opacity-100"
-                transition={{ duration: 0.5 }}
-              />
-              
-              <div className="relative z-10">
-                <div className="flex items-center mb-3">
-                  <motion.div 
-                    className="p-2.5 rounded-full bg-orange/10 text-orange mr-3 relative overflow-hidden"
-                    whileHover={{
-                      scale: 1.1,
-                      transition: { duration: 0.3 }
-                    }}
-                    animate={{
-                      boxShadow: [
-                        "0 0 0 0 rgba(255, 115, 0, 0)",
-                        "0 0 0 8px rgba(255, 115, 0, 0.1)",
-                        "0 0 0 0 rgba(255, 115, 0, 0)"
-                      ],
-                      transition: { 
-                        duration: 2,
-                        repeat: Infinity,
-                        repeatType: "loop"
-                      }
-                    }}
-                  >
-                    <motion.div
-                      animate={{ rotate: [0, 10, 0, -10, 0] }}
-                      transition={{ 
-                        duration: 5, 
-                        repeat: Infinity,
-                        repeatType: "loop" 
-                      }}
-                    >
-                      <Brain size={22} />
-                    </motion.div>
-                  </motion.div>
-                  <motion.h3 
-                    className="text-lg font-bold"
-                    initial={{ opacity: 0.9 }}
-                    whileHover={{ opacity: 1, scale: 1.03 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    Научно Обоснован
-                  </motion.h3>
-                </div>
-                
-                <motion.p 
-                  className="text-gray-300 text-sm"
-                  initial={{ opacity: 0.8 }}
-                  whileHover={{ opacity: 1 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  Програмата е базирана на съвременни научни изследвания за оптимално физическо развитие и метаболизъм.
-                </motion.p>
-              </div>
-            </motion.div>
-            
-            {/* Benefit 2 */}
-            <motion.div 
-              className="bg-card/80 backdrop-blur-sm p-5 rounded-lg border border-orange/20 overflow-hidden relative group"
-              variants={fadeInUp}
-              whileHover={{ 
-                y: -8, 
-                boxShadow: "0 10px 25px -5px rgba(255, 115, 0, 0.2)",
-                transition: { duration: 0.3, ease: "easeOut" } 
-              }}
-            >
-              <motion.div 
-                className="absolute -top-8 -right-8 w-32 h-32 bg-orange/10 rounded-full blur-2xl z-0 opacity-0 group-hover:opacity-100"
-                transition={{ duration: 0.5 }}
-              />
-              
-              <div className="relative z-10">
-                <div className="flex items-center mb-3">
-                  <motion.div 
-                    className="p-2.5 rounded-full bg-orange/10 text-orange mr-3 relative overflow-hidden"
-                    whileHover={{
-                      scale: 1.1,
-                      transition: { duration: 0.3 }
-                    }}
-                    animate={{
-                      boxShadow: [
-                        "0 0 0 0 rgba(255, 115, 0, 0)",
-                        "0 0 0 8px rgba(255, 115, 0, 0.1)",
-                        "0 0 0 0 rgba(255, 115, 0, 0)"
-                      ],
-                      transition: { 
-                        duration: 2,
-                        repeat: Infinity,
-                        repeatType: "loop",
-                        delay: 0.5
-                      }
-                    }}
-                  >
-                    <motion.div
-                      animate={{ 
-                        scale: [1, 1.1, 1],
-                      }}
-                      transition={{ 
-                        duration: 3, 
-                        repeat: Infinity,
-                        repeatType: "loop" 
-                      }}
-                    >
-                      <UserRound size={22} />
-                    </motion.div>
-                  </motion.div>
-                  <motion.h3 
-                    className="text-lg font-bold"
-                    initial={{ opacity: 0.9 }}
-                    whileHover={{ opacity: 1, scale: 1.03 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    Подходящ За Всеки
-                  </motion.h3>
-                </div>
-                
-                <motion.p 
-                  className="text-gray-300 text-sm"
-                  initial={{ opacity: 0.8 }}
-                  whileHover={{ opacity: 1 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  Нашият план може да бъде адаптиран за всеки тип тяло, възраст и ниво на физическа подготовка.
-                </motion.p>
-              </div>
-            </motion.div>
-            
-            {/* Benefit 3 */}
-            <motion.div 
-              className="bg-card/80 backdrop-blur-sm p-5 rounded-lg border border-orange/20 overflow-hidden relative group"
-              variants={fadeInUp}
-              whileHover={{ 
-                y: -8, 
-                boxShadow: "0 10px 25px -5px rgba(255, 115, 0, 0.2)",
-                transition: { duration: 0.3, ease: "easeOut" } 
-              }}
-            >
-              <motion.div 
-                className="absolute -top-8 -right-8 w-32 h-32 bg-orange/10 rounded-full blur-2xl z-0 opacity-0 group-hover:opacity-100"
-                transition={{ duration: 0.5 }}
-              />
-              
-              <div className="relative z-10">
-                <div className="flex items-center mb-3">
-                  <motion.div 
-                    className="p-2.5 rounded-full bg-orange/10 text-orange mr-3 relative overflow-hidden"
-                    whileHover={{
-                      scale: 1.1,
-                      transition: { duration: 0.3 }
-                    }}
-                    animate={{
-                      boxShadow: [
-                        "0 0 0 0 rgba(255, 115, 0, 0)",
-                        "0 0 0 8px rgba(255, 115, 0, 0.1)",
-                        "0 0 0 0 rgba(255, 115, 0, 0)"
-                      ],
-                      transition: { 
-                        duration: 2,
-                        repeat: Infinity,
-                        repeatType: "loop",
-                        delay: 1
-                      }
-                    }}
-                  >
-                    <motion.div
-                      animate={{ 
-                        y: [0, -5, 0, 5, 0],
-                      }}
-                      transition={{ 
-                        duration: 4, 
-                        repeat: Infinity,
-                        repeatType: "loop" 
-                      }}
-                    >
-                      <Heart size={22} />
-                    </motion.div>
-                  </motion.div>
-                  <motion.h3 
-                    className="text-lg font-bold"
-                    initial={{ opacity: 0.9 }}
-                    whileHover={{ opacity: 1, scale: 1.03 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    За Всички Здравословни Състояния
-                  </motion.h3>
-                </div>
-                
-                <motion.p 
-                  className="text-gray-300 text-sm"
-                  initial={{ opacity: 0.8 }}
-                  whileHover={{ opacity: 1 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  Специално разработен за хора с различни здравословни особености, включително физически ограничения.
-                </motion.p>
-              </div>
-            </motion.div>
-            
-            {/* Benefit 4 */}
-            <motion.div 
-              className="bg-card/80 backdrop-blur-sm p-5 rounded-lg border border-orange/20 overflow-hidden relative group"
-              variants={fadeInUp}
-              whileHover={{ 
-                y: -8, 
-                boxShadow: "0 10px 25px -5px rgba(255, 115, 0, 0.2)",
-                transition: { duration: 0.3, ease: "easeOut" } 
-              }}
-            >
-              <motion.div 
-                className="absolute -top-8 -right-8 w-32 h-32 bg-orange/10 rounded-full blur-2xl z-0 opacity-0 group-hover:opacity-100"
-                transition={{ duration: 0.5 }}
-              />
-              
-              <div className="relative z-10">
-                <div className="flex items-center mb-3">
-                  <motion.div 
-                    className="p-2.5 rounded-full bg-orange/10 text-orange mr-3 relative overflow-hidden"
-                    whileHover={{
-                      scale: 1.1,
-                      transition: { duration: 0.3 }
-                    }}
-                    animate={{
-                      boxShadow: [
-                        "0 0 0 0 rgba(255, 115, 0, 0)",
-                        "0 0 0 8px rgba(255, 115, 0, 0.1)",
-                        "0 0 0 0 rgba(255, 115, 0, 0)"
-                      ],
-                      transition: { 
-                        duration: 2,
-                        repeat: Infinity,
-                        repeatType: "loop",
-                        delay: 1.5
-                      }
-                    }}
-                  >
-                    <motion.div
-                      animate={{ 
-                        rotate: [0, 360],
-                      }}
-                      transition={{ 
-                        duration: 20, 
-                        repeat: Infinity,
-                        ease: "linear"
-                      }}
-                    >
-                      <Salad size={22} />
-                    </motion.div>
-                  </motion.div>
-                  <motion.h3 
-                    className="text-lg font-bold"
-                    initial={{ opacity: 0.9 }}
-                    whileHover={{ opacity: 1, scale: 1.03 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    Съобразен с Алергии
-                  </motion.h3>
-                </div>
-                
-                <motion.p 
-                  className="text-gray-300 text-sm"
-                  initial={{ opacity: 0.8 }}
-                  whileHover={{ opacity: 1 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  Хранителният план се адаптира спрямо всички хранителни ограничения, алергии и непоносимости.
-                </motion.p>
-              </div>
-            </motion.div>
-          </motion.div>
         </motion.div>
 
         {/* Social Media Section - New Section */}
@@ -1436,7 +1141,7 @@ const LandingPage = () => {
                   >
                     <Heart size={12} className="fill-orange" /> 
                   </motion.span>
-                  от Palm Fitness
+                  от Automation Aid
                 </span>
               </motion.div>
             </div>

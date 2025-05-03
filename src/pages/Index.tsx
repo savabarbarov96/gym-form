@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import TestimonialSlider from "@/components/TestimonialSlider";
 import { FormState, LoadingState, ResultsState, SuccessState } from "@/components/app-states";
 import { SurveyProvider, useSurvey } from "@/contexts/SurveyContext";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { MessageSquareQuote } from "lucide-react";
 import { preloadImages, getBackgroundPaths, detectBackgroundCount, getSafeBackgroundPath } from "@/utils/imagePreloader";
@@ -129,10 +129,33 @@ const SurveyContent = () => {
     setFormData,
     handleNext,
     handleBack,
-    handleGetPlan,
-    handleGetMealPlan,
-    handleGetWorkoutPlan
   } = useSurvey();
+  
+  // Create a ref to the results container for scrolling
+  const resultsRef = useRef<HTMLDivElement>(null);
+  const [searchParams] = useSearchParams();
+  const showPricing = searchParams.get('showPricing') === 'true';
+  
+  // Handle scrolling to pricing options if showPricing is true
+  useEffect(() => {
+    if (appState === "results" && showPricing && resultsRef.current) {
+      // Find the pricing button or section
+      const pricingButton = resultsRef.current.querySelector('button[data-pricing="true"]');
+      
+      if (pricingButton) {
+        // Scroll to the pricing button with smooth behavior
+        pricingButton.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        // Optionally, add a visual highlight to draw attention
+        pricingButton.classList.add('highlight-pulse');
+        
+        // Remove the highlight after animation completes
+        setTimeout(() => {
+          pricingButton.classList.remove('highlight-pulse');
+        }, 2000);
+      }
+    }
+  }, [appState, showPricing]);
 
   return (
     <main className="flex-1 overflow-x-hidden relative z-[1] pb-20">
@@ -153,11 +176,9 @@ const SurveyContent = () => {
       )}
 
       {appState === "results" && (
-        <ResultsState 
-          handleGetPlan={handleGetPlan} 
-          handleGetMealPlan={handleGetMealPlan} 
-          handleGetWorkoutPlan={handleGetWorkoutPlan} 
-        />
+        <div ref={resultsRef}>
+          <ResultsState />
+        </div>
       )}
       
       {appState === "success" && (
