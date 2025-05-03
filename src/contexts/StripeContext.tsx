@@ -56,14 +56,14 @@ export const PRODUCT_MAPPING: Record<PlanType, {
     amount: 6000, // 60 лева in cents
     name: 'Тренировъчен План',
     description: 'Персонализирана тренировъчна програма, съобразена с вашите цели',
-    paymentLink: 'https://buy.stripe.com/8wMbMv5Mo3e50vu6oo' // Тренировъчен
+    paymentLink: 'https://buy.stripe.com/fZeaIrdeQ9Ct2DC9AB' // Тренировъчен
   },
   combined: {
     productId: STRIPE_PRODUCTS.COMBINED_PLAN,
     amount: 9700, // 97 лева in cents
     name: 'Комбиниран План',
     description: 'Комбиниран план - хранителен режим и тренировъчна програма',
-    paymentLink: 'https://buy.stripe.com/fZeaIrdeQ9Ct2DC9AB' // Combined plan
+    paymentLink: 'https://buy.stripe.com/8wMbMv5Mo3e50vu6oo' // Combined plan
   }
 };
 
