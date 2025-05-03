@@ -1,11 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ChefHat, Dumbbell, CheckCircle, Gift } from 'lucide-react';
-import { loadStripe } from '@stripe/stripe-js';
-
-// Initialize Stripe outside of the component render cycle
-// Use the same key as in ResultsState.tsx
-const stripePromise = loadStripe('pk_test_51RBLsb09RSewZPYHj4dcfAEVrBAIffaPwo6AfJLbRl6rJOE8WpTMvoxMzCMmepUZEGzz5XV9ZInhjL5fYXA3wiar00iu9d2Elm');
+import { ChefHat, Dumbbell, CheckCircle, Gift, AlertCircle } from 'lucide-react';
+import { useStripe, PlanType, PRODUCT_PRICES } from '@/contexts/StripeContext';
 
 interface PricingCardProps {
   icon: React.ReactNode;
@@ -20,6 +16,7 @@ interface PricingCardProps {
   className?: string;
   buttonText?: string;
   delay: number;
+  isLoading?: boolean;
 }
 
 const PricingCard: React.FC<PricingCardProps> = ({
@@ -34,7 +31,8 @@ const PricingCard: React.FC<PricingCardProps> = ({
   highlightLabel = 'Най-популярен избор',
   className = '',
   buttonText = 'Поръчай сега',
-  delay
+  delay,
+  isLoading = false
 }) => {
   return (
     <motion.div
@@ -110,12 +108,24 @@ const PricingCard: React.FC<PricingCardProps> = ({
       <div className={`px-6 pb-6 ${isHighlighted ? 'pt-2' : 'pt-0'}`}>
         <button
           onClick={onClick}
+          disabled={isLoading}
           className={`w-full py-3.5 rounded-xl font-semibold transition-all text-white
           ${isHighlighted 
             ? 'bg-gradient-to-r from-orange to-orange-600 hover:from-orange-600 hover:to-orange shadow-lg hover:shadow-xl relative overflow-hidden group' 
-            : 'bg-gradient-to-r from-orange/90 to-orange hover:from-orange hover:to-orange-600 shadow-md hover:shadow-lg'}`}
+            : 'bg-gradient-to-r from-orange/90 to-orange hover:from-orange hover:to-orange-600 shadow-md hover:shadow-lg'}
+          ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
         >
-          <span className={isHighlighted ? "relative z-10" : ""}>{buttonText}</span>
+          {isLoading ? (
+            <span className="flex items-center justify-center">
+              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Зареждане...
+            </span>
+          ) : (
+            <span className={isHighlighted ? "relative z-10" : ""}>{buttonText}</span>
+          )}
           {isHighlighted && <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>}
         </button>
       </div>
@@ -124,33 +134,43 @@ const PricingCard: React.FC<PricingCardProps> = ({
 };
 
 interface PricingOptionsProps {
-  // handleGetPlan: () => void; // Removed
-  // handleGetMealPlan: () => void; // Removed
-  // handleGetWorkoutPlan: () => void; // Removed
+  // No props needed anymore as we use the Stripe context
 }
 
-export const PricingOptions: React.FC<PricingOptionsProps> = ({
-  // handleGetPlan, // Removed
-  // handleGetMealPlan, // Removed
-  // handleGetWorkoutPlan // Removed
-}) => {
+export const PricingOptions: React.FC<PricingOptionsProps> = () => {
+  const { handleCheckout, isStripeLoading, stripeError } = useStripe();
+  const [loading, setLoading] = useState<PlanType | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleStripeCheckout = async (priceId: string, planType: 'workout' | 'meal' | 'combined') => {
-    const stripe = await stripePromise;
-    if (!stripe) {
-      console.error("Stripe.js has not loaded yet.");
+  const handlePlanSelect = async (planType: PlanType) => {
+    if (isStripeLoading) {
+      setError('Платежният процесор все още се зарежда. Моля, опитайте отново след момент.');
       return;
     }
 
-    const { error } = await stripe.redirectToCheckout({
-      lineItems: [{ price: priceId, quantity: 1 }],
-      mode: 'payment',
-      successUrl: `${window.location.origin}/payment-success?session_id={CHECKOUT_SESSION_ID}_${planType}`,
-      cancelUrl: `${window.location.origin}/payment-canceled`,
-    });
+    if (stripeError) {
+      setError('Възникна проблем при зареждането на платежния процесор. Моля, опитайте отново по-късно.');
+      return;
+    }
 
-    if (error) {
-      console.error("Stripe checkout error:", error.message);
+    try {
+      setLoading(planType);
+      setError(null);
+      
+      console.log(`Initiating checkout for plan: ${planType}`);
+      const success = await handleCheckout(planType);
+      
+      if (!success) {
+        setError('Процесът на плащане не може да бъде стартиран. Моля, опитайте отново.');
+      }
+      
+      // Note: If successful, the page will redirect so we don't need to update state
+    } catch (error) {
+      console.error('Checkout error:', error);
+      setError('Възникна неочаквана грешка. Моля, опитайте отново.');
+    } finally {
+      // In case checkout fails or there's an error that doesn't redirect
+      setLoading(null);
     }
   };
 
@@ -185,20 +205,21 @@ export const PricingOptions: React.FC<PricingOptionsProps> = ({
         <PricingCard
           icon={<ChefHat className="text-orange h-9 w-9" />}
           title="Хранителен режим"
-          price="60 лева"
+          price={PRODUCT_PRICES.meal}
           features={[
             { text: 'Седмично меню' },
             { text: 'Списък с покупки' },
             { text: 'Персонализиран режим' },
           ]}
-          onClick={() => handleStripeCheckout('price_1RBwp509RSewZPYHEKr9LQzp', 'meal')}
+          onClick={() => handlePlanSelect('meal')}
           delay={0}
+          isLoading={loading === 'meal'}
         />
         
         <PricingCard
           icon={<><ChefHat className="text-orange h-7 w-7" /><Dumbbell className="text-orange h-7 w-7" /></>}
           title="Комбиниран план"
-          price="97 лева"
+          price={PRODUCT_PRICES.combined}
           originalPrice="120 лева"
           discount="Спестявате 19%"
           features={[
@@ -208,28 +229,46 @@ export const PricingOptions: React.FC<PricingOptionsProps> = ({
             { text: 'Максимално бърз резултат', highlight: true },
             { text: 'Подарък: Брошура с рецепти', icon: <Gift className="w-5 h-5 text-orange flex-shrink-0 mt-0.5" />, highlight: true },
           ]}
-          onClick={() => handleStripeCheckout('price_1RBwqy09RSewZPYHofVF49Uy', 'combined')}
+          onClick={() => handlePlanSelect('combined')}
           isHighlighted={true}
           delay={0}
+          isLoading={loading === 'combined'}
         />
         
         <PricingCard
           icon={<Dumbbell className="text-orange h-9 w-9" />}
           title="Тренировъчен план"
-          price="60 лева"
+          price={PRODUCT_PRICES.workout}
           features={[
             { text: 'Персонализирани тренировки' },
             { text: 'Инструкции за изпълнение' },
             { text: 'Прогресивна програма' },
           ]}
-          onClick={() => handleStripeCheckout('price_1RBwo109RSewZPYHEBeKTIbm', 'workout')}
+          onClick={() => handlePlanSelect('workout')}
           delay={0}
+          isLoading={loading === 'workout'}
         />
       </div>
       
       <p className="text-white dark:text-white text-center mt-8 text-sm max-w-xl mx-auto">
         Цените са за еднократно генериране на персонализиран план.
       </p>
+      
+      {error && (
+        <div className="mt-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+          <div className="flex items-center">
+            <AlertCircle className="h-5 w-5 mr-2" />
+            <span className="block sm:inline">{error}</span>
+          </div>
+        </div>
+      )}
+      
+      {stripeError && (
+        <div className="mt-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+          <strong className="font-bold">Грешка:</strong>
+          <span className="block sm:inline"> Възникна проблем при зареждането на платежния процесор. Моля, опитайте отново по-късно.</span>
+        </div>
+      )}
     </motion.div>
   );
 }; 

@@ -1,66 +1,41 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { XCircle, ArrowLeft } from 'lucide-react';
+import { X } from "lucide-react";
 
 const PaymentCanceled = () => {
   const navigate = useNavigate();
-  
+
   return (
-    <div className="w-full max-w-4xl mx-auto flex items-center justify-center min-h-screen">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-xl mx-4"
-      >
-        <div className="text-center">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ 
-              type: "spring", 
-              stiffness: 300, 
-              damping: 20,
-              delay: 0.2 
-            }}
-            className="bg-red-100 p-4 rounded-full mx-auto mb-6 w-20 h-20 flex items-center justify-center"
-          >
-            <XCircle size={48} className="text-red-500" />
-          </motion.div>
-          
-          <motion.h1 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="text-3xl font-bold mb-4"
-          >
-            Плащането е отменено
-          </motion.h1>
-          
-          <motion.p 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="text-gray-600 dark:text-gray-300 mb-8"
-          >
-            Вашето плащане беше отменено. Никакви средства не са удържани от Вашата сметка.
-          </motion.p>
-          
-          <motion.button
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            onClick={() => navigate('/')}
-            className="bg-gradient-to-r from-orange to-orange-600 hover:from-orange-600 hover:to-orange text-white px-6 py-3 rounded-full inline-flex items-center font-medium transition-colors"
-            whileHover={{ y: -2 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <ArrowLeft size={18} className="mr-2" />
-            Върнете се към планове
-          </motion.button>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg max-w-md w-full p-6 md:p-8 text-center">
+        <div className="mx-auto w-16 h-16 flex items-center justify-center bg-red-100 dark:bg-red-900/20 rounded-full mb-6">
+          <X className="h-8 w-8 text-red-600 dark:text-red-400" />
         </div>
-      </motion.div>
+        
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+          Плащането е отменено
+        </h1>
+        
+        <p className="text-gray-600 dark:text-gray-300 mb-8">
+          Вашата поръчка беше отменена и няма да бъдете таксувани. Можете да опитате отново или да се свържете с нас, ако имате въпроси.
+        </p>
+        
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <button
+            onClick={() => navigate('/')}
+            className="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+          >
+            Върнете се към началото
+          </button>
+          
+          <button
+            onClick={() => navigate('/form')}
+            className="px-6 py-3 bg-orange-600 text-white rounded-lg font-medium hover:bg-orange-700 transition-colors"
+          >
+            Опитайте отново
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

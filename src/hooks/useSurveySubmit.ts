@@ -77,23 +77,15 @@ export const useSurveySubmit = (
     // when the user selects and pays for a plan in payment-success.tsx
     if (formData.personalInfo?.name && formData.personalInfo?.email) {
       try {
-        const result = await saveUserData(
+        await saveUserData(
           formData.personalInfo.name,
           formData.personalInfo.email,
           formData
         );
-        
-        if (result.success) {
-          console.log("User data saved to Supabase successfully");
-        } else {
-          console.error("Failed to save user data to Supabase:", result.message);
-        }
+        // Continue regardless of success/failure
       } catch (error) {
-        console.error("Error saving user data to Supabase:", error);
         // Continue with webhook submission even if Supabase save fails
       }
-    } else {
-      console.warn("Missing name or email, skipping Supabase save");
     }
   };
 
@@ -112,13 +104,10 @@ export const useSurveySubmit = (
               setLoadingProgress(100);
               setTimeout(() => setAppState("success"), 500); // Short delay after reaching 100%
             }, 500); // Small delay for visual effect
-          } else {
-            console.error("Failed to submit to webhook");
-            // We'll let the loading continue anyway
           }
+          // We'll let the loading continue anyway even if not successful
         })
-        .catch(err => {
-          console.error("Error submitting to webhooks:", err);
+        .catch(() => {
           // Loading animation continues regardless of error
         });
       
@@ -129,7 +118,6 @@ export const useSurveySubmit = (
         setTimeout(() => setAppState("success"), 500);
       }, 120500); // 120 seconds + 500ms buffer
     } catch (error) {
-      console.error("Error during plan submission:", error);
       // Even if there's an error, we continue with the UI flow
       setTimeout(() => {
         setLoadingProgress(100);
@@ -152,13 +140,10 @@ export const useSurveySubmit = (
               setLoadingProgress(100);
               setTimeout(() => setAppState("success"), 500); // Short delay after reaching 100%
             }, 500); // Small delay for visual effect
-          } else {
-            console.error("Failed to submit to meal plan webhook");
-            // We'll let the loading continue anyway
           }
+          // We'll let the loading continue anyway
         })
-        .catch(err => {
-          console.error("Error submitting to meal plan webhook:", err);
+        .catch(() => {
           // Loading animation continues regardless of error
         });
       
@@ -168,7 +153,6 @@ export const useSurveySubmit = (
         setTimeout(() => setAppState("success"), 500);
       }, 120500); // 120 seconds + 500ms buffer
     } catch (error) {
-      console.error("Error during meal plan submission:", error);
       // Even if there's an error, we continue with the UI flow
       setTimeout(() => {
         setLoadingProgress(100);
@@ -191,13 +175,10 @@ export const useSurveySubmit = (
               setLoadingProgress(100);
               setTimeout(() => setAppState("success"), 500); // Short delay after reaching 100%
             }, 500); // Small delay for visual effect
-          } else {
-            console.error("Failed to submit to workout plan webhook");
-            // We'll let the loading continue anyway
           }
+          // We'll let the loading continue anyway
         })
-        .catch(err => {
-          console.error("Error submitting to workout plan webhook:", err);
+        .catch(() => {
           // Loading animation continues regardless of error
         });
       
@@ -207,7 +188,6 @@ export const useSurveySubmit = (
         setTimeout(() => setAppState("success"), 500);
       }, 120500); // 120 seconds + 500ms buffer
     } catch (error) {
-      console.error("Error during workout plan submission:", error);
       // Even if there's an error, we continue with the UI flow
       setTimeout(() => {
         setLoadingProgress(100);

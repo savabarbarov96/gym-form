@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { UserRound, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { UserRound, X, ChevronLeft, ChevronRight, Star } from "lucide-react";
 
 // Testimonial data structure
 interface Testimonial {
@@ -190,7 +190,17 @@ const TestimonialSlider: React.FC<TestimonialSliderProps> = ({
   useEffect(() => {
     if (isOpen) {
       setCurrentIndex(0);
+      // Lock body scroll when modal is open
+      document.body.style.overflow = 'hidden';
+    } else {
+      // Restore body scroll when modal is closed
+      document.body.style.overflow = '';
     }
+    
+    return () => {
+      // Cleanup on unmount
+      document.body.style.overflow = '';
+    };
   }, [isOpen]);
 
   // Auto-scroll effect only when modal is open
@@ -215,6 +225,26 @@ const TestimonialSlider: React.FC<TestimonialSliderProps> = ({
     setCurrentIndex((prevIndex) => (prevIndex - 1 + testimonials.length) % testimonials.length);
   };
 
+  // Handle keyboard navigation
+  useEffect(() => {
+    if (!isOpen) return;
+    
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      } else if (e.key === 'ArrowRight') {
+        handleNext();
+      } else if (e.key === 'ArrowLeft') {
+        handlePrevious();
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
+
   // Animation variants for testimonials
   const slideVariants = {
     enter: (direction: number) => ({
@@ -236,18 +266,21 @@ const TestimonialSlider: React.FC<TestimonialSliderProps> = ({
     hidden: {
       opacity: 0,
       scale: 0.9,
+      y: 20
     },
     visible: {
       opacity: 1,
       scale: 1,
+      y: 0,
       transition: {
-        duration: 0.2,
+        duration: 0.3,
         ease: "easeOut"
       }
     },
     exit: {
       opacity: 0,
       scale: 0.9,
+      y: 20,
       transition: {
         duration: 0.2,
         ease: "easeIn"
@@ -259,85 +292,105 @@ const TestimonialSlider: React.FC<TestimonialSliderProps> = ({
   const currentTestimonial = testimonials[currentIndex];
 
   // Calculate truncated text to fit in the available space
-  const truncateText = (text: string, maxLength: number = 200): string => {
+  const truncateText = (text: string, maxLength: number = 250): string => {
     if (text.length <= maxLength) return text;
     return text.slice(0, maxLength) + "...";
   };
 
+  // Don't render anything if not open
   if (!isOpen) return null;
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          {/* Backdrop overlay */}
-          <motion.div 
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm" 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-          />
+    <div className="fixed inset-0 w-full h-full flex items-center justify-center z-[9999]">
+      {/* Backdrop overlay with blur effect */}
+      <motion.div 
+        className="fixed inset-0 bg-black/80 backdrop-blur-sm" 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={onClose}
+      />
+      
+      {/* Main modal container */}
+      <AnimatePresence mode="wait">
+        <motion.div 
+          className="w-[95%] max-w-3xl bg-gradient-to-b from-zinc-800/95 to-zinc-900/95 rounded-xl shadow-2xl z-[10000] overflow-hidden border border-zinc-700/50 relative"
+          variants={modalVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Modal header */}
+          <div className="flex justify-between items-center px-6 py-4 border-b border-zinc-700/50 bg-gradient-to-r from-zinc-800/90 to-zinc-900/90">
+            <h3 className="text-2xl font-semibold text-white flex items-center">
+              <span className="text-orange mr-2 text-3xl">❝</span> 
+              Мнения на нашите клиенти
+            </h3>
+            <button 
+              onClick={onClose}
+              className="p-2 rounded-full bg-zinc-700/70 hover:bg-orange/70 text-white transition-all duration-200 transform hover:scale-110 active:scale-95"
+              aria-label="Close"
+            >
+              <X size={20} />
+            </button>
+          </div>
           
-          {/* Modal container */}
-          <motion.div 
-            className="bg-zinc-900 w-full max-w-2xl rounded-xl shadow-xl z-10 overflow-hidden"
-            variants={modalVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-          >
-            {/* Modal header */}
-            <div className="flex justify-between items-center p-4 border-b border-zinc-800">
-              <h3 className="text-xl font-semibold text-white">Мнения на клиенти</h3>
-              <button 
-                onClick={onClose}
-                className="p-1 rounded-full bg-zinc-800 hover:bg-zinc-700 text-white"
-              >
-                <X size={20} />
-              </button>
-            </div>
-            
-            {/* Modal content - Testimonials */}
-            <div className="p-6 relative">
-              <div className="relative min-h-[180px] flex items-center justify-center">
-                <AnimatePresence custom={direction} mode="wait">
-                  <motion.div
-                    key={currentIndex}
-                    custom={direction}
-                    variants={slideVariants}
-                    initial="enter"
-                    animate="center"
-                    exit="exit"
-                    transition={{
-                      x: { type: "spring", stiffness: 300, damping: 30 },
-                      opacity: { duration: 0.2 }
-                    }}
-                    className="absolute w-full flex items-center justify-center"
-                  >
-                    <div className="flex flex-col items-center justify-center w-full text-center">
-                      <div className="bg-zinc-800/90 p-4 rounded-lg shadow-inner w-full">
-                        <div className="flex items-center justify-center mb-3">
-                          <div className="flex-shrink-0 w-10 h-10 rounded-full bg-orange/20 flex justify-center items-center text-orange mr-3">
-                            <UserRound size={20} />
-                          </div>
-                          <p className="text-xl sm:text-2xl font-medium text-orange-400">
+          {/* Modal content - Testimonials carousel */}
+          <div className="p-6 md:p-8 relative">
+            <div className="relative min-h-[250px] flex items-center justify-center">
+              <AnimatePresence custom={direction} mode="wait">
+                <motion.div
+                  key={currentIndex}
+                  custom={direction}
+                  variants={slideVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{
+                    x: { type: "spring", stiffness: 300, damping: 30 },
+                    opacity: { duration: 0.3 }
+                  }}
+                  className="absolute w-full flex items-center justify-center"
+                >
+                  <div className="flex flex-col items-center justify-center w-full text-center">
+                    <div className="bg-gradient-to-r from-zinc-800/90 to-zinc-800/70 p-6 md:p-8 rounded-lg shadow-inner w-full border border-orange/20">
+                      {/* Testimonial avatar and name */}
+                      <div className="flex flex-col sm:flex-row items-center justify-center mb-6 gap-3">
+                        <div className="flex-shrink-0 w-16 h-16 rounded-full bg-gradient-to-r from-orange/30 to-orange/20 flex justify-center items-center text-orange shadow-lg shadow-orange/10">
+                          <UserRound size={28} />
+                        </div>
+                        <div className="text-center sm:text-left">
+                          <p className="text-2xl sm:text-3xl font-medium text-orange-400 mb-1">
                             {currentTestimonial.name}
                           </p>
+                          <div className="flex justify-center sm:justify-start">
+                            {[...Array(5)].map((_, i) => (
+                              <Star 
+                                key={i}
+                                size={16} 
+                                className="text-orange fill-orange" 
+                              />
+                            ))}
+                          </div>
                         </div>
-                        <p className="text-base sm:text-lg text-white/90 leading-relaxed">
-                          {truncateText(currentTestimonial.text, 300)}
-                        </p>
                       </div>
+                      
+                      {/* Testimonial text */}
+                      <p className="text-base sm:text-lg text-white/90 leading-relaxed italic">
+                        "{truncateText(currentTestimonial.text, 350)}"
+                      </p>
                     </div>
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-              
-              {/* Navigation arrows */}
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+            
+            {/* Navigation arrows */}
+            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between pointer-events-none px-2">
               <button 
                 onClick={handlePrevious}
-                className="absolute left-0 top-1/2 -translate-y-1/2 bg-zinc-800/80 hover:bg-zinc-700 p-2 rounded-r-lg text-white"
+                className="pointer-events-auto bg-zinc-800/90 hover:bg-orange-500/90 p-3 rounded-r-lg text-white transition-all duration-200 shadow-lg ml-1 transform hover:scale-110 active:scale-95 focus:outline-none"
                 aria-label="Previous testimonial"
               >
                 <ChevronLeft size={24} />
@@ -345,23 +398,56 @@ const TestimonialSlider: React.FC<TestimonialSliderProps> = ({
               
               <button 
                 onClick={handleNext}
-                className="absolute right-0 top-1/2 -translate-y-1/2 bg-zinc-800/80 hover:bg-zinc-700 p-2 rounded-l-lg text-white"
+                className="pointer-events-auto bg-zinc-800/90 hover:bg-orange-500/90 p-3 rounded-l-lg text-white transition-all duration-200 shadow-lg mr-1 transform hover:scale-110 active:scale-95 focus:outline-none"
                 aria-label="Next testimonial"
               >
                 <ChevronRight size={24} />
               </button>
-              
-              {/* Pagination indicator */}
-              <div className="flex justify-center mt-6">
-                <p className="text-sm text-gray-400">
+            </div>
+            
+            {/* Pagination indicator */}
+            <div className="flex justify-center mt-6">
+              <div className="bg-gradient-to-r from-zinc-800/90 to-zinc-800/70 px-4 py-2 rounded-full border border-orange/20 shadow-lg">
+                <p className="text-sm text-white">
                   {currentIndex + 1} / {testimonials.length}
                 </p>
               </div>
             </div>
-          </motion.div>
-        </div>
-      )}
-    </AnimatePresence>
+          </div>
+          
+          {/* Bottom pagination dots */}
+          <div className="flex justify-center gap-1.5 py-4 px-6 bg-gradient-to-b from-zinc-800/80 to-zinc-900/80 border-t border-zinc-700/30">
+            {testimonials.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  setDirection(index > currentIndex ? 1 : -1);
+                  setCurrentIndex(index);
+                }}
+                className={`w-2.5 h-2.5 rounded-full transition-all duration-300 focus:outline-none ${
+                  index === currentIndex
+                    ? "bg-orange scale-110"
+                    : "bg-zinc-600 hover:bg-orange/50"
+                }`}
+                aria-label={`Go to testimonial ${index + 1}`}
+              />
+            ))}
+          </div>
+          
+          {/* Footer with close button */}
+          <div className="bg-gradient-to-b from-zinc-800/90 to-zinc-900/90 p-4 flex justify-center border-t border-zinc-700/30">
+            <motion.button
+              onClick={onClose}
+              className="px-6 py-3 bg-gradient-to-r from-orange/90 to-orange-600/90 hover:from-orange hover:to-orange-600 text-white rounded-lg shadow-lg transition-all duration-200 font-medium"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Затвори
+            </motion.button>
+          </div>
+        </motion.div>
+      </AnimatePresence>
+    </div>
   );
 };
 

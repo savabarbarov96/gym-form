@@ -7,13 +7,11 @@ const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Enable debug mode for development
-const DEBUG = true;
+const DEBUG = false;
 
 // Helper function for logging
 const logDebug = (message: string, data?: any) => {
-  if (DEBUG) {
-    console.log(`[Supabase] ${message}`, data || '');
-  }
+  // Debug logging removed for production
 };
 
 // Function to check Supabase connection
@@ -23,14 +21,12 @@ export async function checkSupabaseConnection(): Promise<boolean> {
     const { data, error } = await supabase.from('form_submissions').select('id').limit(1);
     
     if (error) {
-      console.error('Error connecting to Supabase:', error);
       return false;
     }
     
     logDebug('Supabase connection successful', data);
     return true;
   } catch (error) {
-    console.error('Exception when connecting to Supabase:', error);
     return false;
   }
 }
@@ -54,7 +50,6 @@ export async function checkRlsPolicies(): Promise<{ success: boolean; message: s
       .select();
     
     if (error) {
-      console.error('RLS policy test failed:', error);
       return {
         success: false,
         message: `RLS policy test failed: ${error.message}. Code: ${error.code}`
@@ -70,10 +65,6 @@ export async function checkRlsPolicies(): Promise<{ success: boolean; message: s
         .from('form_submissions')
         .delete()
         .eq('id', id);
-      
-      if (deleteError) {
-        console.warn('Could not delete test record:', deleteError);
-      }
     }
     
     return {
@@ -81,7 +72,6 @@ export async function checkRlsPolicies(): Promise<{ success: boolean; message: s
       message: 'RLS policies are configured correctly'
     };
   } catch (error) {
-    console.error('Exception when testing RLS policies:', error);
     return {
       success: false,
       message: `Exception when testing RLS policies: ${error instanceof Error ? error.message : String(error)}`
@@ -123,7 +113,6 @@ export async function saveUserData(
       .select();
     
     if (error) {
-      console.error('Error saving user data:', error);
       return { 
         success: false, 
         message: `Error saving user data: ${error.message}. Code: ${error.code}` 
@@ -138,7 +127,6 @@ export async function saveUserData(
       data
     };
   } catch (error) {
-    console.error('Exception when saving user data:', error);
     return { 
       success: false, 
       message: `Exception when saving user data: ${error instanceof Error ? error.message : String(error)}` 
@@ -163,14 +151,12 @@ export async function uploadToSupabase(
       });
 
     if (error) {
-      console.error('Error uploading file:', error);
       return { data: null, error };
     }
 
     logDebug('File uploaded successfully', data);
     return { data, error: null };
   } catch (error) {
-    console.error('Exception when uploading:', error);
     return { data: null, error };
   }
 }

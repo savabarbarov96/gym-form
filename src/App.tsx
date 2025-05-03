@@ -8,25 +8,28 @@ import NotFound from "./pages/NotFound";
 import PaymentSuccess from "./pages/payment-success";
 import PaymentCanceled from "./pages/payment-canceled";
 import LandingPage from "./pages/LandingPage";
+import { StripeProvider } from "./contexts/StripeContext";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/form" element={<Index />} />
-          <Route path="/form/:stepNumber" element={<Index />} />
-          <Route path="/payment-success" element={<PaymentSuccess />} />
-          <Route path="/payment-canceled" element={<PaymentCanceled />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <StripeProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/form" element={<Index />} />
+            <Route path="/form/:stepNumber" element={<Index />} />
+            <Route path="/payment-success" element={<PaymentSuccess />} />
+            <Route path="/payment-canceled" element={<PaymentCanceled />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </StripeProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
