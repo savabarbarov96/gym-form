@@ -158,13 +158,18 @@ const PaymentSuccess = () => {
         console.warn("Missing name or email, skipping Supabase save");
       }
 
-      console.log(`Payment Success: Starting webhook submission to sava.automationaid.eu for plan type: ${planType}`);
+      console.log(`Payment Success: Starting webhook submission for plan type: ${planType}`);
       
       // Only trigger the specific webhooks needed for the plan type
       let webhookResult = false;
+      
       if (planType === 'combined') {
-        console.log('Triggering combined webhooks (both meal and workout plans)');
-        webhookResult = await submitToWebhook(formData);
+        console.log('Triggering both meal and workout plan webhooks for combined plan');
+        // For combined plan, trigger both webhooks separately rather than using combined webhook
+        const mealResult = await submitToMealPlanWebhook(formData);
+        const workoutResult = await submitToWorkoutPlanWebhook(formData);
+        webhookResult = mealResult && workoutResult;
+        console.log(`Combined plan webhooks results - Meal: ${mealResult}, Workout: ${workoutResult}`);
       } else if (planType === 'meal') {
         console.log('Triggering meal plan webhook only');
         webhookResult = await submitToMealPlanWebhook(formData);
