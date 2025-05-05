@@ -232,6 +232,50 @@ export const PricingModal: React.FC<PricingModalProps> = ({ open, onOpenChange }
           />
         </div>
         
+        {/* Tip Button */}
+        <div className="mt-6 flex justify-center">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.2, delay: 0.2 }}
+            className="relative bg-white/95 dark:bg-gray-800/95 rounded-xl shadow-md border border-orange/20 overflow-hidden p-4 max-w-xs w-full"
+          >
+            <div className="text-center mb-3">
+              <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-orange/10 mb-2">
+                <Gift className="text-orange h-5 w-5" />
+              </div>
+              <h3 className="font-bold text-base text-gray-800 dark:text-white">Бакшиш</h3>
+            </div>
+            
+            <div className="text-center mb-4">
+              <div className="text-2xl font-bold text-orange mb-1">
+                {PRODUCT_PRICES.tip}
+              </div>
+              <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
+                Подкрепете нашата работа с малък жест на благодарност
+              </p>
+            </div>
+            
+            <button
+              onClick={() => handlePlanSelection('tip')}
+              disabled={loading === 'tip'}
+              className={`w-full py-3 rounded-lg font-semibold transition-all text-white
+              bg-orange hover:brightness-105
+              ${loading === 'tip' ? 'opacity-70 cursor-not-allowed' : ''}`}
+            >
+              {loading === 'tip' ? (
+                <span className="flex items-center justify-center">
+                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  Зареждане...
+                </span>
+              ) : (
+                'Дайте бакшиш'
+              )}
+            </button>
+          </motion.div>
+        </div>
+        
         <p className="text-center mt-6 text-xs text-gray-600 dark:text-gray-300">
           Цените са за еднократно генериране на персонализиран план.
         </p>

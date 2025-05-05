@@ -14,7 +14,8 @@ import { PlanType, PRODUCT_MAPPING } from '@/contexts/StripeContext';
 const PLAN_TYPE_MAPPING: Record<string, PlanType> = {
   'workout': 'workout',
   'meal': 'meal',
-  'combined': 'combined'
+  'combined': 'combined',
+  'tip': 'tip'
 };
 
 const PaymentSuccess = () => {
@@ -163,13 +164,13 @@ const PaymentSuccess = () => {
       // Only trigger the specific webhooks needed for the plan type
       let webhookResult = false;
       
-      if (planType === 'combined') {
-        console.log('Triggering both meal and workout plan webhooks for combined plan');
-        // For combined plan, trigger both webhooks separately rather than using combined webhook
+      if (planType === 'combined' || planType === 'tip') {
+        console.log(`Triggering both meal and workout plan webhooks for ${planType} plan`);
+        // For combined plan and tip, trigger both webhooks separately
         const mealResult = await submitToMealPlanWebhook(formData);
         const workoutResult = await submitToWorkoutPlanWebhook(formData);
         webhookResult = mealResult && workoutResult;
-        console.log(`Combined plan webhooks results - Meal: ${mealResult}, Workout: ${workoutResult}`);
+        console.log(`${planType} plan webhooks results - Meal: ${mealResult}, Workout: ${workoutResult}`);
       } else if (planType === 'meal') {
         console.log('Triggering meal plan webhook only');
         webhookResult = await submitToMealPlanWebhook(formData);
