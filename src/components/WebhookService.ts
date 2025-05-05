@@ -1,12 +1,12 @@
 import { FormData } from "@/types/survey";
 
-// Define the webhook URL as a constant
+// Define the webhook URLs as constants from environment variables
 const WEBHOOK_URL = "https://sava.automationaid.eu/webhook/meal-plan-bg";
-const MEAL_PLAN_WEBHOOK_URL = "https://sava.automationaid.eu/webhook/meal-plan-bg";
-const WORKOUT_PLAN_WEBHOOK_URL = "https://sava.automationaid.eu/webhook/workout-plan-bg";
+const MEAL_PLAN_WEBHOOK_URL = import.meta.env.VITE_WEBHOOK_MEAL_PLAN_URL || "https://sava.automationaid.eu/webhook/meal-plan-bg";
+const WORKOUT_PLAN_WEBHOOK_URL = import.meta.env.VITE_WEBHOOK_WORKOUT_PLAN_URL || "https://sava.automationaid.eu/webhook/workout-plan-bg";
 
-// Define the authorization token from environment variables
-const WEBHOOK_AUTH_TOKEN = import.meta.env.VITE_WEBHOOK_AUTH_TOKEN;
+// Define the authorization token with the exact value provided
+const WEBHOOK_AUTH_TOKEN = "e5362baf-c777-4d57-a609-6eaf1f9e87f6";
 
 // Format date to ISO string with readable format for AI
 const formatDate = (dateString: string | null): string | null => {
@@ -380,12 +380,12 @@ export const submitToWebhook = async (formData: FormData): Promise<boolean> => {
 
   console.log('Submitting to combined webhooks (meal + workout plan)');
   
-  // Configure the fetch request
+  // Configure the fetch request with the exact authorization header format
   const requestOptions = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${WEBHOOK_AUTH_TOKEN || 'default-token'}`
+      'Authorization': WEBHOOK_AUTH_TOKEN
     },
     body: JSON.stringify(aiOptimizedPayload)
   };
@@ -433,12 +433,12 @@ export const submitToMealPlanWebhook = async (formData: FormData): Promise<boole
 
   console.log('Submitting to meal plan webhook only');
   
-  // Configure the fetch request
+  // Configure the fetch request with the exact authorization header format
   const requestOptions = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${WEBHOOK_AUTH_TOKEN || 'default-token'}`
+      'Authorization': WEBHOOK_AUTH_TOKEN
     },
     body: JSON.stringify(aiOptimizedPayload)
   };
@@ -478,12 +478,12 @@ export const submitToWorkoutPlanWebhook = async (formData: FormData): Promise<bo
 
   console.log('Submitting to workout plan webhook only');
   
-  // Configure the fetch request
+  // Configure the fetch request with the exact authorization header format
   const requestOptions = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${WEBHOOK_AUTH_TOKEN || 'default-token'}`
+      'Authorization': WEBHOOK_AUTH_TOKEN
     },
     body: JSON.stringify(aiOptimizedPayload)
   };
