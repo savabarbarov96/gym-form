@@ -14,8 +14,17 @@ import { PlanType, PRODUCT_MAPPING } from '@/contexts/StripeContext';
 const PLAN_TYPE_MAPPING: Record<string, PlanType> = {
   'workout': 'workout',
   'meal': 'meal',
-  'combined': 'combined'
+  'combined': 'combined',
+  'tip': 'tip'
 };
+
+// Processing stages for better UX
+enum ProcessingStage {
+  VERIFYING_PAYMENT = 'Проверка на плащането...',
+  INITIALIZING_WEBHOOK = 'Подготовка на поръчката...',
+  GENERATING_PLAN = 'Генериране на вашата програма...',
+  COMPLETED = 'Готово!'
+}
 
 const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
@@ -32,10 +41,13 @@ const PaymentSuccess = () => {
   
   const navigate = useNavigate();
   const [formData, setFormData] = useState<FormData | null>(null);
-  const [isVerifying, setIsVerifying] = useState(true);
+  const [processingStage, setProcessingStage] = useState<ProcessingStage>(ProcessingStage.VERIFYING_PAYMENT);
+  const [progressPercent, setProgressPercent] = useState<number>(5);
   const [error, setError] = useState<string | null>(null);
   // Add a ref to track if webhooks have been triggered
   const webhooksTriggeredRef = useRef(false);
+  // Timer for progress simulation
+  const progressTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Load form data from localStorage on component mount
   useEffect(() => {
@@ -52,12 +64,51 @@ const PaymentSuccess = () => {
     }
   }, []);
 
+  // Progress bar simulation
+  useEffect(() => {
+    // Start the progress bar simulation for the backend processing
+    if (processingStage === ProcessingStage.GENERATING_PLAN && progressPercent < 95) {
+      progressTimerRef.current = setInterval(() => {
+        setProgressPercent(prev => {
+          const newProgress = prev + 1;
+          // Slow down as we approach 95%
+          if (newProgress >= 95) {
+            if (progressTimerRef.current) {
+              clearInterval(progressTimerRef.current);
+            }
+            // Complete after reaching 95%
+            setTimeout(() => {
+              setProgressPercent(100);
+              setProcessingStage(ProcessingStage.COMPLETED);
+            }, 2000);
+            return 95;
+          }
+          return newProgress;
+        });
+      }, 950); // Update about every second to simulate a 90 second process
+    }
+
+    // Cleanup timer
+    return () => {
+      if (progressTimerRef.current) {
+        clearInterval(progressTimerRef.current);
+      }
+    };
+  }, [processingStage, progressPercent]);
+
   useEffect(() => {
     // Validate that we have a plan type
     if (!planParam) {
       console.error('Missing required plan parameter');
       setError('Payment verification failed. Missing plan information. Please contact support.');
-      setIsVerifying(false);
+      return;
+    }
+
+    // Determine the plan type from the URL parameter
+    const planType = PLAN_TYPE_MAPPING[planParam];
+    if (!planType) {
+      console.error(`Invalid plan type: ${planParam}`);
+      setError('Invalid plan type. Please contact support.');
       return;
     }
 
@@ -65,48 +116,102 @@ const PaymentSuccess = () => {
     const processOrder = async () => {
       // If webhooks have already been triggered, don't do it again
       if (webhooksTriggeredRef.current) {
-        console.log('Webhooks already triggered, skipping');
-        setIsVerifying(false);
+        console.log('Webhooks already triggered, continuing with simulation');
         return;
       }
 
       try {
         console.log('Starting order processing for plan:', planParam);
-        
-        // Determine the plan type from the URL parameter
-        const planType = PLAN_TYPE_MAPPING[planParam];
-        
-        if (!planType) {
-          console.error(`Invalid plan type: ${planParam}`);
-          setError('Invalid plan type. Please contact support.');
-          setIsVerifying(false);
-          return;
-        }
-        
         console.log('Determined plan type:', planType);
 
-        // Only proceed if form data is available
-        if (formData) {
-          console.log('Form data is available, triggering webhooks for plan type:', planType);
+        // Simulate the webhook trigger phase
+        setTimeout(async () => {
+          setProcessingStage(ProcessingStage.INITIALIZING_WEBHOOK);
+          setProgressPercent(15);
+
+          // Only proceed if form data is available
+          if (formData) {
+            console.log('Form data is available, triggering webhooks for plan type:', planType);
+            
+            // Mark webhooks as triggered before actually triggering them
+            webhooksTriggeredRef.current = true;
+            
+            // First, save the form data to Supabase if we have a name and email
+            if (formData.personalInfo?.name && formData.personalInfo?.email) {
+              console.log('Saving form data to Supabase...');
+              
+              // Add selected plan type to the form data before saving
+              const formDataWithPlan = {
+                ...formData,
+                selectedPlan: planType,
+                paymentStatus: 'completed',
+                paymentDate: new Date().toISOString(),
+                paymentDetails: {
+                  productId: PRODUCT_MAPPING[planType]?.productId || '',
+                  productName: PRODUCT_MAPPING[planType]?.name || '',
+                  paymentLink: PRODUCT_MAPPING[planType]?.paymentLink || '',
+                }
+              };
+              
+              try {
+                const result = await saveUserData(
+                  formData.personalInfo.name,
+                  formData.personalInfo.email,
+                  formDataWithPlan
+                );
+                
+                if (result.success) {
+                  console.log("Form data saved to Supabase successfully");
+                } else {
+                  console.error("Failed to save form data to Supabase:", result.message);
+                  // Continue with webhook submission even if Supabase save fails
+                }
+              } catch (error) {
+                console.error("Error saving form data to Supabase:", error);
+                // Continue with webhook submission even if Supabase save fails
+              }
+            } else {
+              console.warn("Missing name or email, skipping Supabase save");
+            }
+
+            console.log(`Payment Success: Starting webhook submission for plan type: ${planType}`);
+            
+            // Trigger the appropriate webhook(s) based on the plan type
+            let webhookResult = false;
+            
+            if (planType === 'combined' || planType === 'tip') {
+              console.log(`Triggering both meal and workout plan webhooks for ${planType} plan`);
+              const mealResult = await submitToMealPlanWebhook(formData);
+              const workoutResult = await submitToWorkoutPlanWebhook(formData);
+              webhookResult = mealResult && workoutResult;
+              console.log(`${planType} plan webhooks results - Meal: ${mealResult}, Workout: ${workoutResult}`);
+            } else if (planType === 'meal') {
+              console.log('Triggering meal plan webhook only');
+              webhookResult = await submitToMealPlanWebhook(formData);
+            } else if (planType === 'workout') {
+              console.log('Triggering workout plan webhook only');
+              webhookResult = await submitToWorkoutPlanWebhook(formData);
+            }
+            
+            console.log(`Payment Success: Webhook submission ${webhookResult ? 'succeeded' : 'failed'}`);
+          } else {
+            console.warn('Form data not available for webhook submission');
+          }
           
-          // Mark webhooks as triggered before actually triggering them
-          webhooksTriggeredRef.current = true;
-          
-          // Trigger the appropriate webhook(s) based on the plan type
-          await triggerWebhooks(planType, formData);
-        } else {
-          console.warn('Form data not available for webhook submission');
-        }
+          // Move to generating plan stage regardless of webhook result for better UX
+          setTimeout(() => {
+            setProcessingStage(ProcessingStage.GENERATING_PLAN);
+            setProgressPercent(25);
+          }, 1000);
+        }, 2000); // Wait 2 seconds before triggering webhooks for visual feedback
         
-        setIsVerifying(false);
       } catch (error) {
         console.error('Error processing order:', error);
         setError('An error occurred while processing your order. Please contact support.');
-        setIsVerifying(false);
       }
     };
 
-    // Only process order if form data is loaded AND we haven't triggered webhooks yet
+    // Start processing as soon as we have form data
     if (formData !== null && !webhooksTriggeredRef.current) {
       console.log('Initiating order processing. Form data loaded:', formData !== null);
       processOrder();
@@ -114,89 +219,6 @@ const PaymentSuccess = () => {
       console.log('Waiting for form data to be loaded before processing order');
     }
   }, [planParam, formData]);
-
-  // Function to trigger the appropriate webhooks
-  const triggerWebhooks = async (planType: PlanType, formData: FormData) => {
-    console.log(`Triggering webhooks for plan type: ${planType}`);
-
-    try {
-      // First, save the form data to Supabase if we have a name and email
-      if (formData.personalInfo?.name && formData.personalInfo?.email) {
-        console.log('Saving form data to Supabase...');
-        
-        // Add selected plan type to the form data before saving
-        const formDataWithPlan = {
-          ...formData,
-          selectedPlan: planType,
-          paymentStatus: 'completed',
-          paymentDate: new Date().toISOString(),
-          paymentDetails: {
-            productId: PRODUCT_MAPPING[planType]?.productId || '',
-            productName: PRODUCT_MAPPING[planType]?.name || '',
-            paymentLink: PRODUCT_MAPPING[planType]?.paymentLink || '',
-          }
-        };
-        
-        try {
-          const result = await saveUserData(
-            formData.personalInfo.name,
-            formData.personalInfo.email,
-            formDataWithPlan
-          );
-          
-          if (result.success) {
-            console.log("Form data saved to Supabase successfully");
-          } else {
-            console.error("Failed to save form data to Supabase:", result.message);
-            // Continue with webhook submission even if Supabase save fails
-          }
-        } catch (error) {
-          console.error("Error saving form data to Supabase:", error);
-          // Continue with webhook submission even if Supabase save fails
-        }
-      } else {
-        console.warn("Missing name or email, skipping Supabase save");
-      }
-
-      console.log(`Payment Success: Starting webhook submission for plan type: ${planType}`);
-      
-      // Only trigger the specific webhooks needed for the plan type
-      let webhookResult = false;
-      
-      if (planType === 'combined') {
-        console.log('Triggering both meal and workout plan webhooks for combined plan');
-        // For combined plan, trigger both webhooks separately rather than using combined webhook
-        const mealResult = await submitToMealPlanWebhook(formData);
-        const workoutResult = await submitToWorkoutPlanWebhook(formData);
-        webhookResult = mealResult && workoutResult;
-        console.log(`Combined plan webhooks results - Meal: ${mealResult}, Workout: ${workoutResult}`);
-      } else if (planType === 'meal') {
-        console.log('Triggering meal plan webhook only');
-        webhookResult = await submitToMealPlanWebhook(formData);
-      } else if (planType === 'workout') {
-        console.log('Triggering workout plan webhook only');
-        webhookResult = await submitToWorkoutPlanWebhook(formData);
-      }
-      
-      console.log(`Payment Success: Webhook submission ${webhookResult ? 'succeeded' : 'failed'}`);
-    } catch (error) {
-      console.error('Error triggering webhooks:', error);
-      // We don't set an error state here as we still want to show the success page
-      // The user will still get their plan via email even if the webhook fails
-    }
-  };
-
-  // If we're still verifying, show a loading message
-  if (isVerifying) {
-    return (
-      <div className="w-full h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-orange border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-xl">Обработване на поръчката...</p>
-        </div>
-      </div>
-    );
-  }
 
   // If there was an error, show an error message
   if (error) {
@@ -216,7 +238,30 @@ const PaymentSuccess = () => {
     );
   }
 
-  // Payment verified, show the success state
+  // If still processing, show the loading state with progress
+  if (processingStage !== ProcessingStage.COMPLETED) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center">
+        <div className="text-center max-w-md px-4">
+          <div className="mb-8">
+            <div className="w-20 h-20 border-4 border-orange border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-xl font-medium text-gray-800">{processingStage}</p>
+            <p className="text-gray-500 mt-1">Моля, изчакайте. Процесът може да отнеме до 90 секунди.</p>
+          </div>
+          
+          <div className="w-full bg-gray-200 rounded-full h-3 mb-2">
+            <div 
+              className="bg-gradient-to-r from-orange to-orange-600 h-3 rounded-full transition-all duration-300 ease-out"
+              style={{ width: `${progressPercent}%` }}
+            ></div>
+          </div>
+          <p className="text-sm text-gray-600">{progressPercent}% завършено</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Processing completed, show the success state
   return <SuccessWithLoading />;
 };
 

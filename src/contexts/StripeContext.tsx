@@ -12,13 +12,14 @@ export const STRIPE_PRODUCTS = {
 };
 
 // Define plan types
-export type PlanType = 'workout' | 'meal' | 'combined';
+export type PlanType = 'workout' | 'meal' | 'combined' | 'tip';
 
 // Define product prices in currency display format
 export const PRODUCT_PRICES = {
   workout: '60 лева',
   meal: '60 лева',
   combined: '97 лева',
+  tip: '20 лева',
 };
 
 interface StripeContextType {
@@ -67,6 +68,14 @@ export const PRODUCT_MAPPING: Record<PlanType, {
     amount: 9700, // 97 лева in cents
     name: 'Комбиниран План',
     description: 'Комбиниран план - хранителен режим и тренировъчна програма',
+    paymentLink: '' // This will be generated dynamically
+  },
+  tip: {
+    productId: 'prod_SFujkRD0eOlzPO',
+    priceId: 'price_1RLOtsP3RUANtq4LKFYg0Txl',
+    amount: 2000, // 20 лева in cents
+    name: 'Бакшиш',
+    description: 'Бакшиш в знак на благодарност',
     paymentLink: '' // This will be generated dynamically
   }
 };
