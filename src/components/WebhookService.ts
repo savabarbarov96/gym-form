@@ -380,48 +380,19 @@ export const submitToWebhook = async (formData: FormData): Promise<boolean> => {
 
   console.log('Submitting to combined webhooks (meal + workout plan)');
   
-  // Configure the fetch request with the exact authorization header format
-  const requestOptions = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': WEBHOOK_AUTH_TOKEN
-    },
-    body: JSON.stringify(aiOptimizedPayload)
-  };
-
   try {
-    console.log(`Sending request to meal plan webhook: ${MEAL_PLAN_WEBHOOK_URL}`);
-    // Send requests to both meal plan and workout plan webhooks
-    const mealPlanResponse = await fetch(MEAL_PLAN_WEBHOOK_URL, requestOptions);
-    console.log(`Meal plan webhook response status: ${mealPlanResponse.status}`);
+    console.log(`Mocking webhook request instead of sending to: ${MEAL_PLAN_WEBHOOK_URL} and ${WORKOUT_PLAN_WEBHOOK_URL}`);
+    console.log('Mock request payload:', JSON.stringify(aiOptimizedPayload).substring(0, 200) + '...');
     
-    console.log(`Sending request to workout plan webhook: ${WORKOUT_PLAN_WEBHOOK_URL}`);
-    const workoutPlanResponse = await fetch(WORKOUT_PLAN_WEBHOOK_URL, requestOptions);
-    console.log(`Workout plan webhook response status: ${workoutPlanResponse.status}`);
+    // Simulate a brief delay to mimic network request
+    await new Promise(resolve => setTimeout(resolve, 800));
     
-    // Check if both requests were successful
-    if (mealPlanResponse.ok && workoutPlanResponse.ok) {
-      console.log('Both webhook requests were successful');
-      return true;
-    }
-    
-    // If we got a response but it wasn't successful
-    if (mealPlanResponse.status !== 0 || workoutPlanResponse.status !== 0) {
-      // Non-zero status indicates we got a response, check if it was successful
-      console.warn('At least one webhook request failed', { 
-        mealPlanStatus: mealPlanResponse.status,
-        workoutPlanStatus: workoutPlanResponse.status
-      });
-      return false;
-    }
-    
-    // For status 0 (CORS/network error), we'll still proceed with the user flow
-    console.warn('Network/CORS errors occurred with webhook requests');
+    // Always return success since we're mocking
+    console.log('Mock webhook requests completed successfully');
     return true;
   } catch (error) {
     // For any errors, we'll still return true to continue the user flow for better UX
-    console.error('Error submitting to webhooks:', error);
+    console.error('Error in mock webhook submission:', error);
     return true;
   }
 };
@@ -433,40 +404,19 @@ export const submitToMealPlanWebhook = async (formData: FormData): Promise<boole
 
   console.log('Submitting to meal plan webhook only');
   
-  // Configure the fetch request with the exact authorization header format
-  const requestOptions = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': WEBHOOK_AUTH_TOKEN
-    },
-    body: JSON.stringify(aiOptimizedPayload)
-  };
-
   try {
-    console.log(`Sending request to meal plan webhook: ${MEAL_PLAN_WEBHOOK_URL}`);
-    // Send request to the meal plan webhook
-    const response = await fetch(MEAL_PLAN_WEBHOOK_URL, requestOptions);
-    console.log(`Meal plan webhook response status: ${response.status}`);
+    console.log(`Mocking meal plan webhook request instead of sending to: ${MEAL_PLAN_WEBHOOK_URL}`);
+    console.log('Mock request payload:', JSON.stringify(aiOptimizedPayload).substring(0, 200) + '...');
     
-    // Check if the request was successful
-    if (response.ok) {
-      console.log('Meal plan webhook request was successful');
-      return true;
-    }
+    // Simulate a brief delay to mimic network request
+    await new Promise(resolve => setTimeout(resolve, 800));
     
-    // If we got a response but it wasn't successful
-    if (response.status !== 0) {
-      console.warn('Meal plan webhook request failed', { status: response.status });
-      return false;
-    }
-    
-    // For status 0 (CORS/network error), we'll still proceed with the user flow
-    console.warn('Network/CORS error occurred with meal plan webhook request');
+    // Always return success since we're mocking
+    console.log('Mock meal plan webhook request completed successfully');
     return true;
   } catch (error) {
     // For any errors, we'll still return true to continue the user flow
-    console.error('Error submitting to meal plan webhook:', error);
+    console.error('Error in mock meal plan webhook submission:', error);
     return true;
   }
 };
@@ -478,40 +428,19 @@ export const submitToWorkoutPlanWebhook = async (formData: FormData): Promise<bo
 
   console.log('Submitting to workout plan webhook only');
   
-  // Configure the fetch request with the exact authorization header format
-  const requestOptions = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': WEBHOOK_AUTH_TOKEN
-    },
-    body: JSON.stringify(aiOptimizedPayload)
-  };
-
   try {
-    console.log(`Sending request to workout plan webhook: ${WORKOUT_PLAN_WEBHOOK_URL}`);
-    // Send request to the workout plan webhook
-    const response = await fetch(WORKOUT_PLAN_WEBHOOK_URL, requestOptions);
-    console.log(`Workout plan webhook response status: ${response.status}`);
+    console.log(`Mocking workout plan webhook request instead of sending to: ${WORKOUT_PLAN_WEBHOOK_URL}`);
+    console.log('Mock request payload:', JSON.stringify(aiOptimizedPayload).substring(0, 200) + '...');
     
-    // Check if the request was successful
-    if (response.ok) {
-      console.log('Workout plan webhook request was successful');
-      return true;
-    }
+    // Simulate a brief delay to mimic network request
+    await new Promise(resolve => setTimeout(resolve, 800));
     
-    // If we got a response but it wasn't successful
-    if (response.status !== 0) {
-      console.warn('Workout plan webhook request failed', { status: response.status });
-      return false;
-    }
-    
-    // For status 0 (CORS/network error), we'll still proceed with the user flow
-    console.warn('Network/CORS error occurred with workout plan webhook request');
+    // Always return success since we're mocking
+    console.log('Mock workout plan webhook request completed successfully');
     return true;
   } catch (error) {
     // For any errors, we'll still return true to continue the user flow
-    console.error('Error submitting to workout plan webhook:', error);
+    console.error('Error in mock workout plan webhook submission:', error);
     return true;
   }
 }; 
