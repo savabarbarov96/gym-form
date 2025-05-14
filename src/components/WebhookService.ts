@@ -381,19 +381,15 @@ export const submitToWebhook = async (formData: FormData): Promise<boolean> => {
   console.log('Submitting to combined webhooks (meal + workout plan)');
   
   try {
-    console.log(`Mocking webhook request instead of sending to: ${MEAL_PLAN_WEBHOOK_URL} and ${WORKOUT_PLAN_WEBHOOK_URL}`);
-    console.log('Mock request payload:', JSON.stringify(aiOptimizedPayload).substring(0, 200) + '...');
+    // Send to both webhooks in parallel, but don't wait for responses
+    submitToMealPlanWebhook(formData);
+    submitToWorkoutPlanWebhook(formData);
     
-    // Simulate a very brief delay to mimic network request - reduced from 800ms
-    await new Promise(resolve => setTimeout(resolve, 200));
-    
-    // Always return success since we're mocking
-    console.log('Mock webhook requests completed successfully');
+    console.log('Combined webhook requests initiated');
     return true;
   } catch (error) {
-    // For any errors, we'll still return true to continue the user flow for better UX
-    console.error('Error in mock webhook submission:', error);
-    return true;
+    console.error('Error initiating combined webhook requests:', error);
+    return true; // Continue the user flow regardless of errors
   }
 };
 
@@ -402,22 +398,28 @@ export const submitToMealPlanWebhook = async (formData: FormData): Promise<boole
   // Optimize the form data for AI processing
   const aiOptimizedPayload = createAIOptimizedPayload(formData);
 
-  console.log('Submitting to meal plan webhook only');
+  console.log('Submitting to meal plan webhook');
   
   try {
-    console.log(`Mocking meal plan webhook request instead of sending to: ${MEAL_PLAN_WEBHOOK_URL}`);
-    console.log('Mock request payload:', JSON.stringify(aiOptimizedPayload).substring(0, 200) + '...');
+    // Send the actual HTTP request without waiting for the response
+    fetch(MEAL_PLAN_WEBHOOK_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${WEBHOOK_AUTH_TOKEN}`
+      },
+      body: JSON.stringify(aiOptimizedPayload)
+    }).then(response => {
+      console.log(`Meal plan webhook response status: ${response.status}`);
+    }).catch(err => {
+      console.error('Error in meal plan webhook response:', err);
+    });
     
-    // Simulate a very brief delay to mimic network request - reduced from 800ms
-    await new Promise(resolve => setTimeout(resolve, 200));
-    
-    // Always return success since we're mocking
-    console.log('Mock meal plan webhook request completed successfully');
+    console.log('Meal plan webhook request initiated');
     return true;
   } catch (error) {
-    // For any errors, we'll still return true to continue the user flow
-    console.error('Error in mock meal plan webhook submission:', error);
-    return true;
+    console.error('Error initiating meal plan webhook request:', error);
+    return true; // Continue the user flow regardless of errors
   }
 };
 
@@ -426,21 +428,27 @@ export const submitToWorkoutPlanWebhook = async (formData: FormData): Promise<bo
   // Optimize the form data for AI processing
   const aiOptimizedPayload = createAIOptimizedPayload(formData);
 
-  console.log('Submitting to workout plan webhook only');
+  console.log('Submitting to workout plan webhook');
   
   try {
-    console.log(`Mocking workout plan webhook request instead of sending to: ${WORKOUT_PLAN_WEBHOOK_URL}`);
-    console.log('Mock request payload:', JSON.stringify(aiOptimizedPayload).substring(0, 200) + '...');
+    // Send the actual HTTP request without waiting for the response
+    fetch(WORKOUT_PLAN_WEBHOOK_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${WEBHOOK_AUTH_TOKEN}`
+      },
+      body: JSON.stringify(aiOptimizedPayload)
+    }).then(response => {
+      console.log(`Workout plan webhook response status: ${response.status}`);
+    }).catch(err => {
+      console.error('Error in workout plan webhook response:', err);
+    });
     
-    // Simulate a very brief delay to mimic network request - reduced from 800ms
-    await new Promise(resolve => setTimeout(resolve, 200));
-    
-    // Always return success since we're mocking
-    console.log('Mock workout plan webhook request completed successfully');
+    console.log('Workout plan webhook request initiated');
     return true;
   } catch (error) {
-    // For any errors, we'll still return true to continue the user flow
-    console.error('Error in mock workout plan webhook submission:', error);
-    return true;
+    console.error('Error initiating workout plan webhook request:', error);
+    return true; // Continue the user flow regardless of errors
   }
 }; 
