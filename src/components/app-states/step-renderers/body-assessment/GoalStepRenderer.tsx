@@ -13,9 +13,7 @@ const GoalStepRenderer = ({
 }: GoalStepRendererProps) => {
   return (
     <GoalStep
-      value={formData.goal}
       currentBodyFat={formData.currentBodyFat}
-      onChange={(goal) => setFormData(prev => ({ ...prev, goal }))}
       onCurrentBodyFatChange={(currentBodyFat) => 
         setFormData(prev => ({ ...prev, currentBodyFat }))
       }

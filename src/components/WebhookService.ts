@@ -384,8 +384,8 @@ export const submitToWebhook = async (formData: FormData): Promise<boolean> => {
     console.log(`Mocking webhook request instead of sending to: ${MEAL_PLAN_WEBHOOK_URL} and ${WORKOUT_PLAN_WEBHOOK_URL}`);
     console.log('Mock request payload:', JSON.stringify(aiOptimizedPayload).substring(0, 200) + '...');
     
-    // Simulate a brief delay to mimic network request
-    await new Promise(resolve => setTimeout(resolve, 800));
+    // Simulate a very brief delay to mimic network request - reduced from 800ms
+    await new Promise(resolve => setTimeout(resolve, 200));
     
     // Always return success since we're mocking
     console.log('Mock webhook requests completed successfully');
@@ -408,8 +408,8 @@ export const submitToMealPlanWebhook = async (formData: FormData): Promise<boole
     console.log(`Mocking meal plan webhook request instead of sending to: ${MEAL_PLAN_WEBHOOK_URL}`);
     console.log('Mock request payload:', JSON.stringify(aiOptimizedPayload).substring(0, 200) + '...');
     
-    // Simulate a brief delay to mimic network request
-    await new Promise(resolve => setTimeout(resolve, 800));
+    // Simulate a very brief delay to mimic network request - reduced from 800ms
+    await new Promise(resolve => setTimeout(resolve, 200));
     
     // Always return success since we're mocking
     console.log('Mock meal plan webhook request completed successfully');
@@ -432,8 +432,8 @@ export const submitToWorkoutPlanWebhook = async (formData: FormData): Promise<bo
     console.log(`Mocking workout plan webhook request instead of sending to: ${WORKOUT_PLAN_WEBHOOK_URL}`);
     console.log('Mock request payload:', JSON.stringify(aiOptimizedPayload).substring(0, 200) + '...');
     
-    // Simulate a brief delay to mimic network request
-    await new Promise(resolve => setTimeout(resolve, 800));
+    // Simulate a very brief delay to mimic network request - reduced from 800ms
+    await new Promise(resolve => setTimeout(resolve, 200));
     
     // Always return success since we're mocking
     console.log('Mock workout plan webhook request completed successfully');

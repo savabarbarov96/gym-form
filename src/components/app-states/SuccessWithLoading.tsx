@@ -6,53 +6,52 @@ const SuccessWithLoading: React.FC = () => {
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Simulate a loading process
+  // Simulate a loading process - optimized for faster loading
   useEffect(() => {
     let interval: NodeJS.Timeout;
     
     if (isLoading) {
-      // Calculate parameters for a ~90 second loading time
-      // For 90 seconds with average increment of ~0.3% we need:
-      // 100% / 0.3% = ~333 increments
-      // 90 seconds / 333 increments = ~270ms per increment
+      // Optimized parameters for a ~30 second loading time
+      // For 30 seconds with average increment of ~0.9% we need:
+      // 100% / 0.9% = ~111 increments
+      // 30 seconds / 111 increments = ~270ms per increment
       
       interval = setInterval(() => {
         setLoadingProgress(prev => {
-          // Much smaller increments to stretch out the loading time
-          // Vary the increments to make it look more natural
+          // Larger increments for faster loading
           let increment;
           
           if (prev < 30) {
             // Start a bit faster (first 30%)
-            increment = 0.4;
+            increment = 1.2; // Increased from 0.4
           } else if (prev < 60) {
             // Middle section (30-60%)
-            increment = 0.3;
+            increment = 0.9; // Increased from 0.3
           } else if (prev < 85) {
             // Slow down (60-85%)
-            increment = 0.25;
+            increment = 0.75; // Increased from 0.25
           } else if (prev < 95) {
             // Even slower (85-95%)
-            increment = 0.2;
+            increment = 0.6; // Increased from 0.2
           } else {
             // Very slow at the end (95-100%)
-            increment = 0.1;
+            increment = 0.3; // Increased from 0.1
           }
           
           // Add small random variation to make it look more natural
-          increment += Math.random() * 0.1;
+          increment += Math.random() * 0.3; // Increased variation
           
           const nextProgress = Math.min(prev + increment, 100);
           
           // When we reach 100, set loading to complete after a small delay
           if (nextProgress === 100) {
             clearInterval(interval);
-            setTimeout(() => setIsLoading(false), 1000); // Short delay at 100% before showing success
+            setTimeout(() => setIsLoading(false), 500); // Reduced from 1000ms
           }
           
           return nextProgress;
         });
-      }, 270); // Update every 270ms for approximately 90 seconds total
+      }, 90); // Reduced from 270ms to 90ms for approximately 30 seconds total
     }
     
     return () => {

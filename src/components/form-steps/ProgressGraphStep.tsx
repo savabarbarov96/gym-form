@@ -2,11 +2,10 @@ import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
 interface ProgressGraphStepProps {
-  goalValue: number;
   currentBodyFat?: number;
 }
 
-const ProgressGraphStep = ({ goalValue, currentBodyFat = 25 }: ProgressGraphStepProps) => {
+const ProgressGraphStep = ({ currentBodyFat = 25 }: ProgressGraphStepProps) => {
   const chartRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
@@ -15,9 +14,9 @@ const ProgressGraphStep = ({ goalValue, currentBodyFat = 25 }: ProgressGraphStep
     // Clear any existing SVG
     d3.select(chartRef.current).selectAll("*").remove();
     
-    // Calculate values based on goal - adjusted muscle mass to be more realistic
-    const startingBodyFat = currentBodyFat || goalValue;
-    const targetBodyFat = Math.max(goalValue, 8);
+    // Calculate target body fat as 5% less than current, but not less than 10%
+    const startingBodyFat = currentBodyFat;
+    const targetBodyFat = Math.max(startingBodyFat - 5, 10);
     const startingMuscleMass = 30;
     const targetMuscleMass = 40; // Reduced from previous value to more realistic value
     
@@ -349,7 +348,7 @@ const ProgressGraphStep = ({ goalValue, currentBodyFat = 25 }: ProgressGraphStep
     
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [goalValue, currentBodyFat]);
+  }, [currentBodyFat]);
 
   return (
     <div className="text-center">

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { FormData } from '@/types/survey';
 import { ProgressGraphStep } from '@/components/form-steps';
@@ -12,7 +11,6 @@ const ProgressGraphStepRenderer = ({
 }: ProgressGraphStepRendererProps) => {
   return (
     <ProgressGraphStep 
-      goalValue={formData.goal}
       currentBodyFat={formData.currentBodyFat}
     />
   );

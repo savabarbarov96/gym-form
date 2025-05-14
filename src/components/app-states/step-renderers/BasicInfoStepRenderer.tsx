@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { FormData } from '@/types/survey';
 import {
@@ -50,8 +49,6 @@ const BasicInfoStepRenderer: React.FC<BasicInfoStepRendererProps> = ({
   if (step === 4) {
     return (
       <GoalStep 
-        value={formData.goal} 
-        onChange={(goal) => setFormData({...formData, goal})}
         currentBodyFat={formData.currentBodyFat}
         onCurrentBodyFatChange={(currentBodyFat) => setFormData({...formData, currentBodyFat})}
       />

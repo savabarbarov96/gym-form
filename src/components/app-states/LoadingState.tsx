@@ -73,7 +73,7 @@ const LoadingState: React.FC<LoadingStateProps> = ({ loadingProgress }) => {
       >
         <h2 className="text-3xl font-bold mb-2">Създаваме Вашата Тренировъчна Програма</h2>
         <p className="text-muted-foreground">
-          Моля, изчакайте докато персонализираме вашия план
+          Моля, изчакайте докато персонализираме вашия план. Готови сме след момент!
         </p>
       </motion.div>
 
@@ -139,7 +139,7 @@ const LoadingState: React.FC<LoadingStateProps> = ({ loadingProgress }) => {
         </motion.p>
         
         <p className="text-sm">
-          Създаваме персонализирана програма, базирана на Вашите цели и предпочитания
+          Създаваме персонализирана програма, базирана на Вашите цели и предпочитания. Процесът ще приключи скоро.
         </p>
         
         {/* Visual elements to create a more "active" loading state */}
