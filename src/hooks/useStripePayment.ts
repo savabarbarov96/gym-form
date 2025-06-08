@@ -51,7 +51,6 @@ export const useStripePayment = (): UseStripePaymentReturn => {
       
       return result;
     } catch (error) {
-      console.error('Payment processing error:', error);
       setError('An unexpected error occurred. Please try again.');
       return false;
     } finally {

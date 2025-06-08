@@ -5,9 +5,6 @@ const WEBHOOK_URL = "https://sava.automationaid.eu/webhook/meal-plan-bg";
 const MEAL_PLAN_WEBHOOK_URL = import.meta.env.VITE_WEBHOOK_MEAL_PLAN_URL || "https://sava.automationaid.eu/webhook/meal-plan-bg";
 const WORKOUT_PLAN_WEBHOOK_URL = import.meta.env.VITE_WEBHOOK_WORKOUT_PLAN_URL || "https://sava.automationaid.eu/webhook/workout-plan-bg";
 
-// Define the authorization token with the exact value provided
-const WEBHOOK_AUTH_TOKEN = "e5362baf-c777-4d57-a609-6eaf1f9e87f6";
-
 // Format date to ISO string with readable format for AI
 const formatDate = (dateString: string | null): string | null => {
   if (!dateString) return null;
@@ -377,18 +374,14 @@ const createAIOptimizedPayload = (formData: FormData): Record<string, any> => {
 export const submitToWebhook = async (formData: FormData): Promise<boolean> => {
   // Optimize the form data for AI processing
   const aiOptimizedPayload = createAIOptimizedPayload(formData);
-
-  console.log('Submitting to combined webhooks (meal + workout plan)');
   
   try {
     // Send to both webhooks in parallel, but don't wait for responses
     submitToMealPlanWebhook(formData);
     submitToWorkoutPlanWebhook(formData);
     
-    console.log('Combined webhook requests initiated');
     return true;
   } catch (error) {
-    console.error('Error initiating combined webhook requests:', error);
     return true; // Continue the user flow regardless of errors
   }
 };
@@ -397,28 +390,23 @@ export const submitToWebhook = async (formData: FormData): Promise<boolean> => {
 export const submitToMealPlanWebhook = async (formData: FormData): Promise<boolean> => {
   // Optimize the form data for AI processing
   const aiOptimizedPayload = createAIOptimizedPayload(formData);
-
-  console.log('Submitting to meal plan webhook');
   
   try {
     // Send the actual HTTP request without waiting for the response
     fetch(MEAL_PLAN_WEBHOOK_URL, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${WEBHOOK_AUTH_TOKEN}`
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(aiOptimizedPayload)
     }).then(response => {
-      console.log(`Meal plan webhook response status: ${response.status}`);
+      // Response handled silently
     }).catch(err => {
-      console.error('Error in meal plan webhook response:', err);
+      // Error handled silently
     });
     
-    console.log('Meal plan webhook request initiated');
     return true;
   } catch (error) {
-    console.error('Error initiating meal plan webhook request:', error);
     return true; // Continue the user flow regardless of errors
   }
 };
@@ -427,28 +415,23 @@ export const submitToMealPlanWebhook = async (formData: FormData): Promise<boole
 export const submitToWorkoutPlanWebhook = async (formData: FormData): Promise<boolean> => {
   // Optimize the form data for AI processing
   const aiOptimizedPayload = createAIOptimizedPayload(formData);
-
-  console.log('Submitting to workout plan webhook');
   
   try {
     // Send the actual HTTP request without waiting for the response
     fetch(WORKOUT_PLAN_WEBHOOK_URL, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${WEBHOOK_AUTH_TOKEN}`
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(aiOptimizedPayload)
     }).then(response => {
-      console.log(`Workout plan webhook response status: ${response.status}`);
+      // Response handled silently
     }).catch(err => {
-      console.error('Error in workout plan webhook response:', err);
+      // Error handled silently
     });
     
-    console.log('Workout plan webhook request initiated');
     return true;
   } catch (error) {
-    console.error('Error initiating workout plan webhook request:', error);
     return true; // Continue the user flow regardless of errors
   }
 }; 

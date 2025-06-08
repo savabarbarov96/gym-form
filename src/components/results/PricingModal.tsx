@@ -140,12 +140,10 @@ export const PricingModal: React.FC<PricingModalProps> = ({ open, onOpenChange }
 
   const handlePlanSelection = async (selectedPlan: PlanType) => {
     if (isStripeLoading) {
-      console.log("Payment processor is still initializing. Please try again in a moment.");
       return;
     }
 
     if (stripeError) {
-      console.error("There was a problem loading the payment processor. Please try again later.");
       return;
     }
 
@@ -154,12 +152,9 @@ export const PricingModal: React.FC<PricingModalProps> = ({ open, onOpenChange }
 
     try {
       const success = await handleCheckout(selectedPlan);
-      if (!success) {
-        console.error("Checkout failed. Please try again.");
-      }
       // We don't close the modal here as the redirectToCheckout will navigate away
     } catch (error) {
-      console.error("Error during checkout:", error);
+      // Error handled silently
     } finally {
       setIsProcessing(false);
       // Set loading to null after a short delay

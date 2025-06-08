@@ -88,7 +88,6 @@ export const StripeProvider: React.FC<StripeProviderProps> = ({ children }) => {
         setStripe(stripePromise);
         setIsStripeLoading(false);
       } catch (error) {
-        console.error('Failed to initialize Stripe:', error);
         setStripeError(error instanceof Error ? error : new Error('Unknown Stripe initialization error'));
         setIsStripeLoading(false);
       }
@@ -104,17 +103,13 @@ export const StripeProvider: React.FC<StripeProviderProps> = ({ children }) => {
    */
   const handleCheckout = async (planType: PlanType): Promise<boolean> => {
     try {
-      console.log(`Initiating checkout for plan: ${planType}`);
-      
       // Get the product mapping for the selected plan
       const product = PRODUCT_MAPPING[planType];
       if (!product) {
-        console.error(`No product mapping found for plan type: ${planType}`);
         return false;
       }
 
       if (!stripe) {
-        console.error('Stripe not initialized');
         return false;
       }
 
@@ -137,13 +132,11 @@ export const StripeProvider: React.FC<StripeProviderProps> = ({ children }) => {
       });
       
       if (error) {
-        console.error('Stripe checkout error:', error);
         return false;
       }
       
       return true;
     } catch (error) {
-      console.error('Checkout process failed:', error);
       return false;
     }
   };

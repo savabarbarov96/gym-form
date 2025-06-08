@@ -157,7 +157,6 @@ export const PricingOptions: React.FC<PricingOptionsProps> = () => {
       setLoading(planType);
       setError(null);
       
-      console.log(`Initiating checkout for plan: ${planType}`);
       const success = await handleCheckout(planType);
       
       if (!success) {
@@ -166,7 +165,6 @@ export const PricingOptions: React.FC<PricingOptionsProps> = () => {
       
       // Note: If successful, the page will redirect so we don't need to update state
     } catch (error) {
-      console.error('Checkout error:', error);
       setError('Възникна неочаквана грешка. Моля, опитайте отново.');
     } finally {
       // In case checkout fails or there's an error that doesn't redirect
