@@ -24,8 +24,8 @@ interface SurveyProviderProps {
 }
 
 export const SurveyProvider: React.FC<SurveyProviderProps> = ({ children, initialStep }) => {
-  // Updated to 32 steps with correct flow (including AllergiesStep)
-  const totalSteps = 32;
+  // Updated to 33 steps with correct flow (including StartCommitmentStep)
+  const totalSteps = 33;
   
   // Use our custom hooks
   const { formData, setFormData, updateFormData } = useSurveyForm();

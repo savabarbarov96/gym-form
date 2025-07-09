@@ -8,10 +8,10 @@ interface ProgressBarProps {
   totalSteps?: number;
 }
 
-const ProgressBar: React.FC<ProgressBarProps> = ({ 
-  progress, 
-  step = 0, 
-  totalSteps = 32 
+const ProgressBar: React.FC<ProgressBarProps> = ({
+  progress,
+  step = 0,
+  totalSteps = 33
 }) => {
   const [prevProgress, setPrevProgress] = useState(progress);
 
